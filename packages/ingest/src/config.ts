@@ -24,7 +24,7 @@ export const config = {
   dryRun: bool('INGEST_DRY_RUN', false) || process.argv.includes('--dry-run'),
   backfill: process.argv.includes('--backfill'),
   logLevel: (process.env.INGEST_LOG_LEVEL ?? 'info') as 'debug' | 'info' | 'warn' | 'error',
-  revalidateUrl: process.env.NEXT_PUBLIC_SITE_URL ? `${process.env.NEXT_PUBLIC_SITE_URL}/api/revalidate` : '',
+  revalidateUrl: siteOrigin(process.env.NEXT_PUBLIC_SITE_URL) ? `${siteOrigin(process.env.NEXT_PUBLIC_SITE_URL)}/api/revalidate` : '',
   revalidateSecret: process.env.REVALIDATE_SECRET ?? '',
 };
 
@@ -35,3 +35,10 @@ export const log = {
   warn: (...a: unknown[]) => { if (levels[config.logLevel] <= 30) console.warn('[warn]', ...a); },
   error: (...a: unknown[]) => console.error('[error]', ...a),
 };
+
+/** "example.com" or "https://example.com/" -> "https://example.com"; invalid -> "". */
+function siteOrigin(raw: string | undefined): string {
+  const v = raw?.trim();
+  if (!v) return '';
+  try { return new URL(/^https?:\/\//i.test(v) ? v : `https://${v}`).origin; } catch { return ''; }
+}

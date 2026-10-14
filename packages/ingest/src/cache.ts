@@ -13,6 +13,10 @@ export interface IngestState {
   etags: Record<string, string>;
   seen: Record<string, { newestNodeId: string | null; newestPublishedAt: string | null; backfilled: boolean }>;
   lastAdvisoryPoll: Record<string, string>;
+  /** "slug@tag" -> content hash of what we last wrote. Unchanged releases are not re-written. */
+  releaseHashes?: Record<string, string>;
+  /** repo key -> "pushedAt|archived" last written to components. */
+  repoMeta?: Record<string, string>;
   lastRun?: string;
 }
 
@@ -22,7 +26,7 @@ export function loadState(): IngestState {
   try {
     if (existsSync(file())) return JSON.parse(readFileSync(file(), 'utf8')) as IngestState;
   } catch { /* corrupt cache -> start fresh */ }
-  return { etags: {}, seen: {}, lastAdvisoryPoll: {} };
+  return { etags: {}, seen: {}, lastAdvisoryPoll: {}, releaseHashes: {}, repoMeta: {} };
 }
 
 export function saveState(s: IngestState): void {

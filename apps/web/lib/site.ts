@@ -1,10 +1,24 @@
-/** Canonical site URL for metadata, sitemap and feeds. */
+const FALLBACK = 'https://stakestack-eth.vercel.app';
+
+/** Accepts "example.com", "https://example.com/" or junk; returns an absolute origin or null. */
+export function normalizeUrl(raw: string | undefined | null): string | null {
+  const v = raw?.trim();
+  if (!v) return null;
+  try {
+    const u = new URL(/^https?:\/\//i.test(v) ? v : `https://${v}`);
+    return u.origin;
+  } catch {
+    return null;
+  }
+}
+
+/** Canonical site URL for metadata, sitemap and feeds. Never throws, so a bad env value cannot break the build. */
 export function siteUrl(): string {
-  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
-  if (explicit && !explicit.includes('localhost')) return explicit.replace(/\/$/, '');
-  const prod = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-  if (prod) return `https://${prod}`;
-  return explicit?.replace(/\/$/, '') || 'https://stakestack-eth.vercel.app';
+  const explicit = normalizeUrl(process.env.NEXT_PUBLIC_SITE_URL);
+  if (explicit && !explicit.includes('localhost')) return explicit;
+  const prod = normalizeUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL);
+  if (prod) return prod;
+  return explicit ?? FALLBACK;
 }
 
 export const SITE_NAME = 'stakestack';

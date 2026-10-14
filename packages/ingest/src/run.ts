@@ -5,8 +5,9 @@ import { config, log } from './config';
 import { loadState, saveState } from './cache';
 import { Budget, BudgetExceeded } from './github/budget';
 import { fetchReleasesBatch, fetchAdvisories, type GqlRepo } from './github/client';
-import { assessRelease } from './assess/rules';
-import { db, upsert } from './db';
+import { assessRelease, ASSESSOR_VERSION } from './assess/rules';
+import { createHash } from 'node:crypto';
+import { db, dbStats, upsert } from './db';
 
 /**
  * One ingest run:
@@ -58,6 +59,15 @@ async function main() {
     if (e instanceof BudgetExceeded) log.warn(`stopping releases early: ${e.message}`); else throw e;
   }
 
+  // Change detection: only releases whose content (or the assessor version) changed since our last write.
+  state.releaseHashes ??= {};
+  state.repoMeta ??= {};
+  const hashOf = (r: Release) => createHash('sha1').update([r.name ?? '', r.body ?? '', r.is_prerelease, r.published_at, r.url, ASSESSOR_VERSION].join('\u0000')).digest('hex').slice(0, 16);
+  const fetched = newReleases.length;
+  const changed = newReleases.filter(r => state.releaseHashes![`${r.component_slug}@${r.tag}`] !== hashOf(r));
+  newReleases.length = 0; newReleases.push(...changed);
+  log.info(`fetched ${fetched} releases in the re-check window, ${changed.length} new or changed`);
+
   // assess + write
   const assessments = newReleases.map(rel => {
     const comp = cat.components.find(c => c.slug === rel.component_slug)!;
@@ -78,11 +88,18 @@ async function main() {
       evidence: a.evidence, assessor: a.assessor, assessor_version: a.assessor_version, source: 'rules',
     })), 'component_slug,release_tag,source');
   }
-  // Repo metadata: UPDATE, not upsert (a partial upsert would trip NOT NULL columns on the insert path).
+  if (!client) { /* dry run */ } else for (const r of newReleases) state.releaseHashes[`${r.component_slug}@${r.tag}`] = hashOf(r);
+  // Repo metadata: UPDATE (not upsert, which would trip NOT NULL on insert), and only when it changed.
   if (client) {
-    for (const [key, m] of Object.entries(repoMeta)) for (const c of byRepo.get(key) ?? []) {
-      const { error } = await client.from('components').update({ repo_archived: m.archived, repo_pushed_at: m.pushed_at }).eq('slug', c.slug);
-      if (error) log.warn(`components meta ${c.slug}: ${error.message}`);
+    for (const [key, m] of Object.entries(repoMeta)) {
+      const sig = `${m.pushed_at}|${m.archived}`;
+      if (state.repoMeta[key] === sig) continue;
+      let ok = true;
+      for (const c of byRepo.get(key) ?? []) {
+        const { error } = await client.from('components').update({ repo_archived: m.archived, repo_pushed_at: m.pushed_at }).eq('slug', c.slug);
+        if (error) { ok = false; log.warn(`components meta ${c.slug}: ${error.message}`); } else dbStats.rowsWritten += 1;
+      }
+      if (ok) state.repoMeta[key] = sig;
     }
   }
 
@@ -118,7 +135,7 @@ async function main() {
       await revalidate([...new Set(newReleases.map(r => r.component_slug))]);
     }
   }
-  log.info(`done in ${Math.round((Date.now() - started) / 1000)}s`);
+  log.info('usage', { durationS: Math.round((Date.now() - started) / 1000), github: { graphqlPoints: report.graphqlPoints, rest: report.restRequests, rest304: report.rest304 }, supabase: { ...dbStats } });
 }
 
 /**
