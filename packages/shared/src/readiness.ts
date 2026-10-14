@@ -14,8 +14,20 @@ export interface ComponentReadiness {
   detail: string;
 }
 
+/** Where the network stands in the current fork wave. */
+export type UpgradePhase = 'activated' | 'upcoming' | 'tba' | 'none';
+
+export function upgradePhase(u: Upgrade | null, now = new Date()): UpgradePhase {
+  if (!u) return 'none';
+  if (u.activation_time && new Date(u.activation_time) <= now) return 'activated';
+  if (u.status === 'activated') return 'activated';
+  if (u.activation_time) return 'upcoming';
+  return 'tba';
+}
+
 export interface NetworkReadiness {
   network: Network;
+  phase: UpgradePhase;
   upgrade: Upgrade | null;
   activation_time: string | null;
   seconds_to_activation: number | null;
@@ -85,6 +97,6 @@ export function computeReadiness(catalog: Catalog, stack: Stack, releases: Relea
       behind: components.filter(c => c.state === 'behind').length,
       unknown: components.filter(c => c.state === 'unknown' || c.state === 'no-release').length,
     };
-    return { network, upgrade, activation_time: activation, seconds_to_activation: secs, components, summary };
+    return { network, phase: upgradePhase(upgrade, now), upgrade, activation_time: activation, seconds_to_activation: secs, components, summary };
   });
 }

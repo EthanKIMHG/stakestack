@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getCatalog, getTimeline } from '@/lib/catalog';
-import { Timeline } from '@/components/Timeline';
+import { ReleaseList } from '@/components/ReleaseList';
+import { Card, NetDot } from '@/components/ui';
 
 export const revalidate = 300;
 
@@ -9,24 +10,42 @@ export default async function ComponentPage({ params }: { params: Promise<{ slug
   const catalog = await getCatalog();
   const c = catalog.components.find(x => x.slug === slug);
   if (!c) notFound();
-  const rows = await getTimeline({ network: ['hoodi'], any: [slug] }, 50);
-  const requiredIn = catalog.upgrades.filter(u => u.required_versions?.[slug]).map(u => ({ id: u.id, network: u.network, v: u.required_versions[slug]! }));
+  const rows = await getTimeline({ network: ['hoodi'], any: [slug] }, 80);
+  const required = catalog.upgrades.filter(u => u.required_versions?.[slug]).sort((a, b) => (b.activation_time ?? '').localeCompare(a.activation_time ?? ''));
   return (
-    <div className="space-y-6">
-      <section className="card">
-        <h1 className="text-xl font-bold">{c.name} <span className="text-sm font-normal" style={{ color: 'var(--muted)' }}>{c.vendor}</span></h1>
-        <p className="mt-1 text-sm">{c.summary}</p>
-        <p className="mt-2 text-xs" style={{ color: 'var(--muted)' }}>
-          roles: {c.roles.join(', ')} · status: {c.status} · assessor: {c.assessor} · weight {c.priority_weight ?? 1} · <a href={`https://github.com/${c.repo}`} target="_blank" rel="noreferrer">{c.repo}</a>
-          {c.docs && <> · <a href={c.docs} target="_blank" rel="noreferrer">docs</a></>}
-        </p>
-        {c.notes && <p className="mt-2 text-xs">{c.notes}</p>}
-        {requiredIn.length > 0 && <p className="mt-2 text-xs">Required versions: {requiredIn.map(r => `${r.network} ${r.id}: ≥ ${r.v}`).join(' · ')}</p>}
+    <div style={{ display: 'grid', gap: 20 }}>
+      <section className="card card-pad">
+        <div style={{ display: 'flex', gap: 10, alignItems: 'baseline', flexWrap: 'wrap' }}>
+          <h1 className="page-title">{c.name}</h1>
+          <span className="muted">{c.vendor}</span>
+          {c.status !== 'active' && <span className="chip chip-warn">{c.status}</span>}
+        </div>
+        {c.summary && <p style={{ marginTop: 6 }}>{c.summary}</p>}
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 12 }}>
+          {c.roles.map(r => <span key={r} className="chip chip-accent">{r}</span>)}
+          {c.language && <span className="chip">{c.language}</span>}
+          {c.license && <span className="chip">{c.license}</span>}
+          {(c.networks ?? []).map(n => <span key={n} className="chip"><NetDot id={n} />{n}</span>)}
+        </div>
+        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 14, fontSize: 14 }}>
+          <a href={`https://github.com/${c.repo}`} target="_blank" rel="noreferrer">github.com/{c.repo} ↗</a>
+          {c.docs && <a href={c.docs} target="_blank" rel="noreferrer">Docs ↗</a>}
+          {c.homepage && <a href={c.homepage} target="_blank" rel="noreferrer">Website ↗</a>}
+          {c.docker_image && <span className="mono muted">{c.docker_image}</span>}
+        </div>
+        {c.notes && <p className="muted" style={{ marginTop: 12, fontSize: 13.5 }}>{c.notes}</p>}
       </section>
-      <section>
-        <h2 className="mb-3 text-lg font-semibold">Releases (incl. pre-releases)</h2>
-        <Timeline rows={rows} />
-      </section>
+      {required.length > 0 && (
+        <Card title="Required by network upgrades">
+          <table className="matrix">
+            <thead><tr><th>Upgrade</th><th>Network</th><th>Minimum</th></tr></thead>
+            <tbody>{required.map(u => <tr key={u.id}><td>{u.wave}</td><td><span style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}><NetDot id={u.network} />{u.network}</span></td><td className="v">≥ {u.required_versions[slug]}</td></tr>)}</tbody>
+          </table>
+        </Card>
+      )}
+      <Card title={<div><h2>Releases</h2><span className="faint" style={{ fontSize: 13 }}>Assessed by the <span className="mono">{c.assessor}</span> rules · weight {c.priority_weight ?? 1}</span></div>}>
+        <ReleaseList rows={rows} linkComponents={false} />
+      </Card>
     </div>
   );
 }

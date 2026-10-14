@@ -11,7 +11,9 @@
     "./composer": "./src/composer.ts",
     "./readiness": "./src/readiness.ts",
     "./versions": "./src/versions.ts",
-    "./types": "./src/types.ts"
+    "./types": "./src/types.ts",
+    "./topology": "./src/topology.ts",
+    "./presets": "./src/presets.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

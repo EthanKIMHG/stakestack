@@ -109,13 +109,16 @@ upgrades:
     required_versions: {}
 
   # ------------------------------------------------------------------ Fusaka --
+  # Source: https://blog.ethereum.org/2025/09/26/fusaka-testnet-announcement (Holesky slot 5,283,840)
+  # and https://blog.ethereum.org/2025/11/06/fusaka-mainnet-announcement (mainnet table).
   - id: fusaka-holesky
     wave: fusaka
     network: holesky
     status: activated
-    activation_time: "2025-10-01T00:00:00Z"
+    activation_epoch: 165120
+    activation_time: "2025-10-01T08:48:00Z"
     announcement: https://blog.ethereum.org/2025/09/26/fusaka-testnet-announcement
-    verified: false
+    verified: true
     required_versions: {}
   - id: fusaka-sepolia
     wave: fusaka
@@ -125,6 +128,7 @@ upgrades:
     announcement: https://blog.ethereum.org/2025/09/26/fusaka-testnet-announcement
     verified: false
     required_versions: {}
+    notes: "Date confirmed by press coverage; exact slot not transcribed."
   - id: fusaka-hoodi
     wave: fusaka
     network: hoodi
@@ -133,6 +137,7 @@ upgrades:
     announcement: https://blog.ethereum.org/2025/09/26/fusaka-testnet-announcement
     verified: false
     required_versions: {}
+    notes: "Date confirmed by press coverage; exact slot not transcribed."
   - id: fusaka-mainnet
     wave: fusaka
     network: mainnet
@@ -140,35 +145,58 @@ upgrades:
     activation_epoch: 411392
     activation_time: "2025-12-03T21:49:11Z"
     announcement: https://blog.ethereum.org/2025/11/06/fusaka-mainnet-announcement
-    verified: false
-    # Example of the shape. Keys are component slugs; values are the minimum
-    # stable version from the announcement. Fill from the EF table.
-    required_versions: {}
-    # required_versions:
-    #   geth: "1.16.6"
-    #   lighthouse: "8.0.0"
+    verified: true
+    required_versions:
+      grandine: "2.0.0"
+      lighthouse: "8.0.1"
+      lodestar: "1.36.0"
+      nimbus-eth2: "25.11.1"
+      prysm: "7.0.0"
+      teku: "25.11.1"
+      besu: "25.11.0"
+      erigon: "3.3.0"
+      caplin: "3.3.0"
+      geth: "1.16.7"
+      nethermind: "1.35.3"
+      reth: "1.9.3"
 
   # ------------------------------------------------------------- Glamsterdam --
-  # Rollout in progress as of 2026-10. Sepolia first, then Hoodi, then Mainnet.
+  # Source: https://blog.ethereum.org/2026/09/17/glamsterdam-testnet-announcement
+  # Rollout: Sepolia (activated) -> Hoodi (tentative) -> Mainnet (TBA).
   - id: glamsterdam-sepolia
     wave: glamsterdam
     network: sepolia
-    status: scheduled          # draft | scheduled | activated | cancelled
-    activation_epoch: null
-    activation_time: null
-    announcement: null
-    verified: false
-    required_versions: {}
-    notes: "Set activation + versions from the EF testnet announcement when published."
+    status: activated
+    activation_epoch: 353024
+    activation_time: "2026-10-06T13:53:36Z"
+    announcement: https://blog.ethereum.org/2026/09/17/glamsterdam-testnet-announcement
+    verified: true
+    required_versions:
+      grandine: "3.0.0-rc.0"
+      lighthouse: "8.3.0-rc.0"
+      lodestar: "1.49.0"
+      nimbus-eth2: "26.10.0"
+      prysm: "7.2.1"
+      teku: "26.9.1"
+      besu: "26.9.0"
+      ethrex: "29.0.1"
+      erigon: "3.7.1"
+      caplin: "3.7.1"
+      geth: "1.17.7"
+      nethermind: "2.1.0"
+      reth: "2.7.0"
+    notes: "Prysm 7.2.0 and Teku 26.9.1 default to a 60M gas limit after activation; Teku needs --validators-builder-registration-default-gas-limit=200000000 for 200M."
   - id: glamsterdam-hoodi
     wave: glamsterdam
     network: hoodi
-    status: planned
+    status: scheduled
+    tentative: true
     activation_epoch: null
-    activation_time: null
-    announcement: null
+    activation_time: "2026-10-27T00:00:00Z"
+    announcement: https://blog.ethereum.org/2026/09/17/glamsterdam-testnet-announcement
     verified: false
     required_versions: {}
+    notes: "Tentative date from All Core Devs notes. The EF announcement still lists the Hoodi epoch as TBD; update epoch, time and versions when published."
   - id: glamsterdam-mainnet
     wave: glamsterdam
     network: mainnet
@@ -178,3 +206,4 @@ upgrades:
     announcement: null
     verified: false
     required_versions: {}
+    notes: "No date. Roadmap target is Q4 2026, unconfirmed."

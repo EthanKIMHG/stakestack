@@ -1,26 +1,27 @@
 import type { Metadata } from 'next';
+import { NavLinks } from '@/components/NavLinks';
 import './globals.css';
 
 export const metadata: Metadata = {
   title: 'stakestack',
-  description: 'Compose an Ethereum staking stack and track every release that matters, per network.',
+  description: 'Compose an Ethereum staking stack and track every release and fork that matters, per network.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className="min-h-screen">
-        <header className="border-b" style={{ borderColor: 'var(--line)' }}>
-          <nav className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3 text-sm">
-            <a href="/" className="font-bold tracking-tight" style={{ color: 'var(--fg)' }}>stakestack</a>
-            <a href="/build">Build a stack</a>
-            <a href="/upgrades">Upgrades</a>
-            <a href={process.env.NEXT_PUBLIC_GITHUB_REPO_URL ?? '#'} className="ml-auto" target="_blank" rel="noreferrer">GitHub</a>
+        <header className="site-header">
+          <nav className="container">
+            <a href="/" className="brand"><span className="brand-mark">S</span>stakestack</a>
+            <NavLinks />
+            <a href={process.env.NEXT_PUBLIC_GITHUB_REPO_URL ?? 'https://github.com/kimhg2/stakestack'} className="nav-link nav-github" style={{ marginLeft: "auto" }} target="_blank" rel="noreferrer">GitHub ↗</a>
           </nav>
         </header>
-        <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
-        <footer className="mx-auto max-w-6xl px-4 py-8 text-xs" style={{ color: 'var(--muted)' }}>
-          Assessments are rule-based and show their evidence. Always read the release notes before upgrading production validators.
+        <main className="container" style={{ paddingTop: 24, paddingBottom: 48 }}>{children}</main>
+        <footer className="container faint" style={{ fontSize: 12.5, paddingBottom: 32 }}>
+          Severity ratings are rule-based and always show their evidence. Read the release notes before upgrading production validators.
+          Fork dates come from Ethereum Foundation announcements; tentative dates are marked.
         </footer>
       </body>
     </html>

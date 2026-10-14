@@ -5,6 +5,8 @@ export function tagToVersion(tag: string): string | null {
   const cleaned = tag.trim()
     .replace(/^(release[-/]|rel[-/]|version[-/])/i, '')
     .replace(/^v(?=\d)/i, '');
+  // Only tags that start with a number are versions; "zisk-guest-r8" or "tests-bogota@v1" are other artifacts.
+  if (!/^\d/.test(cleaned)) return null;
   const coerced = semver.valid(cleaned) ?? semver.valid(semver.coerce(cleaned, { includePrerelease: true }));
   return coerced;
 }

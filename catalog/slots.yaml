@@ -34,7 +34,9 @@ slots:
 
   - id: dvt
     label: Distributed validator (DVT)
+    description: Split one validator across a cluster of nodes. Each node can run a different EL/CL/VC for client diversity.
     role: dvt
+    include_tag: dvt-middleware
     cardinality: one
     required: false
     order: 40
@@ -42,6 +44,7 @@ slots:
   - id: dvt-extras
     label: DVT companions
     role: dvt
+    exclude_tag: dvt-middleware
     cardinality: many
     required: false
     hidden_by_default: true
@@ -111,6 +114,8 @@ rules:
     description: Charon sits between the beacon node and the VC. It needs a Charon-compatible VC and optionally Web3Signer/Dirk.
     when: { component: charon }
     then:
+      cluster: { default_nodes: 4, roles: [execution, consensus, validator] }
+      allow_many: [execution, consensus, validator]
       open_slots: [dvt-extras, remote-signer]
       restrict:
         - { slot: validator, to_supporting: charon }
@@ -129,6 +134,8 @@ rules:
     description: The SSV node performs validator duties itself; a separate VC is not run.
     when: { any_of: [ssv-node, anchor] }
     then:
+      cluster: { default_nodes: 1, roles: [execution, consensus] }
+      allow_many: [execution, consensus]
       hide_slots: [validator, remote-signer]
       open_slots: [dvt-extras]
       recommend: [ssv-dkg]
@@ -197,21 +204,3 @@ rules:
     when: { component: dappnode }
     then:
       warn: "DAppNode ships its own packaged versions; the upstream release date and the DAppNode package date differ. stakestack tracks upstream."
-
-  # ------------------------------------------------------------- Networks --
-  - id: hoodi-testnet
-    when: { network: hoodi }
-    then:
-      warn: "Hoodi activates forks about 2-4 weeks before mainnet. Testnet-ready releases are often -rc or pre-release tags; stakestack includes pre-releases in the Hoodi timeline."
-
-  - id: sepolia-testnet
-    when: { network: sepolia }
-    then:
-      warn: "Sepolia is the first network in each wave. Its required versions are usually pre-releases; do not reuse them for mainnet."
-
-  - id: mainnet-only
-    description: Running mainnet without any testnet means forks are never rehearsed.
-    when: { network: mainnet }
-    then:
-      recommend: []
-      warn: "Add hoodi to this stack to rehearse the next fork with the same software before mainnet activation."

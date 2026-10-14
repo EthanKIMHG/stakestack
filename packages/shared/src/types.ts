@@ -49,12 +49,17 @@ export interface Slot {
   required: boolean;
   hidden_by_default?: boolean;
   order?: number;
+  include_tag?: string;
+  exclude_tag?: string;
 }
 
 export interface RuleWhen { component?: string; any_of?: string[]; slot_filled?: string; network?: string }
 export interface RuleRestrict { slot: string; to?: string[]; to_supporting?: keyof ComponentSupports }
+export type ClusterRole = 'execution' | 'consensus' | 'validator';
+export interface ClusterSpec { default_nodes?: number; roles: ClusterRole[] }
 export interface RuleThen {
   open_slots?: string[]; hide_slots?: string[]; require_slots?: string[];
+  allow_many?: string[]; cluster?: ClusterSpec;
   restrict?: RuleRestrict[]; recommend?: string[]; require?: string[]; conflict?: string[]; warn?: string;
 }
 export interface Rule { id: string; description?: string; when: RuleWhen; then: RuleThen }
@@ -70,7 +75,7 @@ export type UpgradeStatus = 'draft' | 'planned' | 'scheduled' | 'activated' | 'c
 export interface Upgrade {
   id: string; wave: string; network: string; status: UpgradeStatus;
   activation_epoch?: number | null; activation_time?: string | null; announcement?: string | null;
-  verified?: boolean; required_versions: Record<string, string>; notes?: string;
+  verified?: boolean; tentative?: boolean; required_versions: Record<string, string>; notes?: string;
 }
 export interface NetworksFile { networks: Network[]; rollout_sequence: string[]; waves: Wave[]; upgrades: Upgrade[] }
 
@@ -126,8 +131,13 @@ export interface StackSelection {
   // slot id -> component slug(s). `network` holds network ids.
   [slotId: string]: string[];
 }
+/** One machine in a DVT cluster. Each node may run different clients. */
+export interface ClusterNode { label?: string; execution?: string; consensus?: string; validator?: string }
+export interface Topology { nodes: ClusterNode[]; threshold?: number }
+
 export interface Stack {
   id?: string; slug?: string; name: string; selection: StackSelection;
+  topology?: Topology | null;
   running_versions?: Record<string, string>;   // component slug -> version the operator runs now (optional)
   created_at?: string; owner_id?: string | null;
 }

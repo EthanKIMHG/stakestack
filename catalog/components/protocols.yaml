@@ -159,4 +159,4 @@
   status: beta
   assessor: generic
   priority_weight: 0.7
-  tags: [diva, dvt]
+  tags: [dvt-middleware, diva, dvt]

@@ -15,7 +15,7 @@
   status: active
   assessor: charon-notes
   priority_weight: 1.5
-  tags: [dvt, obol]
+  tags: [dvt-middleware, dvt, obol]
   notes: Charon enforces a compatibility matrix with CL and VC versions; breaking changes usually require a cluster-wide coordinated upgrade.
 
 - slug: charon-distributed-validator-node
@@ -80,7 +80,7 @@
   assessor: generic
   supports: { mev_boost: true }
   priority_weight: 1.5
-  tags: [dvt, ssv]
+  tags: [dvt-middleware, dvt, ssv]
 
 - slug: anchor
   name: Anchor
@@ -96,7 +96,7 @@
   status: beta
   assessor: lighthouse-table
   priority_weight: 1.3
-  tags: [dvt, ssv, client-diversity]
+  tags: [dvt-middleware, dvt, ssv, client-diversity]
 
 - slug: ssv-dkg
   name: SSV DKG

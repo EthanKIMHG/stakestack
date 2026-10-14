@@ -3,63 +3,202 @@
   "$id": "https://stakestack.dev/schema/slots.schema.json",
   "type": "object",
   "additionalProperties": false,
-  "required": ["slots", "rules"],
+  "required": [
+    "slots",
+    "rules"
+  ],
   "properties": {
     "slots": {
       "type": "array",
       "items": {
-        "type": "object", "additionalProperties": false,
-        "required": ["id", "label", "role", "cardinality", "required"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "label",
+          "role",
+          "cardinality",
+          "required"
+        ],
         "properties": {
-          "id": { "type": "string" },
-          "label": { "type": "string" },
-          "description": { "type": "string" },
-          "role": { "type": "string" },
-          "cardinality": { "type": "string", "enum": ["one", "many"] },
-          "required": { "type": "boolean" },
-          "hidden_by_default": { "type": "boolean" },
-          "order": { "type": "integer" }
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "cardinality": {
+            "type": "string",
+            "enum": [
+              "one",
+              "many"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "hidden_by_default": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "integer"
+          },
+          "include_tag": {
+            "type": "string",
+            "description": "Only components carrying this tag are offered in the slot."
+          },
+          "exclude_tag": {
+            "type": "string",
+            "description": "Components carrying this tag are not offered in the slot."
+          }
         }
       }
     },
     "rules": {
       "type": "array",
       "items": {
-        "type": "object", "additionalProperties": false,
-        "required": ["id", "when", "then"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "when",
+          "then"
+        ],
         "properties": {
-          "id": { "type": "string" },
-          "description": { "type": "string" },
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
           "when": {
-            "type": "object", "additionalProperties": false,
+            "type": "object",
+            "additionalProperties": false,
             "properties": {
-              "component": { "type": "string" },
-              "any_of": { "type": "array", "items": { "type": "string" } },
-              "slot_filled": { "type": "string" },
-              "network": { "type": "string" }
+              "component": {
+                "type": "string"
+              },
+              "any_of": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "slot_filled": {
+                "type": "string"
+              },
+              "network": {
+                "type": "string"
+              }
             }
           },
           "then": {
-            "type": "object", "additionalProperties": false,
+            "type": "object",
+            "additionalProperties": false,
             "properties": {
-              "open_slots": { "type": "array", "items": { "type": "string" } },
-              "hide_slots": { "type": "array", "items": { "type": "string" } },
-              "require_slots": { "type": "array", "items": { "type": "string" } },
+              "open_slots": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "hide_slots": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "require_slots": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
               "restrict": {
                 "type": "array",
                 "items": {
-                  "type": "object", "additionalProperties": false, "required": ["slot"],
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "slot"
+                  ],
                   "properties": {
-                    "slot": { "type": "string" },
-                    "to": { "type": "array", "items": { "type": "string" } },
-                    "to_supporting": { "type": "string" }
+                    "slot": {
+                      "type": "string"
+                    },
+                    "to": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "to_supporting": {
+                      "type": "string"
+                    }
                   }
                 }
               },
-              "recommend": { "type": "array", "items": { "type": "string" } },
-              "require": { "type": "array", "items": { "type": "string" } },
-              "conflict": { "type": "array", "items": { "type": "string" } },
-              "warn": { "type": "string" }
+              "recommend": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "require": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "conflict": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "warn": {
+                "type": "string"
+              },
+              "allow_many": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Slots that accept multiple selections while this rule fires (e.g. one EL per DVT node)."
+              },
+              "cluster": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "roles"
+                ],
+                "properties": {
+                  "default_nodes": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 16
+                  },
+                  "roles": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "execution",
+                        "consensus",
+                        "validator"
+                      ]
+                    },
+                    "minItems": 1
+                  }
+                },
+                "description": "Enables the per-node cluster editor. roles = which client roles each node picks."
+              }
             }
           }
         }

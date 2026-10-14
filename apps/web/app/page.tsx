@@ -1,31 +1,45 @@
-import { getCatalog, getLatestAssessed } from '@/lib/catalog';
-import { Timeline } from '@/components/Timeline';
-import { isrSeconds } from '@/lib/supabase';
+import { getCatalog, getLatestAssessed, currentWave } from '@/lib/catalog';
+import { ReleaseList } from '@/components/ReleaseList';
+import { WaveProgress } from '@/components/WaveProgress';
+import { Card } from '@/components/ui';
 
 export const revalidate = 300;
 
 export default async function Home() {
-  const [catalog, rows] = await Promise.all([getCatalog(), getLatestAssessed(30)]);
-  const roles = new Map<string, number>();
-  for (const c of catalog.components) for (const r of c.roles) roles.set(r, (roles.get(r) ?? 0) + 1);
+  const [catalog, rows] = await Promise.all([getCatalog(), getLatestAssessed(40)]);
+  const wave = currentWave(catalog);
+  const critical = rows.filter(r => r.severity === 'critical').length;
+  const high = rows.filter(r => r.severity === 'high').length;
   return (
-    <div className="space-y-8">
-      <section className="card">
-        <h1 className="text-2xl font-bold">Every staking release that matters, for your exact stack.</h1>
-        <p className="mt-2 text-sm" style={{ color: 'var(--muted)' }}>
-          Pick EL, CL, VC, DVT (Charon, SSV), signers, MEV sidecars, protocol modules and monitoring. stakestack tracks {catalog.components.length} open-source components,
-          scores each release with evidence, and shows readiness per network in rollout order: sepolia, hoodi, mainnet.
-        </p>
-        <div className="mt-4 flex gap-3">
-          <a href="/build" className="rounded-md px-4 py-2 text-sm font-semibold" style={{ background: 'var(--accent)', color: '#052e16' }}>Build your stack</a>
-          <a href="/upgrades" className="rounded-md border px-4 py-2 text-sm" style={{ borderColor: 'var(--line)' }}>Fork timeline</a>
+    <div style={{ display: 'grid', gap: 20 }}>
+      <section className="card hero">
+        <div>
+          <h1>Know which staking releases matter for your exact stack.</h1>
+          <p>
+            Pick your execution, consensus and validator clients, DVT middleware, signers, MEV sidecars and protocol modules.
+            stakestack rates every release with evidence and shows fork readiness network by network, Sepolia to Hoodi to Mainnet.
+          </p>
+          <div style={{ display: 'flex', gap: 10, marginTop: 18, flexWrap: 'wrap' }}>
+            <a href="/build" className="btn btn-primary">Build your stack</a>
+            <a href="/upgrades" className="btn">See fork timeline</a>
+          </div>
         </div>
-        <p className="mt-3 text-xs" style={{ color: 'var(--muted)' }}>{[...roles.entries()].map(([r, n]) => `${r} ${n}`).join(' · ')} · ISR {isrSeconds}s</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+          <div className="stat"><b>{catalog.components.length}</b><span>components tracked</span></div>
+          <div className="stat"><b style={{ color: 'var(--sev-critical)' }}>{critical}</b><span>critical, recent</span></div>
+          <div className="stat"><b style={{ color: 'var(--sev-high)' }}>{high}</b><span>high, recent</span></div>
+        </div>
       </section>
-      <section>
-        <h2 className="mb-3 text-lg font-semibold">Recent releases rated recommended or higher</h2>
-        <Timeline rows={rows} />
-      </section>
+
+      {wave && (
+        <Card title={<div><h2>{wave.name} rollout</h2><span className="faint" style={{ fontSize: 13 }}>Current network upgrade</span></div>} actions={<a href="/upgrades" className="btn btn-sm">Details & versions</a>}>
+          <div className="card-pad"><WaveProgress catalog={catalog} wave={wave} /></div>
+        </Card>
+      )}
+
+      <Card title={<div><h2>Latest important releases</h2><span className="faint" style={{ fontSize: 13 }}>Stable releases of clients and operator software, newest first</span></div>} actions={<a href="/releases" className="btn btn-sm">All releases</a>}>
+        <ReleaseList rows={rows} showPrereleaseToggle={false} emptyText="No releases ingested yet. The ingester runs every 30 minutes." />
+      </Card>
     </div>
   );
 }

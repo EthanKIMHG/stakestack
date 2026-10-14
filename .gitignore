@@ -13,3 +13,4 @@ coverage/
 supabase/.temp/
 packages/ingest/.cache/
 apps/web/next-env.d.ts
+.claude/
