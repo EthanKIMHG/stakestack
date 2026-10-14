@@ -54,13 +54,12 @@ export async function getTimeline(selection: Stack['selection'], limit = 100): P
 export async function getLatestAssessed(limit = 30): Promise<TimelineRow[]> {
   const sb = supabase();
   if (!sb) return [];
-  const { data } = await sb.from('release_assessment_effective').select('component_slug, release_tag, severity, score, flags, networks, wave_id, evidence, releases!inner(name,url,is_prerelease,published_at), components!inner(name)')
-    .in('severity', ['critical', 'high', 'recommended']).order('created_at', { ascending: false }).limit(limit);
-  return ((data ?? []) as unknown as Array<Record<string, unknown>>).map(x => {
-    const rel = x.releases as { name: string | null; url: string; is_prerelease: boolean; published_at: string };
-    const comp = x.components as { name: string };
-    return { component_slug: x.component_slug as string, component_name: comp.name, tag: x.release_tag as string, name: rel.name, url: rel.url, is_prerelease: rel.is_prerelease, published_at: rel.published_at, severity: x.severity as string, score: x.score as number, flags: x.flags as string[], networks: x.networks as string[], wave_id: x.wave_id as string | null, evidence: x.evidence as TimelineRow['evidence'], weighted_score: x.score as number };
-  });
+  // Stable releases of software operators actually run (priority_weight >= 1), rated recommended or higher.
+  const { data, error } = await sb.from('latest_assessed').select('*')
+    .in('severity', ['critical', 'high', 'recommended']).eq('is_prerelease', false).gte('priority_weight', 1)
+    .order('published_at', { ascending: false }).limit(limit);
+  if (error) { console.error('latest_assessed', error.message); return []; }
+  return (data ?? []) as TimelineRow[];
 }
 
 export async function getStack(slug: string): Promise<Stack | null> {

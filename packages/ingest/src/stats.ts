@@ -5,7 +5,7 @@ import pg from 'pg';
 async function main() {
   const c = new pg.Client({ connectionString: process.env.SUPABASE_DB_URL, ssl: { rejectUnauthorized: false } });
   await c.connect();
-  const q = async <T = Record<string, unknown>>(sql: string) => (await c.query<T>(sql)).rows;
+  const q = async <T extends pg.QueryResultRow = Record<string, unknown>>(sql: string) => (await c.query<T>(sql)).rows;
   try {
     console.log('releases:', (await q('select count(*)::int n, count(distinct component_slug)::int comps, sum((is_prerelease)::int)::int pre from releases'))[0]);
     console.log('assessments by severity:', await q('select severity, count(*)::int n from release_assessment_effective group by 1 order by 2 desc'));
