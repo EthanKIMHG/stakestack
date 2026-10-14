@@ -115,10 +115,24 @@ async function main() {
     });
     if (error) log.warn(`ingest_runs insert: ${error.message}`);
     if (newReleases.length && config.revalidateUrl && config.revalidateSecret) {
-      await fetch(config.revalidateUrl, { method: 'POST', headers: { 'content-type': 'application/json', 'x-revalidate-secret': config.revalidateSecret }, body: JSON.stringify({ components: [...new Set(newReleases.map(r => r.component_slug))] }) }).catch(e => log.warn(`revalidate: ${(e as Error).message}`));
+      await revalidate([...new Set(newReleases.map(r => r.component_slug))]);
     }
   }
   log.info(`done in ${Math.round((Date.now() - started) / 1000)}s`);
+}
+
+/**
+ * Only send the secret to a host that identifies itself as stakestack. A typo or a
+ * placeholder in NEXT_PUBLIC_SITE_URL would otherwise hand the secret to a stranger.
+ */
+async function revalidate(components: string[]) {
+  try {
+    const probe = await fetch(config.revalidateUrl, { method: 'GET', redirect: 'error', signal: AbortSignal.timeout(10_000) });
+    const id = probe.ok ? ((await probe.json().catch(() => ({}))) as { app?: string }).app : undefined;
+    if (id !== 'stakestack') { log.warn(`revalidate skipped: ${new URL(config.revalidateUrl).host} is not a stakestack deployment (check NEXT_PUBLIC_SITE_URL)`); return; }
+    const res = await fetch(config.revalidateUrl, { method: 'POST', redirect: 'error', headers: { 'content-type': 'application/json', 'x-revalidate-secret': config.revalidateSecret }, body: JSON.stringify({ components }) });
+    log.info(`revalidate ${new URL(config.revalidateUrl).host}: HTTP ${res.status}`);
+  } catch (e) { log.warn(`revalidate: ${(e as Error).message}`); }
 }
 
 function maxDate(repo: GqlRepo, prev: string | null): string | null {

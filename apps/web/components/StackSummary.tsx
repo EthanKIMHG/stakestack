@@ -13,7 +13,10 @@ export function StackSummary({ catalog, result, topology }: { catalog: Catalog; 
   return (
     <aside className="builder-aside">
       <div className="card">
-        <div className="card-head"><h2>Composition</h2>{issues.length === 0 ? <span className="chip chip-ok">Valid</span> : <span className="chip chip-warn">{issues.length} note{issues.length > 1 ? 's' : ''}</span>}</div>
+        <div className="card-head"><h2>Composition</h2>{(() => {
+          const e = issues.filter(d => d.level === 'error').length; const w = issues.length - e;
+          return e ? <span className="chip chip-err">{e} to fix</span> : w ? <span className="chip chip-warn">{w} warning{w > 1 ? 's' : ''}</span> : <span className="chip chip-ok">Valid</span>;
+        })()}</div>
         <div className="panel-section">
           <div className="panel-label">Networks</div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>{result.networks.map(n => <span key={n} className="sel-chip static"><NetDot id={n} />&nbsp;{catalog.networks.find(x => x.id === n)?.name ?? n}</span>)}</div>

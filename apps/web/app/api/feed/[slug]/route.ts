@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { siteUrl } from '@/lib/site';
 import { getStack, getTimeline } from '@/lib/catalog';
 
 export const revalidate = 300;
@@ -11,7 +12,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
   const stack = await getStack(slug);
   if (!stack) return NextResponse.json({ error: 'not found' }, { status: 404 });
   const rows = await getTimeline(stack.selection, 50);
-  const site = process.env.NEXT_PUBLIC_SITE_URL ?? '';
+  const site = siteUrl();
   if (ext === 'json') return NextResponse.json({ stack: { name: stack.name, slug, selection: stack.selection }, items: rows });
   const items = rows.map(r => `<item>
   <title>[${r.severity.toUpperCase()}] ${esc(r.component_name)} ${esc(r.tag)}${r.is_prerelease ? ' (pre-release)' : ''}</title>

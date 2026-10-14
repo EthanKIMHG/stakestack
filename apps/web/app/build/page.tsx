@@ -4,6 +4,12 @@ import { supabase } from '@/lib/supabase';
 
 export const revalidate = 300;
 
+export const metadata = {
+  title: 'Build your Ethereum staking stack',
+  description: 'Pick EL, CL and VC clients, or design an Obol Charon / SSV DVT cluster with a different client per node. Get client-diversity checks and live hard fork readiness for Hoodi and Mainnet.',
+  alternates: { canonical: '/build' },
+};
+
 export default async function BuildPage() {
   const catalog = await getCatalog();
   const canSave = !!supabase() && process.env.NEXT_PUBLIC_ENABLE_ANON_STACKS !== 'false';

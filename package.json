@@ -2,7 +2,34 @@
   "name": "stakestack",
   "private": true,
   "version": "0.1.0",
-  "description": "Open-source Ethereum staking stack composer and release intelligence tracker",
+  "description": "Open-source Ethereum staking stack builder and client release tracker: severity-rated releases and hard fork readiness for Sepolia, Hoodi and Mainnet, with DVT cluster support.",
+  "homepage": "https://stakestack-eth.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimhg2/stakestack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kimhg2/stakestack/issues"
+  },
+  "keywords": [
+    "ethereum",
+    "staking",
+    "validator",
+    "node-operator",
+    "consensus-client",
+    "execution-client",
+    "client-diversity",
+    "hard-fork",
+    "release-tracker",
+    "dvt",
+    "obol",
+    "charon",
+    "ssv",
+    "mev-boost",
+    "web3signer",
+    "glamsterdam",
+    "hoodi"
+  ],
   "license": "MIT",
   "packageManager": "pnpm@10.33.0",
   "engines": {

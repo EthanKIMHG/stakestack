@@ -2,6 +2,8 @@ import { getCatalog, getLatestAssessed, currentWave } from '@/lib/catalog';
 import { ReleaseList } from '@/components/ReleaseList';
 import { WaveProgress } from '@/components/WaveProgress';
 import { Card } from '@/components/ui';
+import { JsonLd } from '@/components/JsonLd';
+import { REPO_URL, SITE_DESCRIPTION, SITE_NAME, siteUrl } from '@/lib/site';
 
 export const revalidate = 300;
 
@@ -12,6 +14,15 @@ export default async function Home() {
   const high = rows.filter(r => r.severity === 'high').length;
   return (
     <div style={{ display: 'grid', gap: 20 }}>
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@graph': [
+          { '@type': 'WebSite', name: SITE_NAME, url: siteUrl(), description: SITE_DESCRIPTION },
+          { '@type': 'SoftwareApplication', name: SITE_NAME, applicationCategory: 'DeveloperApplication', operatingSystem: 'Web', url: siteUrl(),
+            description: SITE_DESCRIPTION, isAccessibleForFree: true, license: 'https://opensource.org/licenses/MIT', codeRepository: REPO_URL,
+            offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+        ],
+      }} />
       <section className="card hero">
         <div>
           <h1>Know which staking releases matter for your exact stack.</h1>

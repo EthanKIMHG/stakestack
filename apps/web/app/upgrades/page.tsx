@@ -6,6 +6,12 @@ import type { Catalog, Wave } from '@stakestack/shared/types';
 
 export const revalidate = 300;
 
+export const metadata = {
+  title: 'Ethereum hard fork timeline and required client versions',
+  description: 'Glamsterdam, Fusaka and Pectra rollouts across Sepolia, Hoodi and Mainnet: activation epochs, dates and the minimum Geth, Nethermind, Besu, Reth, Erigon, Lighthouse, Prysm, Teku, Nimbus, Lodestar and Grandine versions.',
+  alternates: { canonical: '/upgrades' },
+};
+
 export default async function UpgradesPage() {
   const catalog = await getCatalog();
   const current = currentWave(catalog);

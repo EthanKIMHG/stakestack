@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 
+/** Identity probe: the ingester checks this before sending its secret, so a wrong NEXT_PUBLIC_SITE_URL cannot leak it. */
+export function GET() {
+  return NextResponse.json({ app: 'stakestack' });
+}
+
 /** Called by the ingester after new rows land. Busts ISR for affected pages. */
 export async function POST(req: Request) {
   const secret = process.env.REVALIDATE_SECRET;

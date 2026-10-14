@@ -10,6 +10,11 @@ import { Card } from '@/components/ui';
 
 export const revalidate = 300;
 
+export const metadata = {
+  title: 'Staking stack',
+  robots: { index: false, follow: true },
+};
+
 export default async function StackPage({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ sel?: string; topo?: string }> }) {
   const { slug } = await params;
   const sp = await searchParams;

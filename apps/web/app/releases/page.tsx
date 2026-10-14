@@ -4,6 +4,12 @@ import { Card } from '@/components/ui';
 
 export const revalidate = 300;
 
+export const metadata = {
+  title: 'Ethereum client releases rated by severity',
+  description: 'Latest releases of Ethereum execution, consensus and validator clients, DVT, MEV and staking tools, rated critical, high or recommended with the evidence from each release note.',
+  alternates: { canonical: '/releases' },
+};
+
 export default async function ReleasesPage() {
   const rows = await getLatestAssessedAll(250);
   return (
