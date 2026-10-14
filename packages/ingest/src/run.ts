@@ -61,7 +61,9 @@ async function main() {
   // assess + write
   const assessments = newReleases.map(rel => {
     const comp = cat.components.find(c => c.slug === rel.component_slug)!;
-    return assessRelease(rel, comp.assessor);
+    // Specs and network configs are not software an operator runs: never rate them critical.
+    const cap = comp.roles.some(r => r === 'spec' || r === 'network-config') ? 'high' : undefined;
+    return assessRelease(rel, comp.assessor, { capSeverity: cap });
   });
   log.info(`new/changed releases: ${newReleases.length}`);
   for (const a of assessments.filter(a => a.severity === 'critical' || a.severity === 'high')) log.info(`  ${a.severity.toUpperCase()} ${a.component_slug} ${a.release_tag} [${a.flags.join(',')}]`);
@@ -75,7 +77,13 @@ async function main() {
       component_slug: a.component_slug, release_tag: a.release_tag, severity: a.severity, score: a.score, flags: a.flags, networks: a.networks ?? [], wave_id: a.wave ?? null,
       evidence: a.evidence, assessor: a.assessor, assessor_version: a.assessor_version, source: 'rules',
     })), 'component_slug,release_tag,source');
-    await upsert(client, 'components', Object.entries(repoMeta).flatMap(([key, m]) => (byRepo.get(key) ?? []).map(c => ({ slug: c.slug, repo_archived: m.archived, repo_pushed_at: m.pushed_at }))), 'slug');
+  }
+  // Repo metadata: UPDATE, not upsert (a partial upsert would trip NOT NULL columns on the insert path).
+  if (client) {
+    for (const [key, m] of Object.entries(repoMeta)) for (const c of byRepo.get(key) ?? []) {
+      const { error } = await client.from('components').update({ repo_archived: m.archived, repo_pushed_at: m.pushed_at }).eq('slug', c.slug);
+      if (error) log.warn(`components meta ${c.slug}: ${error.message}`);
+    }
   }
 
   // advisories (REST + ETag)
@@ -97,7 +105,7 @@ async function main() {
     if (e instanceof BudgetExceeded) log.warn(`stopping advisories early: ${e.message}`); else throw e;
   }
 
-  saveState(state);
+  if (!config.dryRun) saveState(state); else log.info('dry run: cache state not saved');
   const report = budget.report();
   if (client) {
     const { error } = await client.from('ingest_runs').insert({

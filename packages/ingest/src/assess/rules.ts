@@ -145,7 +145,9 @@ const SPECIFIC: Record<Exclude<Assessor, 'generic'>, (t: string) => { score: num
 };
 
 /* -------------------------------------------------------------- entrypoint -- */
-export function assessRelease(release: Release, assessor: Assessor): Assessment {
+const SEVERITY_RANK: Record<Severity, number> = { critical: 4, high: 3, recommended: 2, optional: 1, unassessed: 0 };
+
+export function assessRelease(release: Release, assessor: Assessor, opts: { capSeverity?: Severity } = {}): Assessment {
   const text = `${release.name ?? ''}\n${release.body ?? ''}`;
   const flags = new Set<Flag>();
   const evidence: Evidence[] = [];
@@ -171,10 +173,12 @@ export function assessRelease(release: Release, assessor: Assessor): Assessment 
   if (wave && !flags.has('hardfork')) { flags.add('hardfork'); score += 15; evidence.push({ kind: 'keyword', text: `mentions fork wave "${wave}"`, weight: 15 }); }
 
   score = Math.max(0, Math.min(100, score));
+  let severity = toSeverity(score, flags);
+  if (opts.capSeverity && SEVERITY_RANK[severity] > SEVERITY_RANK[opts.capSeverity]) severity = opts.capSeverity;
   return {
     release_tag: release.tag,
     component_slug: release.component_slug,
-    severity: toSeverity(score, flags),
+    severity,
     score,
     flags: [...flags],
     networks,

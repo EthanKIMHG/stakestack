@@ -1,4 +1,5 @@
-import 'dotenv/config';
+import { repoRoot } from './env';
+import { resolve } from 'node:path';
 
 function num(name: string, def: number): number { const v = process.env[name]; return v ? Number(v) : def; }
 function bool(name: string, def: boolean): boolean { const v = process.env[name]; return v ? v === 'true' || v === '1' : def; }
@@ -19,7 +20,7 @@ export const config = {
   reposPerBatch: num('INGEST_REPOS_PER_GRAPHQL_BATCH', 40),
   tagsPerRepo: num('INGEST_TAGS_PER_REPO', 10),
   advisoriesIntervalHours: num('INGEST_ADVISORIES_INTERVAL_HOURS', 24),
-  cacheDir: process.env.INGEST_CACHE_DIR ?? './.cache',
+  cacheDir: resolve(repoRoot, process.env.INGEST_CACHE_DIR ?? 'packages/ingest/.cache'),
   dryRun: bool('INGEST_DRY_RUN', false) || process.argv.includes('--dry-run'),
   backfill: process.argv.includes('--backfill'),
   logLevel: (process.env.INGEST_LOG_LEVEL ?? 'info') as 'debug' | 'info' | 'warn' | 'error',

@@ -5,7 +5,9 @@
   "description": "Open-source Ethereum staking stack composer and release intelligence tracker",
   "license": "MIT",
   "packageManager": "pnpm@10.33.0",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "pnpm --filter @stakestack/web dev",
     "build": "pnpm -r build",
@@ -16,7 +18,8 @@
     "catalog:sync": "pnpm --filter @stakestack/ingest sync-catalog",
     "ingest": "pnpm --filter @stakestack/ingest ingest",
     "ingest:dry": "pnpm --filter @stakestack/ingest ingest -- --dry-run",
-    "db:migrate": "bash scripts/db-migrate.sh"
+    "db:migrate": "pnpm --filter @stakestack/ingest migrate",
+    "db:migrate:psql": "bash scripts/db-migrate.sh"
   },
   "devDependencies": {
     "typescript": "^5.6.3"
