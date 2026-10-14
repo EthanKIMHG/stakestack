@@ -24,6 +24,9 @@ permissions:
 jobs:
   ingest:
     runs-on: ubuntu-latest
+    # Same environment as the catalog sync job, so secrets stored as `production`
+    # environment secrets (not only repository secrets) are visible here too.
+    environment: production
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
@@ -49,7 +52,7 @@ jobs:
           [ "$HAS_SUPABASE_URL" = "true" ] || missing="$missing secret:NEXT_PUBLIC_SUPABASE_URL"
           [ "$HAS_SUPABASE_SECRET" = "true" ] || missing="$missing secret:SUPABASE_SECRET_KEY"
           if [ -n "$missing" ] && [ "${{ inputs.dry_run }}" != "true" ]; then
-            echo "::error::Missing required configuration:$missing (Settings > Secrets and variables > Actions)"; exit 1
+            echo "::error::Missing required configuration:$missing. Add them as repository secrets or as secrets of the 'production' environment (Settings > Secrets and variables > Actions, or Settings > Environments > production)."; exit 1
           fi
           if [ "$HAS_PAT" = "true" ]; then echo "GitHub token: STAKESTACK_GITHUB_TOKEN (personal access token)"; else echo "GitHub token: built-in github.token (repo-scoped, 1,000 req/h)"; fi
           [ "$HAS_REVALIDATE" = "true" ] || echo "::warning::REVALIDATE_SECRET not set; pages refresh on the 5-minute ISR window instead of immediately"
