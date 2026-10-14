@@ -207,13 +207,13 @@ The full annotated list is in [`.env.example`](.env.example). The required ones:
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | web | Supabase › API Keys › Publishable key (`sb_publishable_…`) |
 | `SUPABASE_SECRET_KEY` | ingest only | Supabase › API Keys › Secret key (`sb_secret_…`). Never put it in Vercel. |
 | `SUPABASE_DB_URL` | migrations | Supabase › Connect › Session pooler |
-| `GITHUB_TOKEN` | ingest | Fine-grained PAT, public repositories, **no permissions** |
+| `GITHUB_TOKEN` | ingest (local runs) | Fine-grained PAT, public repositories, **no permissions**. In Actions the built-in token is used unless you set `STAKESTACK_GITHUB_TOKEN`. |
 | `REVALIDATE_SECRET` | web, ingest | `openssl rand -hex 32` |
 | `NEXT_PUBLIC_SITE_URL` | web, ingest | Your deployment URL. The ingester only sends the secret to a host that identifies itself as stakestack. |
 
 ### 3. Deploy
 
-1. **GitHub:** add secrets `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `STAKESTACK_GITHUB_TOKEN`, `REVALIDATE_SECRET`, variable `NEXT_PUBLIC_SITE_URL`, and create a `production` environment.
+1. **GitHub:** add secrets `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `REVALIDATE_SECRET`, variable `NEXT_PUBLIC_SITE_URL`, and create a `production` environment. `STAKESTACK_GITHUB_TOKEN` is optional: without it the workflow uses the built-in `github.token`, which is plenty for ~2 GraphQL points per run.
 2. **Vercel:** import the repo with root directory `apps/web`; set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `REVALIDATE_SECRET`, `NEXT_PUBLIC_SITE_URL`.
 3. Push to `main`. The `catalog` workflow syncs the catalog, `ingest` runs every 30 minutes.
 

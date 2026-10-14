@@ -37,10 +37,14 @@ code (`packages/ingest/src/github/budget.ts`), not just documented.
 7. **Backfill is explicit.** First sight of a repo fetches 30 releases; after
    that 5. `--backfill` or `workflow_dispatch(backfill=true)` re-fetches 30.
 
-8. **Dedicated token, no scopes.** Use a fine-grained PAT with *Public
-   repositories* access and no permissions. Never use `github.token` from
-   Actions: it has a 1,000 req/h budget scoped to the workflow's repo and
-   cannot query other repositories' advisories reliably.
+8. **Token choice.** In GitHub Actions the workflow uses the secret
+   `STAKESTACK_GITHUB_TOKEN` when it exists, otherwise the built-in
+   `github.token`. The built-in token has its own repo-scoped budget
+   (1,000 requests/hour), which never competes with a personal token used by
+   other projects, and one run only costs ~2 GraphQL points. With the built-in
+   token the remaining-quota floors default to 100 instead of 1,000. For local
+   runs use a fine-grained PAT with *Public repositories* access and no
+   permissions.
 
 9. **Identify yourself.** `INGEST_USER_AGENT` must contain a URL. GitHub
    throttles anonymous-looking agents harder.

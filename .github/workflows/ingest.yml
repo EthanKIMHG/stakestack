@@ -37,17 +37,39 @@ jobs:
           path: packages/ingest/.cache
           key: ingest-state-${{ github.run_id }}
           restore-keys: ingest-state-
+      - name: check configuration
+        env:
+          HAS_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' }}
+          HAS_SUPABASE_SECRET: ${{ secrets.SUPABASE_SECRET_KEY != '' }}
+          HAS_PAT: ${{ secrets.STAKESTACK_GITHUB_TOKEN != '' }}
+          HAS_REVALIDATE: ${{ secrets.REVALIDATE_SECRET != '' }}
+          SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+        run: |
+          missing=""
+          [ "$HAS_SUPABASE_URL" = "true" ] || missing="$missing secret:NEXT_PUBLIC_SUPABASE_URL"
+          [ "$HAS_SUPABASE_SECRET" = "true" ] || missing="$missing secret:SUPABASE_SECRET_KEY"
+          if [ -n "$missing" ] && [ "${{ inputs.dry_run }}" != "true" ]; then
+            echo "::error::Missing required configuration:$missing (Settings > Secrets and variables > Actions)"; exit 1
+          fi
+          if [ "$HAS_PAT" = "true" ]; then echo "GitHub token: STAKESTACK_GITHUB_TOKEN (personal access token)"; else echo "GitHub token: built-in github.token (repo-scoped, 1,000 req/h)"; fi
+          [ "$HAS_REVALIDATE" = "true" ] || echo "::warning::REVALIDATE_SECRET not set; pages refresh on the 5-minute ISR window instead of immediately"
+          [ -n "$SITE_URL" ] || echo "::warning::Variable NEXT_PUBLIC_SITE_URL not set; cache revalidation is skipped"
+
       - name: ingest
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
-          GITHUB_TOKEN: ${{ secrets.STAKESTACK_GITHUB_TOKEN }}   # dedicated PAT; do NOT use github.token (60-point budget, repo-scoped)
+          # A dedicated PAT if configured, otherwise the workflow's own token. One run costs ~2 GraphQL
+          # points and the built-in token has its own repo-scoped budget, so it never competes with
+          # other projects' personal quota. See docs/GITHUB_API_SPEC.md.
+          GITHUB_TOKEN: ${{ secrets.STAKESTACK_GITHUB_TOKEN || github.token }}
           NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
           REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
           INGEST_GRAPHQL_BUDGET_POINTS_PER_RUN: ${{ vars.INGEST_GRAPHQL_BUDGET_POINTS_PER_RUN || 25 }}
           INGEST_REST_BUDGET_REQUESTS_PER_RUN: ${{ vars.INGEST_REST_BUDGET_REQUESTS_PER_RUN || 120 }}
-          INGEST_MIN_REMAINING_POINTS: ${{ vars.INGEST_MIN_REMAINING_POINTS || 1000 }}
-          INGEST_MIN_REMAINING_REST: ${{ vars.INGEST_MIN_REMAINING_REST || 1000 }}
+          # The built-in token has a 1,000/h budget, so the "leave this much for others" floor must be lower.
+          INGEST_MIN_REMAINING_POINTS: ${{ vars.INGEST_MIN_REMAINING_POINTS || (secrets.STAKESTACK_GITHUB_TOKEN && '1000' || '100') }}
+          INGEST_MIN_REMAINING_REST: ${{ vars.INGEST_MIN_REMAINING_REST || (secrets.STAKESTACK_GITHUB_TOKEN && '1000' || '100') }}
           INGEST_DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
           INGEST_USER_AGENT: stakestack-ingest/0.1 (+https://github.com/${{ github.repository }})
         run: pnpm ingest ${{ inputs.backfill && '-- --backfill' || '' }}
