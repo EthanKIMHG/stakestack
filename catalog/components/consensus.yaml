@@ -1,0 +1,176 @@
+# Consensus layer clients (beacon node) and validator clients.
+# CL clients with a built-in VC declare embeds: [validator].
+- slug: lighthouse
+  name: Lighthouse
+  vendor: Sigma Prime
+  summary: Rust consensus client with beacon node and validator client binaries.
+  roles: [consensus, validator]
+  embeds: [validator]
+  repo: sigp/lighthouse
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  homepage: https://lighthouse.sigmaprime.io
+  docs: https://lighthouse-book.sigmaprime.io
+  docker_image: sigp/lighthouse
+  language: Rust
+  license: Apache-2.0
+  networks: [mainnet, hoodi, sepolia, holesky, ephemery]
+  status: active
+  assessor: lighthouse-table
+  supports: { charon: true, web3signer: true, mev_boost: true, commit_boost: true, keymanager_api: true, doppelganger: true }
+  priority_weight: 1.5
+  tags: [cl, vc]
+
+- slug: prysm
+  name: Prysm
+  vendor: Offchain Labs
+  summary: Go consensus client; beacon-chain and validator binaries.
+  roles: [consensus, validator]
+  embeds: [validator]
+  repo: OffchainLabs/prysm
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  homepage: https://prysm.offchainlabs.com
+  docs: https://prysm.offchainlabs.com/docs
+  docker_image: gcr.io/offchainlabs/prysm/beacon-chain
+  language: Go
+  license: GPL-3.0
+  networks: [mainnet, hoodi, sepolia, holesky]
+  status: active
+  assessor: prysm-notes
+  supports: { charon: true, web3signer: true, mev_boost: true, keymanager_api: true, doppelganger: true }
+  priority_weight: 1.5
+  tags: [cl, vc]
+  notes: Repository moved from prysmaticlabs/prysm to OffchainLabs/prysm; old URLs redirect.
+
+- slug: teku
+  name: Teku
+  vendor: Consensys
+  summary: Java consensus client with combined or split BN/VC modes.
+  roles: [consensus, validator]
+  embeds: [validator]
+  repo: Consensys/teku
+  stable_tag_pattern: '^\d+\.\d+\.\d+$'
+  homepage: https://consensys.io/teku
+  docs: https://docs.teku.consensys.io
+  docker_image: consensys/teku
+  language: Java
+  license: Apache-2.0
+  networks: [mainnet, hoodi, sepolia, holesky, ephemery]
+  status: active
+  assessor: teku-notes
+  supports: { charon: true, web3signer: true, mev_boost: true, keymanager_api: true, doppelganger: true }
+  priority_weight: 1.5
+  tags: [cl, vc]
+
+- slug: nimbus-eth2
+  name: Nimbus
+  vendor: Status
+  summary: Nim consensus client optimised for low-resource hardware.
+  roles: [consensus, validator]
+  embeds: [validator]
+  repo: status-im/nimbus-eth2
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  homepage: https://nimbus.team
+  docs: https://nimbus.guide
+  docker_image: statusim/nimbus-eth2
+  language: Nim
+  license: MIT OR Apache-2.0
+  networks: [mainnet, hoodi, sepolia, holesky, ephemery]
+  status: active
+  assessor: nimbus-urgency
+  supports: { charon: true, web3signer: true, mev_boost: true, keymanager_api: true, doppelganger: true }
+  priority_weight: 1.5
+  tags: [cl, vc]
+
+- slug: lodestar
+  name: Lodestar
+  vendor: ChainSafe
+  summary: TypeScript consensus client; beacon node and validator.
+  roles: [consensus, validator]
+  embeds: [validator]
+  repo: ChainSafe/lodestar
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  homepage: https://lodestar.chainsafe.io
+  docs: https://chainsafe.github.io/lodestar
+  docker_image: chainsafe/lodestar
+  language: TypeScript
+  license: LGPL-3.0 OR Apache-2.0
+  networks: [mainnet, hoodi, sepolia, holesky, ephemery]
+  status: active
+  assessor: generic
+  supports: { charon: true, web3signer: true, mev_boost: true, keymanager_api: true, doppelganger: true }
+  priority_weight: 1.5
+  tags: [cl, vc]
+
+- slug: grandine
+  name: Grandine
+  vendor: Grandine
+  summary: Rust consensus client with high-performance validator handling.
+  roles: [consensus, validator]
+  embeds: [validator]
+  repo: grandinetech/grandine
+  stable_tag_pattern: '^\d+\.\d+\.\d+$'
+  homepage: https://grandine.io
+  docs: https://docs.grandine.io
+  docker_image: sifrai/grandine
+  language: Rust
+  license: GPL-3.0
+  networks: [mainnet, hoodi, sepolia, holesky]
+  status: active
+  assessor: generic
+  supports: { web3signer: true, mev_boost: true, keymanager_api: true }
+  priority_weight: 1.5
+  tags: [cl, vc, minority-client]
+
+- slug: caplin
+  name: Caplin (Erigon embedded CL)
+  vendor: Erigon Technologies
+  summary: Consensus client embedded in Erigon; releases follow Erigon.
+  roles: [consensus]
+  repo: erigontech/erigon
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://docs.erigon.tech
+  language: Go
+  license: LGPL-3.0
+  networks: [mainnet, hoodi, sepolia]
+  status: beta
+  assessor: generic
+  priority_weight: 1.2
+  tags: [cl, embedded]
+  notes: Same repository as erigon; releases are de-duplicated in the timeline.
+
+# ---------------------------------------------------- standalone validator --
+- slug: vouch
+  name: Vouch
+  vendor: Attestant
+  summary: Multi-beacon-node validator client, usually paired with Dirk for signing.
+  roles: [validator]
+  repo: attestantio/vouch
+  stable_tag_pattern: '^\d+\.\d+\.\d+$'
+  docs: https://github.com/attestantio/vouch/tree/master/docs
+  docker_image: attestant/vouch
+  language: Go
+  license: Apache-2.0
+  networks: [mainnet, hoodi, sepolia, holesky]
+  status: active
+  assessor: generic
+  supports: { charon: true, dirk: true, mev_boost: true }
+  priority_weight: 1.3
+  tags: [vc, multi-bn]
+
+- slug: vero
+  name: Vero
+  vendor: Serenita
+  summary: Multi-node validator client that attests only when a majority of beacon nodes agree.
+  roles: [validator]
+  repo: serenita-org/vero
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://github.com/serenita-org/vero/tree/master/docs
+  docker_image: ghcr.io/serenita-org/vero
+  language: Python
+  license: MIT
+  networks: [mainnet, hoodi, sepolia, holesky]
+  status: active
+  assessor: generic
+  supports: { web3signer: true, mev_boost: true, keymanager_api: true, doppelganger: true }
+  priority_weight: 1.3
+  tags: [vc, multi-bn, client-diversity]

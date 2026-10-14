@@ -1,0 +1,43 @@
+name: catalog
+
+on:
+  push:
+    branches: [main]
+    paths: ['catalog/**', 'packages/ingest/src/sync-catalog.ts']
+  pull_request:
+    paths: ['catalog/**']
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm catalog:validate
+      - name: check repos exist (changed files only, REST with ETag)
+        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ secrets.STAKESTACK_GITHUB_TOKEN }}
+        run: pnpm --filter @stakestack/ingest exec tsx src/check-repos.ts --changed "${{ github.event.pull_request.base.sha }}"
+
+  sync:
+    if: github.event_name == 'push'
+    needs: validate
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm catalog:sync
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}

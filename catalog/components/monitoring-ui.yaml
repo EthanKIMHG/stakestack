@@ -1,0 +1,190 @@
+# Monitoring, alerting, dashboards
+- slug: ethereum-metrics-exporter
+  name: Ethereum Metrics Exporter
+  vendor: ethPandaOps
+  summary: Prometheus exporter for EL and CL nodes (sync, peers, fork, disk).
+  roles: [monitoring]
+  repo: ethpandaops/ethereum-metrics-exporter
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docker_image: ethpandaops/ethereum-metrics-exporter
+  language: Go
+  license: GPL-3.0
+  status: active
+  assessor: generic
+  priority_weight: 0.7
+  tags: [prometheus]
+
+- slug: ethereum-validators-monitoring
+  name: Lido Ethereum Validators Monitoring
+  vendor: Lido
+  summary: Prometheus-based validator performance monitoring and alerting bot.
+  roles: [monitoring]
+  repo: lidofinance/ethereum-validators-monitoring
+  stable_tag_pattern: '^\d+\.\d+\.\d+$'
+  docker_image: lidofinance/ethereum-validators-monitoring
+  language: TypeScript
+  license: MIT
+  status: active
+  assessor: generic
+  priority_weight: 0.7
+  tags: [prometheus, performance]
+
+- slug: eth-validator-watcher
+  name: eth-validator-watcher
+  vendor: Kiln
+  summary: Watches a set of validators and exports missed duties / slashing signals.
+  roles: [monitoring]
+  repo: kilnfi/eth-validator-watcher
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docker_image: ghcr.io/kilnfi/eth-validator-watcher
+  language: Python
+  license: MIT
+  status: active
+  assessor: generic
+  priority_weight: 0.7
+  tags: [prometheus, duties]
+
+- slug: eth-duties
+  name: eth-duties
+  vendor: TobiWo
+  summary: CLI that prints upcoming duties so you can time maintenance windows.
+  roles: [monitoring]
+  repo: TobiWo/eth-duties
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  language: Python
+  license: MIT
+  status: active
+  assessor: generic
+  priority_weight: 0.5
+  tags: [duties, maintenance]
+
+- slug: ethduties
+  name: ETHDuties Tracker
+  vendor: shayanb
+  summary: Self-hosted duties tracker with Telegram and push notifications.
+  roles: [monitoring]
+  repo: shayanb/ethduties
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  language: Python
+  license: MIT
+  status: active
+  assessor: generic
+  priority_weight: 0.4
+  tags: [duties, telegram]
+
+- slug: beaconchain-explorer
+  name: beaconcha.in explorer
+  vendor: Bitfly
+  summary: Open-source explorer powering beaconcha.in, including its notification engine.
+  roles: [monitoring, ui]
+  repo: gobitfly/eth2-beaconchain-explorer
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  homepage: https://beaconcha.in
+  language: Go
+  license: GPL-3.0
+  status: active
+  assessor: generic
+  priority_weight: 0.5
+  tags: [explorer]
+
+- slug: dora
+  name: Dora
+  vendor: ethPandaOps
+  summary: Lightweight beacon-chain explorer, handy for private/testnet visibility.
+  roles: [ui]
+  repo: ethpandaops/dora
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docker_image: ethpandaops/dora
+  language: Go
+  license: GPL-3.0
+  status: active
+  assessor: generic
+  priority_weight: 0.5
+  tags: [explorer]
+
+- slug: checkpointz
+  name: Checkpointz
+  vendor: ethPandaOps
+  summary: Checkpoint-sync provider; run one to sync your own fleet from a trusted source.
+  roles: [infra]
+  repo: ethpandaops/checkpointz
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docker_image: ethpandaops/checkpointz
+  language: Go
+  license: GPL-3.0
+  status: active
+  assessor: generic
+  priority_weight: 0.6
+  tags: [checkpoint-sync]
+
+- slug: contributoor
+  name: Contributoor
+  vendor: ethPandaOps
+  summary: Opt-in beacon-node telemetry contributor (Xatu) for network research.
+  roles: [monitoring]
+  repo: ethpandaops/contributoor
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docker_image: ethpandaops/contributoor
+  language: Go
+  license: GPL-3.0
+  status: active
+  assessor: generic
+  priority_weight: 0.3
+  tags: [telemetry]
+
+- slug: siren
+  name: Siren
+  vendor: Sigma Prime
+  summary: Web UI for Lighthouse beacon node and validator client.
+  roles: [ui]
+  repo: sigp/siren
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docker_image: sigp/siren
+  language: TypeScript
+  license: Apache-2.0
+  status: active
+  assessor: lighthouse-table
+  priority_weight: 0.5
+  tags: [lighthouse, ui]
+
+- slug: prysm-web-ui
+  name: Prysm Web UI
+  vendor: Offchain Labs
+  summary: Web interface bundled with the Prysm validator.
+  roles: [ui]
+  repo: OffchainLabs/prysm-web-ui
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  language: TypeScript
+  license: GPL-3.0
+  status: maintenance
+  assessor: generic
+  priority_weight: 0.3
+  tags: [prysm, ui]
+
+- slug: grafana
+  name: Grafana
+  vendor: Grafana Labs
+  summary: Dashboards. Tracked because node managers pin specific major versions.
+  roles: [infra]
+  repo: grafana/grafana
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  language: TypeScript
+  license: AGPL-3.0
+  status: active
+  assessor: generic
+  priority_weight: 0.3
+  tags: [observability, generic]
+
+- slug: prometheus
+  name: Prometheus
+  vendor: Prometheus
+  summary: Metrics store used by nearly every staking monitoring setup.
+  roles: [infra]
+  repo: prometheus/prometheus
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  language: Go
+  license: Apache-2.0
+  status: active
+  assessor: generic
+  priority_weight: 0.3
+  tags: [observability, generic]

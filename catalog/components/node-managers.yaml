@@ -1,0 +1,127 @@
+# Node managers / orchestrators / installers
+- slug: eth-docker
+  name: Eth Docker
+  vendor: EthStaker
+  summary: Docker-compose based node orchestration supporting every major EL/CL/VC plus MEV-Boost and monitoring.
+  roles: [node-manager]
+  repo: eth-educators/eth-docker
+  stable_tag_pattern: '^v\d+\.\d+\.\d+(\.\d+)?$'
+  docs: https://ethdocker.com
+  language: Shell
+  license: Apache-2.0
+  networks: [mainnet, hoodi, sepolia, holesky, ephemery]
+  status: active
+  assessor: generic
+  priority_weight: 1.1
+  tags: [compose, orchestrator]
+  notes: Release notes state minimum client versions and whether a release is mandatory; the generic assessor picks up "mandatory"/"required".
+
+- slug: ethpillar
+  name: EthPillar
+  vendor: CoinCashew
+  summary: TUI installer and manager for systemd-based staking nodes.
+  roles: [node-manager]
+  repo: coincashew/EthPillar
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://www.coincashew.com/coins/overview-eth/ethpillar
+  language: Shell
+  license: GPL-3.0
+  networks: [mainnet, hoodi, holesky]
+  status: active
+  assessor: generic
+  priority_weight: 1
+  tags: [systemd, tui]
+
+- slug: stereum
+  name: Stereum
+  vendor: Stereum
+  summary: Desktop GUI that provisions and manages validator nodes over SSH.
+  roles: [node-manager]
+  repo: stereum-dev/ethereum-node
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  homepage: https://stereum.net
+  language: TypeScript
+  license: GPL-3.0
+  networks: [mainnet, hoodi, sepolia, holesky]
+  status: active
+  assessor: generic
+  priority_weight: 1
+  tags: [gui]
+
+- slug: dappnode
+  name: DAppNode (DAppManager)
+  vendor: DAppNode
+  summary: Package-based node OS; staking clients ship as DAppNode packages.
+  roles: [node-manager]
+  repo: dappnode/DNP_DAPPMANAGER
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  homepage: https://dappnode.com
+  docs: https://docs.dappnode.io
+  language: TypeScript
+  license: GPL-3.0
+  networks: [mainnet, hoodi, holesky]
+  status: active
+  assessor: generic
+  priority_weight: 1
+  tags: [packages, appliance]
+
+- slug: sedge
+  name: Sedge
+  vendor: Nethermind
+  summary: One-click docker-compose generator for EL/CL/VC combinations.
+  roles: [node-manager]
+  repo: NethermindEth/sedge
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://docs.sedge.nethermind.io
+  language: Go
+  license: Apache-2.0
+  networks: [mainnet, hoodi, sepolia, holesky]
+  status: active
+  assessor: generic
+  priority_weight: 1
+  tags: [compose, generator]
+
+- slug: nice-node
+  name: NiceNode
+  vendor: NiceNode
+  summary: Desktop app to run EL/CL nodes with a GUI.
+  roles: [node-manager, ui]
+  repo: NiceNode/nice-node
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  homepage: https://nicenode.xyz
+  language: TypeScript
+  license: MIT
+  networks: [mainnet, hoodi, sepolia]
+  status: active
+  assessor: generic
+  priority_weight: 0.8
+  tags: [gui, desktop]
+
+- slug: eth-docker-ansible
+  name: eth-docker-ansible
+  vendor: yorickdowne
+  summary: Ansible roles to deploy and update Eth Docker fleets.
+  roles: [node-manager, infra]
+  repo: yorickdowne/eth-docker-ansible
+  release_source: tags
+  language: Jinja
+  license: Apache-2.0
+  status: active
+  assessor: generic
+  priority_weight: 0.6
+  tags: [ansible, fleet]
+
+- slug: ethereum-on-arm
+  name: Ethereum on ARM
+  vendor: Ethereum on ARM
+  summary: Prebuilt ARM images and apt packages for staking on ARM64 boards.
+  roles: [node-manager, infra]
+  repo: diglos/ethereumonarm
+  release_source: tags
+  docs: https://ethereum-on-arm-documentation.readthedocs.io
+  language: Shell
+  license: GPL-3.0
+  status: active
+  assessor: generic
+  priority_weight: 0.6
+  tags: [arm, images]

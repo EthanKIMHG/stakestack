@@ -1,0 +1,24 @@
+{
+  "name": "stakestack",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Open-source Ethereum staking stack composer and release intelligence tracker",
+  "license": "MIT",
+  "packageManager": "pnpm@10.33.0",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "dev": "pnpm --filter @stakestack/web dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "catalog:validate": "pnpm --filter @stakestack/shared catalog:validate",
+    "catalog:sync": "pnpm --filter @stakestack/ingest sync-catalog",
+    "ingest": "pnpm --filter @stakestack/ingest ingest",
+    "ingest:dry": "pnpm --filter @stakestack/ingest ingest -- --dry-run",
+    "db:migrate": "bash scripts/db-migrate.sh"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

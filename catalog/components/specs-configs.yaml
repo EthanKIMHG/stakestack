@@ -1,0 +1,175 @@
+# Protocol specs, network configs and coordination repos (watch-only).
+# These do not go in a slot; they feed the fork-wave timeline and the
+# "what changed in the protocol" context on each upgrade page.
+- slug: consensus-specs
+  name: Consensus specs
+  vendor: Ethereum Foundation
+  summary: Beacon chain specifications. Tagged releases mark fork spec freezes (alpha/beta/rc).
+  roles: [spec]
+  repo: ethereum/consensus-specs
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  language: Python
+  license: CC0-1.0
+  status: active
+  assessor: generic
+  priority_weight: 0.8
+  tags: [spec, cl]
+
+- slug: execution-specs
+  name: Execution specs
+  vendor: Ethereum Foundation
+  summary: Execution layer specifications and upgrade tracking.
+  roles: [spec]
+  repo: ethereum/execution-specs
+  release_source: tags
+  language: Python
+  license: CC0-1.0
+  status: active
+  assessor: generic
+  priority_weight: 0.8
+  tags: [spec, el]
+
+- slug: execution-apis
+  name: Execution APIs (Engine API)
+  vendor: Ethereum Foundation
+  summary: Engine API and JSON-RPC specs; EL/CL compatibility changes land here first.
+  roles: [spec]
+  repo: ethereum/execution-apis
+  release_source: tags
+  language: JavaScript
+  license: CC0-1.0
+  status: active
+  assessor: generic
+  priority_weight: 0.6
+  tags: [spec, engine-api]
+
+- slug: beacon-apis
+  name: Beacon APIs
+  vendor: Ethereum Foundation
+  summary: Beacon node REST API spec used by VCs, Charon and monitoring.
+  roles: [spec]
+  repo: ethereum/beacon-APIs
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  language: JavaScript
+  license: CC0-1.0
+  status: active
+  assessor: generic
+  priority_weight: 0.6
+  tags: [spec, beacon-api]
+
+- slug: builder-specs
+  name: Builder specs
+  vendor: Ethereum Foundation
+  summary: Builder API spec implemented by MEV-Boost and Commit-Boost.
+  roles: [spec]
+  repo: ethereum/builder-specs
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  language: JavaScript
+  license: CC0-1.0
+  status: active
+  assessor: generic
+  priority_weight: 0.5
+  tags: [spec, mev]
+
+- slug: ethereum-pm
+  name: Ethereum PM (AllCoreDevs)
+  vendor: Ethereum Foundation
+  summary: Core dev call agendas; fork scheduling decisions appear here before announcements.
+  roles: [spec]
+  repo: ethereum/pm
+  release_source: tags
+  language: Markdown
+  license: MIT
+  status: active
+  assessor: generic
+  priority_weight: 0.4
+  tags: [coordination]
+
+- slug: eth-clients-mainnet
+  name: Mainnet network config
+  vendor: eth-clients
+  summary: Canonical mainnet genesis/config; fork epochs are committed here.
+  roles: [network-config]
+  repo: eth-clients/mainnet
+  release_source: tags
+  language: YAML
+  license: CC0-1.0
+  networks: [mainnet]
+  status: active
+  assessor: generic
+  priority_weight: 0.7
+  tags: [config]
+
+- slug: eth-clients-hoodi
+  name: Hoodi network config
+  vendor: eth-clients
+  summary: Hoodi testnet config; fork epochs for the rehearsal network.
+  roles: [network-config]
+  repo: eth-clients/hoodi
+  release_source: tags
+  language: YAML
+  license: CC0-1.0
+  networks: [hoodi]
+  status: active
+  assessor: generic
+  priority_weight: 0.7
+  tags: [config, testnet]
+
+- slug: eth-clients-sepolia
+  name: Sepolia network config
+  vendor: eth-clients
+  summary: Sepolia testnet config.
+  roles: [network-config]
+  repo: eth-clients/sepolia
+  release_source: tags
+  language: YAML
+  license: CC0-1.0
+  networks: [sepolia]
+  status: active
+  assessor: generic
+  priority_weight: 0.6
+  tags: [config, testnet]
+
+- slug: eth-clients-holesky
+  name: Holesky network config
+  vendor: eth-clients
+  summary: Holesky testnet config (sunset).
+  roles: [network-config]
+  repo: eth-clients/holesky
+  release_source: tags
+  language: YAML
+  license: CC0-1.0
+  networks: [holesky]
+  status: deprecated
+  assessor: generic
+  priority_weight: 0.2
+  tags: [config, testnet]
+
+- slug: ephemery-genesis
+  name: Ephemery genesis
+  vendor: Ephemery
+  summary: Ephemery testnet genesis generator; each reset is a tagged release.
+  roles: [network-config]
+  repo: ephemery-testnet/ephemery-genesis
+  release_source: tags
+  language: Shell
+  license: MIT
+  networks: [ephemery]
+  status: active
+  assessor: generic
+  priority_weight: 0.3
+  tags: [config, testnet]
+
+- slug: ethstaker-guides
+  name: EthStaker guides
+  vendor: EthStaker
+  summary: Community guides; upgrade walkthroughs are published per fork.
+  roles: [spec]
+  repo: eth-educators/ethstaker-guides
+  release_source: tags
+  language: Markdown
+  license: CC0-1.0
+  status: active
+  assessor: generic
+  priority_weight: 0.3
+  tags: [docs, community]

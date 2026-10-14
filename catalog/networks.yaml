@@ -1,0 +1,180 @@
+# Networks, fork waves and per-network upgrades.
+#
+# A fork ships as a *wave*: the same upgrade activates on Sepolia, then Hoodi,
+# then Mainnet (Holesky is sunset; Ephemery resets). Validators who run on
+# testnets must upgrade weeks before mainnet, and the required client versions
+# differ per network (testnet releases are often pre-releases or -rc tags).
+# stakestack therefore tracks readiness per (stack, network), not per stack.
+#
+# `required_versions` is the authoritative table from the EF announcement post
+# and MUST be edited by a human. The ingester only drafts entries from
+# UPGRADE_FEED_URLS with status: draft. `verified: false` marks values that still
+# need a source link; the UI shows them as "unconfirmed".
+
+networks:
+  - id: sepolia
+    name: Sepolia
+    kind: testnet
+    chain_id: 11155111
+    config_repo: eth-clients/sepolia
+    rollout_order: 1
+    description: First public testnet in the wave. Permissioned validator set; most operators observe rather than validate here.
+  - id: hoodi
+    name: Hoodi
+    kind: testnet
+    chain_id: 560048
+    config_repo: eth-clients/hoodi
+    rollout_order: 2
+    description: Open validator testnet (Holesky successor). This is where staking operators rehearse the upgrade with their real stack.
+  - id: mainnet
+    name: Ethereum Mainnet
+    kind: mainnet
+    chain_id: 1
+    config_repo: eth-clients/mainnet
+    rollout_order: 3
+  - id: holesky
+    name: Holesky
+    kind: testnet
+    chain_id: 17000
+    config_repo: eth-clients/holesky
+    rollout_order: 0
+    deprecated: true
+    description: Sunset. Kept for historical upgrade records only.
+  - id: ephemery
+    name: Ephemery
+    kind: ephemeral
+    config_repo: ephemery-testnet/ephemery-genesis
+    rollout_order: 0
+    description: Resets on a schedule; forks are enabled from genesis after each reset.
+
+# Default rollout order used by the UI timeline and by readiness ranking.
+rollout_sequence: [sepolia, hoodi, mainnet]
+
+# A wave groups one fork across networks. `upgrades` below reference a wave.
+waves:
+  - id: pectra
+    name: Pectra (Prague + Electra)
+    status: completed
+    meta_eip: https://eips.ethereum.org/EIPS/eip-7600
+  - id: fusaka
+    name: Fusaka (Fulu + Osaka)
+    status: completed
+    meta_eip: https://eips.ethereum.org/EIPS/eip-7607
+  - id: glamsterdam
+    name: Glamsterdam (Gloas + Amsterdam)
+    status: in_progress
+    meta_eip: https://eips.ethereum.org/EIPS/eip-7773
+  - id: hegota
+    name: Hegota (Heze + Bogota)
+    status: planning
+    meta_eip: null
+
+upgrades:
+  # ------------------------------------------------------------------ Pectra --
+  - id: pectra-holesky
+    wave: pectra
+    network: holesky
+    status: activated
+    activation_epoch: 115968
+    activation_time: "2025-02-24T21:55:12Z"
+    announcement: https://blog.ethereum.org/2025/02/14/pectra-testnet-announcement
+    verified: false
+    required_versions: {}
+  - id: pectra-sepolia
+    wave: pectra
+    network: sepolia
+    status: activated
+    activation_epoch: 222464
+    activation_time: "2025-03-05T07:29:36Z"
+    announcement: https://blog.ethereum.org/2025/02/14/pectra-testnet-announcement
+    verified: false
+    required_versions: {}
+  - id: pectra-hoodi
+    wave: pectra
+    network: hoodi
+    status: activated
+    activation_epoch: 2048
+    activation_time: "2025-03-26T15:56:48Z"
+    announcement: https://blog.ethereum.org/2025/03/18/hoodi-release
+    verified: false
+    required_versions: {}
+  - id: pectra-mainnet
+    wave: pectra
+    network: mainnet
+    status: activated
+    activation_epoch: 364032
+    activation_time: "2025-05-07T10:05:11Z"
+    announcement: https://blog.ethereum.org/2025/04/23/pectra-mainnet
+    verified: true
+    required_versions: {}
+
+  # ------------------------------------------------------------------ Fusaka --
+  - id: fusaka-holesky
+    wave: fusaka
+    network: holesky
+    status: activated
+    activation_time: "2025-10-01T00:00:00Z"
+    announcement: https://blog.ethereum.org/2025/09/26/fusaka-testnet-announcement
+    verified: false
+    required_versions: {}
+  - id: fusaka-sepolia
+    wave: fusaka
+    network: sepolia
+    status: activated
+    activation_time: "2025-10-14T00:00:00Z"
+    announcement: https://blog.ethereum.org/2025/09/26/fusaka-testnet-announcement
+    verified: false
+    required_versions: {}
+  - id: fusaka-hoodi
+    wave: fusaka
+    network: hoodi
+    status: activated
+    activation_time: "2025-10-28T00:00:00Z"
+    announcement: https://blog.ethereum.org/2025/09/26/fusaka-testnet-announcement
+    verified: false
+    required_versions: {}
+  - id: fusaka-mainnet
+    wave: fusaka
+    network: mainnet
+    status: activated
+    activation_epoch: 411392
+    activation_time: "2025-12-03T21:49:11Z"
+    announcement: https://blog.ethereum.org/2025/11/06/fusaka-mainnet-announcement
+    verified: false
+    # Example of the shape. Keys are component slugs; values are the minimum
+    # stable version from the announcement. Fill from the EF table.
+    required_versions: {}
+    # required_versions:
+    #   geth: "1.16.6"
+    #   lighthouse: "8.0.0"
+
+  # ------------------------------------------------------------- Glamsterdam --
+  # Rollout in progress as of 2026-10. Sepolia first, then Hoodi, then Mainnet.
+  - id: glamsterdam-sepolia
+    wave: glamsterdam
+    network: sepolia
+    status: scheduled          # draft | scheduled | activated | cancelled
+    activation_epoch: null
+    activation_time: null
+    announcement: null
+    verified: false
+    required_versions: {}
+    notes: "Set activation + versions from the EF testnet announcement when published."
+  - id: glamsterdam-hoodi
+    wave: glamsterdam
+    network: hoodi
+    status: planned
+    activation_epoch: null
+    activation_time: null
+    announcement: null
+    verified: false
+    required_versions: {}
+  - id: glamsterdam-mainnet
+    wave: glamsterdam
+    network: mainnet
+    status: planned
+    activation_epoch: null
+    activation_time: null
+    announcement: null
+    verified: false
+    required_versions: {}

@@ -1,0 +1,162 @@
+# Staking protocol integrations and their operator sidecars
+- slug: lido-csm
+  name: Lido Community Staking Module (operator)
+  vendor: Lido
+  summary: Permissionless Lido module. Operators run their own stack plus the validator-ejector.
+  roles: [protocol]
+  repo: lidofinance/community-staking-module
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://docs.lido.fi/run-on-lido/csm
+  language: Solidity
+  license: GPL-3.0
+  networks: [mainnet, hoodi, holesky]
+  status: active
+  assessor: generic
+  priority_weight: 1.1
+  tags: [lido, csm]
+
+- slug: lido-simple-dvt
+  name: Lido SimpleDVT (operator)
+  vendor: Lido
+  summary: Lido module for DVT clusters (Obol / SSV).
+  roles: [protocol]
+  repo: lidofinance/lido-dao
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://docs.lido.fi/run-on-lido/simple-dvt
+  language: Solidity
+  license: GPL-3.0
+  networks: [mainnet, hoodi, holesky]
+  status: active
+  assessor: generic
+  priority_weight: 0.8
+  tags: [lido, dvt]
+
+- slug: validator-ejector
+  name: Lido Validator Ejector
+  vendor: Lido
+  summary: Daemon that watches Lido exit requests and broadcasts pre-signed exit messages.
+  roles: [protocol]
+  repo: lidofinance/validator-ejector
+  stable_tag_pattern: '^\d+\.\d+\.\d+$'
+  docs: https://docs.lido.fi/run-on-lido/csm/node-operator-manual/validator-ejector
+  docker_image: lidofinance/validator-ejector
+  language: TypeScript
+  license: MIT
+  networks: [mainnet, hoodi, holesky]
+  status: active
+  assessor: generic
+  priority_weight: 1.3
+  tags: [lido, exits]
+
+- slug: lido-keys-api
+  name: Lido Keys API
+  vendor: Lido
+  summary: Service exposing Lido validator keys; used by the ejector in some setups.
+  roles: [protocol, infra]
+  repo: lidofinance/lido-keys-api
+  stable_tag_pattern: '^\d+\.\d+\.\d+$'
+  docker_image: lidofinance/lido-keys-api
+  language: TypeScript
+  license: MIT
+  networks: [mainnet, hoodi, holesky]
+  status: active
+  assessor: generic
+  priority_weight: 0.9
+  tags: [lido, api]
+
+- slug: rocketpool-smartnode
+  name: Rocket Pool Smart Node
+  vendor: Rocket Pool
+  summary: CLI + daemon that installs and manages a full Rocket Pool minipool node.
+  roles: [protocol, node-manager]
+  repo: rocket-pool/smartnode
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://docs.rocketpool.net
+  language: Go
+  license: GPL-3.0
+  networks: [mainnet, hoodi]
+  status: active
+  assessor: generic
+  priority_weight: 1.3
+  tags: [rocket-pool]
+
+- slug: hyperdrive
+  name: NodeSet Hyperdrive
+  vendor: NodeSet
+  summary: Module-based node manager for NodeSet (Constellation, StakeWise) operators.
+  roles: [protocol, node-manager]
+  repo: nodeset-org/hyperdrive
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://docs.nodeset.io
+  language: Go
+  license: GPL-3.0
+  networks: [mainnet, hoodi]
+  status: active
+  assessor: generic
+  priority_weight: 1.1
+  tags: [nodeset]
+
+- slug: stakewise-v3-operator
+  name: StakeWise V3 Operator
+  vendor: StakeWise
+  summary: Operator service that registers validators for StakeWise vaults.
+  roles: [protocol]
+  repo: stakewise/v3-operator
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://docs.stakewise.io/for-operators/operator-service
+  docker_image: europe-west4-docker.pkg.dev/stakewiselabs/public/v3-operator
+  language: Python
+  license: AGPL-3.0
+  networks: [mainnet, hoodi]
+  status: active
+  assessor: generic
+  priority_weight: 1.1
+  tags: [stakewise]
+
+- slug: eigenlayer-cli
+  name: EigenLayer CLI
+  vendor: Eigen Labs
+  summary: Operator CLI for EigenLayer registration and EigenPod management.
+  roles: [protocol]
+  repo: Layr-Labs/eigenlayer-cli
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://docs.eigenlayer.xyz
+  language: Go
+  license: BUSL-1.1
+  networks: [mainnet, hoodi]
+  status: active
+  assessor: generic
+  priority_weight: 0.9
+  tags: [restaking]
+
+- slug: puffer-coral
+  name: Puffer Coral
+  vendor: Puffer Finance
+  summary: Node operator tooling for Puffer validators.
+  roles: [protocol]
+  repo: PufferFinance/coral
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://docs.puffer.fi
+  language: Rust
+  license: Apache-2.0
+  networks: [mainnet, hoodi]
+  status: beta
+  assessor: generic
+  priority_weight: 0.8
+  tags: [puffer, lrt]
+
+- slug: diva-operator
+  name: Diva Operator
+  vendor: Diva Staking
+  summary: DVT-based liquid staking operator client.
+  roles: [protocol, dvt]
+  repo: ShamirLabs/diva-alpha-net
+  release_source: tags
+  docs: https://docs.divastaking.com
+  language: Shell
+  license: UNLICENSED
+  networks: [mainnet, hoodi]
+  status: beta
+  assessor: generic
+  priority_weight: 0.7
+  tags: [diva, dvt]

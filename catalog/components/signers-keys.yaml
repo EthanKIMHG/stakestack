@@ -1,0 +1,116 @@
+# Remote signers and key / deposit tooling
+- slug: web3signer
+  name: Web3Signer
+  vendor: Consensys
+  summary: Remote signing service for validator keys with slashing-protection DB.
+  roles: [remote-signer]
+  repo: Consensys/web3signer
+  stable_tag_pattern: '^\d+\.\d+\.\d+$'
+  docs: https://docs.web3signer.consensys.io
+  docker_image: consensys/web3signer
+  language: Java
+  license: Apache-2.0
+  status: active
+  assessor: teku-notes
+  priority_weight: 1.4
+  tags: [signer, slashing-protection]
+
+- slug: dirk
+  name: Dirk
+  vendor: Attestant
+  summary: Distributed remote signer with threshold signing, designed for Vouch.
+  roles: [remote-signer]
+  repo: attestantio/dirk
+  stable_tag_pattern: '^\d+\.\d+\.\d+$'
+  docker_image: attestant/dirk
+  language: Go
+  license: Apache-2.0
+  status: active
+  assessor: generic
+  priority_weight: 1.3
+  tags: [signer, threshold]
+
+- slug: ethstaker-deposit-cli
+  name: ethstaker-deposit-cli
+  vendor: EthStaker
+  summary: Maintained fork of the staking deposit CLI (mnemonics, keystores, deposit data, BLS-to-execution changes).
+  roles: [key-tooling]
+  repo: eth-educators/ethstaker-deposit-cli
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://deposit-cli.ethstaker.cc
+  language: Python
+  license: CC0-1.0
+  status: active
+  assessor: generic
+  priority_weight: 1
+  tags: [keys, deposit]
+
+- slug: staking-deposit-cli
+  name: staking-deposit-cli (EF, legacy)
+  vendor: Ethereum Foundation
+  summary: Original EF deposit CLI. Superseded by ethstaker-deposit-cli.
+  roles: [key-tooling]
+  repo: ethereum/staking-deposit-cli
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  language: Python
+  license: CC0-1.0
+  status: deprecated
+  assessor: generic
+  priority_weight: 0.5
+  tags: [keys, deposit, legacy]
+
+- slug: wagyu-key-gen
+  name: Wagyu Key Gen
+  vendor: EthStaker
+  summary: Desktop GUI around the deposit CLI for generating keys offline.
+  roles: [key-tooling]
+  repo: stake-house/wagyu-key-gen
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  language: TypeScript
+  license: GPL-3.0
+  status: active
+  assessor: generic
+  priority_weight: 0.8
+  tags: [keys, gui]
+
+- slug: ethdo
+  name: ethdo
+  vendor: Weald Technology
+  summary: "CLI for validator operations: exits, credentials changes, key inspection, epoch summaries."
+  roles: [key-tooling]
+  repo: wealdtech/ethdo
+  stable_tag_pattern: '^\d+\.\d+\.\d+$'
+  language: Go
+  license: Apache-2.0
+  status: active
+  assessor: generic
+  priority_weight: 0.9
+  tags: [keys, exits, cli]
+
+- slug: ethereal
+  name: ethereal
+  vendor: Weald Technology
+  summary: CLI for execution-layer operations (deposits, contract calls) used alongside ethdo.
+  roles: [key-tooling]
+  repo: wealdtech/ethereal
+  stable_tag_pattern: '^\d+\.\d+\.\d+$'
+  language: Go
+  license: Apache-2.0
+  status: maintenance
+  assessor: generic
+  priority_weight: 0.5
+  tags: [cli]
+
+- slug: eth2-val-tools
+  name: eth2-val-tools
+  vendor: protolambda
+  summary: Bulk keystore and deposit generation for testnets.
+  roles: [key-tooling]
+  repo: protolambda/eth2-val-tools
+  release_source: tags
+  language: Go
+  license: MIT
+  status: maintenance
+  assessor: generic
+  priority_weight: 0.4
+  tags: [keys, testnet]

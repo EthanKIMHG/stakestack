@@ -1,0 +1,115 @@
+# Distributed validator technology
+- slug: charon
+  name: Charon
+  vendor: Obol
+  summary: DVT middleware that splits one validator across a cluster of nodes (Obol Network).
+  roles: [dvt]
+  repo: ObolNetwork/charon
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  homepage: https://obol.org
+  docs: https://docs.obol.org
+  docker_image: obolnetwork/charon
+  language: Go
+  license: BUSL-1.1
+  networks: [mainnet, hoodi, sepolia, holesky]
+  status: active
+  assessor: charon-notes
+  priority_weight: 1.5
+  tags: [dvt, obol]
+  notes: Charon enforces a compatibility matrix with CL and VC versions; breaking changes usually require a cluster-wide coordinated upgrade.
+
+- slug: charon-distributed-validator-node
+  name: Charon Distributed Validator Node (CDVN)
+  vendor: Obol
+  summary: Reference docker-compose bundle (EL, CL, Charon, VC, MEV-Boost, monitoring) for a Charon node.
+  roles: [dvt, node-manager]
+  repo: ObolNetwork/charon-distributed-validator-node
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://docs.obol.org/run/start/quickstart_overview
+  language: Shell
+  license: GPL-3.0
+  networks: [mainnet, hoodi, sepolia, holesky]
+  status: active
+  assessor: charon-notes
+  priority_weight: 1.2
+  tags: [dvt, obol, compose]
+
+- slug: obol-monitoring
+  name: Obol monitoring (charon dashboards)
+  vendor: Obol
+  summary: Grafana dashboards and alert rules for Charon clusters.
+  roles: [monitoring]
+  repo: ObolNetwork/monitoring
+  release_source: tags
+  language: Shell
+  license: GPL-3.0
+  status: active
+  assessor: generic
+  priority_weight: 0.6
+  tags: [dvt, obol, grafana]
+
+- slug: lido-dv-exit
+  name: lido-dv-exit
+  vendor: Obol
+  summary: Sidecar that signs and submits exits for Lido SimpleDVT clusters running Charon.
+  roles: [dvt, protocol]
+  repo: ObolNetwork/lido-dv-exit
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  language: Go
+  license: GPL-3.0
+  networks: [mainnet, hoodi, holesky]
+  status: active
+  assessor: generic
+  priority_weight: 1.2
+  tags: [dvt, obol, lido]
+
+- slug: ssv-node
+  name: SSV Node
+  vendor: SSV Labs
+  summary: Go implementation of the SSV network operator node (performs validator duties itself).
+  roles: [dvt]
+  repo: ssvlabs/ssv
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  homepage: https://ssv.network
+  docs: https://docs.ssv.network
+  docker_image: ssvlabs/ssv-node
+  language: Go
+  license: GPL-3.0
+  networks: [mainnet, hoodi, holesky]
+  status: active
+  assessor: generic
+  supports: { mev_boost: true }
+  priority_weight: 1.5
+  tags: [dvt, ssv]
+
+- slug: anchor
+  name: Anchor
+  vendor: Sigma Prime
+  summary: Rust implementation of the SSV protocol by the Lighthouse team.
+  roles: [dvt]
+  repo: sigp/anchor
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://anchor-book.sigmaprime.io
+  language: Rust
+  license: Apache-2.0
+  networks: [mainnet, hoodi]
+  status: beta
+  assessor: lighthouse-table
+  priority_weight: 1.3
+  tags: [dvt, ssv, client-diversity]
+
+- slug: ssv-dkg
+  name: SSV DKG
+  vendor: SSV Labs
+  summary: Distributed key generation tool for SSV operators.
+  roles: [dvt, key-tooling]
+  repo: ssvlabs/ssv-dkg
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://docs.ssv.network/operators/operator-node/dkg
+  docker_image: ssvlabs/ssv-dkg
+  language: Go
+  license: GPL-3.0
+  status: active
+  assessor: generic
+  priority_weight: 1
+  tags: [dvt, ssv, dkg]

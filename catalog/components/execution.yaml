@@ -1,0 +1,126 @@
+# Execution layer clients
+- slug: geth
+  name: Geth
+  vendor: Ethereum Foundation
+  summary: Go execution client; the reference implementation and largest EL share.
+  roles: [execution]
+  repo: ethereum/go-ethereum
+  release_source: releases
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  homepage: https://geth.ethereum.org
+  docs: https://geth.ethereum.org/docs
+  docker_image: ethereum/client-go
+  language: Go
+  license: LGPL-3.0
+  networks: [mainnet, hoodi, sepolia, holesky, ephemery]
+  status: active
+  assessor: geth-prose
+  priority_weight: 1.5
+  tags: [el, majority-client]
+
+- slug: nethermind
+  name: Nethermind
+  vendor: Nethermind
+  summary: .NET execution client, widely used by institutional operators.
+  roles: [execution]
+  repo: NethermindEth/nethermind
+  stable_tag_pattern: '^\d+\.\d+\.\d+$'
+  homepage: https://nethermind.io
+  docs: https://docs.nethermind.io
+  docker_image: nethermind/nethermind
+  language: C#
+  license: LGPL-3.0
+  networks: [mainnet, hoodi, sepolia, holesky, ephemery]
+  status: active
+  assessor: generic
+  priority_weight: 1.5
+  tags: [el]
+
+- slug: besu
+  name: Besu
+  vendor: Consensys / LF Decentralized Trust
+  summary: Java execution client (formerly Hyperledger Besu).
+  roles: [execution]
+  repo: hyperledger/besu
+  stable_tag_pattern: '^\d+\.\d+\.\d+$'
+  homepage: https://besu.hyperledger.org
+  docs: https://besu.hyperledger.org/public-networks
+  docker_image: hyperledger/besu
+  language: Java
+  license: Apache-2.0
+  networks: [mainnet, hoodi, sepolia, holesky, ephemery]
+  status: active
+  assessor: teku-notes
+  priority_weight: 1.5
+  tags: [el]
+  notes: Repository may redirect to a new org after the LF Decentralized Trust move; the GitHub API follows the redirect.
+
+- slug: erigon
+  name: Erigon
+  vendor: Erigon Technologies
+  summary: Go execution client focused on disk efficiency and archive nodes.
+  roles: [execution]
+  repo: erigontech/erigon
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  homepage: https://erigon.tech
+  docs: https://docs.erigon.tech
+  docker_image: erigontech/erigon
+  language: Go
+  license: LGPL-3.0
+  networks: [mainnet, hoodi, sepolia, holesky]
+  status: active
+  assessor: generic
+  priority_weight: 1.5
+  tags: [el, archive]
+  notes: Erigon ships an embedded CL (Caplin). Select it as consensus too if you use Caplin.
+  embeds: [consensus]
+
+- slug: reth
+  name: Reth
+  vendor: Paradigm
+  summary: Rust execution client; fast sync and modular SDK.
+  roles: [execution]
+  repo: paradigmxyz/reth
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  homepage: https://reth.rs
+  docs: https://reth.rs
+  docker_image: ghcr.io/paradigmxyz/reth
+  language: Rust
+  license: MIT OR Apache-2.0
+  networks: [mainnet, hoodi, sepolia, holesky]
+  status: active
+  assessor: reth-table
+  priority_weight: 1.5
+  tags: [el]
+
+- slug: ethrex
+  name: ethrex
+  vendor: LambdaClass
+  summary: Minimalist Rust execution client (L1 + L2).
+  roles: [execution]
+  repo: lambdaclass/ethrex
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  homepage: https://docs.ethrex.xyz
+  docker_image: ghcr.io/lambdaclass/ethrex
+  language: Rust
+  license: Apache-2.0
+  networks: [mainnet, hoodi, sepolia]
+  status: beta
+  assessor: generic
+  priority_weight: 1.2
+  tags: [el, minority-client]
+
+- slug: nimbus-eth1
+  name: Nimbus (execution)
+  vendor: Status
+  summary: Nim execution client, companion to Nimbus eth2.
+  roles: [execution]
+  repo: status-im/nimbus-eth1
+  release_source: tags
+  language: Nim
+  license: MIT OR Apache-2.0
+  networks: [hoodi, sepolia]
+  status: experimental
+  assessor: nimbus-urgency
+  priority_weight: 1
+  tags: [el, experimental]

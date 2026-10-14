@@ -1,0 +1,63 @@
+# MEV / proposer-builder separation sidecars
+- slug: mev-boost
+  name: MEV-Boost
+  vendor: Flashbots
+  summary: Builder API sidecar that lets validators outsource block building to relays.
+  roles: [mev]
+  repo: flashbots/mev-boost
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://docs.flashbots.net/flashbots-mev-boost/introduction
+  docker_image: flashbots/mev-boost
+  language: Go
+  license: MIT
+  networks: [mainnet, hoodi, sepolia, holesky]
+  status: active
+  assessor: generic
+  priority_weight: 1.3
+  tags: [mev, pbs]
+  notes: Fork-specific releases are mandatory; an old MEV-Boost after a fork causes missed proposals.
+
+- slug: commit-boost
+  name: Commit-Boost
+  vendor: Commit-Boost
+  summary: Modular PBS sidecar compatible with MEV-Boost that adds commitment modules.
+  roles: [mev]
+  repo: Commit-Boost/commit-boost-client
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://commit-boost.github.io/commit-boost-client
+  docker_image: ghcr.io/commit-boost/pbs
+  language: Rust
+  license: MIT OR Apache-2.0
+  networks: [mainnet, hoodi, holesky]
+  status: active
+  assessor: generic
+  priority_weight: 1.3
+  tags: [mev, pbs, preconfs]
+
+- slug: mev-boost-relay
+  name: MEV-Boost Relay
+  vendor: Flashbots
+  summary: Relay implementation; relevant for operators who run their own relay.
+  roles: [mev, infra]
+  repo: flashbots/mev-boost-relay
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  language: Go
+  license: AGPL-3.0
+  status: active
+  assessor: generic
+  priority_weight: 0.8
+  tags: [mev, relay]
+
+- slug: mev-rs
+  name: mev-rs
+  vendor: ralexstokes
+  summary: Rust MEV-Boost compatible sidecar and builder tooling.
+  roles: [mev]
+  repo: ralexstokes/mev-rs
+  release_source: tags
+  language: Rust
+  license: MIT
+  status: experimental
+  assessor: generic
+  priority_weight: 0.6
+  tags: [mev, experimental]

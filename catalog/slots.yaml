@@ -1,0 +1,217 @@
+# Slot definitions and composition rules for the stack builder.
+# A "stack" is a map of slot id -> component slug(s). Rules fire on the current
+# selection and may open/hide slots, restrict options, add requirements, or warn.
+slots:
+  - id: network
+    label: Networks
+    role: network-config
+    cardinality: many
+    required: true
+    order: 0
+    description: Every network this stack runs on (e.g. hoodi + mainnet). Readiness is computed per network; forks roll out sepolia -> hoodi -> mainnet.
+
+  - id: execution
+    label: Execution client (EL)
+    role: execution
+    cardinality: one
+    required: true
+    order: 10
+
+  - id: consensus
+    label: Consensus client (CL / beacon node)
+    role: consensus
+    cardinality: one
+    required: true
+    order: 20
+
+  - id: validator
+    label: Validator client (VC)
+    role: validator
+    cardinality: one
+    required: true
+    order: 30
+    description: May be the same software as the CL (embedded VC) or a standalone VC such as Vouch or Vero.
+
+  - id: dvt
+    label: Distributed validator (DVT)
+    role: dvt
+    cardinality: one
+    required: false
+    order: 40
+
+  - id: dvt-extras
+    label: DVT companions
+    role: dvt
+    cardinality: many
+    required: false
+    hidden_by_default: true
+    order: 41
+
+  - id: remote-signer
+    label: Remote signer
+    role: remote-signer
+    cardinality: one
+    required: false
+    order: 50
+
+  - id: mev
+    label: MEV / PBS sidecar
+    role: mev
+    cardinality: one
+    required: false
+    order: 60
+
+  - id: protocol
+    label: Staking protocol integration
+    role: protocol
+    cardinality: many
+    required: false
+    order: 70
+    description: Lido CSM, Rocket Pool, StakeWise, SSV, EigenLayer and similar add their own sidecars.
+
+  - id: node-manager
+    label: Node manager / orchestrator
+    role: node-manager
+    cardinality: one
+    required: false
+    order: 80
+
+  - id: monitoring
+    label: Monitoring & alerting
+    role: monitoring
+    cardinality: many
+    required: false
+    order: 90
+
+  - id: key-tooling
+    label: Key & deposit tooling
+    role: key-tooling
+    cardinality: many
+    required: false
+    order: 100
+
+  - id: ui
+    label: Dashboards / UI
+    role: ui
+    cardinality: many
+    required: false
+    order: 110
+
+  - id: spec
+    label: Protocol specs (watch only)
+    role: spec
+    cardinality: many
+    required: false
+    hidden_by_default: true
+    order: 120
+
+rules:
+  # ---------------------------------------------------------------- Charon --
+  - id: charon-opens-stack
+    description: Charon sits between the beacon node and the VC. It needs a Charon-compatible VC and optionally Web3Signer/Dirk.
+    when: { component: charon }
+    then:
+      open_slots: [dvt-extras, remote-signer]
+      restrict:
+        - { slot: validator, to_supporting: charon }
+      recommend: [charon-distributed-validator-node, obol-monitoring]
+      warn: "Charon requires the VC to be configured against Charon's validator API (default :3600), not the beacon node directly. Keep CL and Charon versions inside Obol's compatibility matrix."
+
+  - id: charon-lido
+    description: Lido SimpleDVT clusters on Charon need the exit sidecar.
+    when: { component: lido-simple-dvt }
+    then:
+      require: [charon]
+      recommend: [lido-dv-exit]
+
+  # -------------------------------------------------------------------- SSV --
+  - id: ssv-replaces-vc
+    description: The SSV node performs validator duties itself; a separate VC is not run.
+    when: { any_of: [ssv-node, anchor] }
+    then:
+      hide_slots: [validator, remote-signer]
+      open_slots: [dvt-extras]
+      recommend: [ssv-dkg]
+      warn: "With SSV/Anchor the operator does not run a validator client. Keyshares come from DKG; MEV is configured on the SSV node."
+
+  # ------------------------------------------------------------ Embedded VC --
+  - id: standalone-vc-needs-compatible-bn
+    description: Vouch and Vero are standalone VCs; any CL works as a beacon node.
+    when: { any_of: [vouch, vero] }
+    then:
+      open_slots: [remote-signer]
+      warn: "Standalone VCs can fan out to multiple beacon nodes. Add every CL you run to monitoring."
+
+  - id: vouch-dirk
+    when: { component: vouch }
+    then:
+      recommend: [dirk]
+
+  # ------------------------------------------------------------------- MEV --
+  - id: mev-boost-needs-relay-config
+    when: { component: mev-boost }
+    then:
+      warn: "Relay list is network-specific. Re-check relays after every fork; relays lag client releases."
+
+  - id: commit-boost
+    when: { component: commit-boost }
+    then:
+      conflict: [mev-boost]
+
+  # ------------------------------------------------------------- Protocols --
+  - id: lido-csm
+    when: { component: lido-csm }
+    then:
+      require: [validator-ejector]
+      recommend: [lido-keys-api, ethereum-validators-monitoring]
+      warn: "CSM requires the validator-ejector to process exit requests. Missing it leads to penalties under the Lido exit policy."
+
+  - id: rocket-pool
+    when: { component: rocketpool-smartnode }
+    then:
+      hide_slots: [node-manager]
+      warn: "Smartnode manages EL/CL/VC/MEV-Boost containers itself. Pick the clients it will run; do not pair it with another orchestrator."
+
+  - id: nodeset-hyperdrive
+    when: { component: hyperdrive }
+    then:
+      hide_slots: [node-manager]
+
+  - id: stakewise
+    when: { component: stakewise-v3-operator }
+    then:
+      recommend: [web3signer]
+
+  - id: eigenlayer
+    when: { component: eigenlayer-cli }
+    then:
+      warn: "EigenPod restaking changes withdrawal credentials. Verify validator withdrawal address strategy before enabling."
+
+  # --------------------------------------------------------- Node managers --
+  - id: eth-docker
+    when: { component: eth-docker }
+    then:
+      recommend: [ethereum-metrics-exporter]
+
+  - id: dappnode
+    when: { component: dappnode }
+    then:
+      warn: "DAppNode ships its own packaged versions; the upstream release date and the DAppNode package date differ. stakestack tracks upstream."
+
+  # ------------------------------------------------------------- Networks --
+  - id: hoodi-testnet
+    when: { network: hoodi }
+    then:
+      warn: "Hoodi activates forks about 2-4 weeks before mainnet. Testnet-ready releases are often -rc or pre-release tags; stakestack includes pre-releases in the Hoodi timeline."
+
+  - id: sepolia-testnet
+    when: { network: sepolia }
+    then:
+      warn: "Sepolia is the first network in each wave. Its required versions are usually pre-releases; do not reuse them for mainnet."
+
+  - id: mainnet-only
+    description: Running mainnet without any testnet means forks are never rehearsed.
+    when: { network: mainnet }
+    then:
+      recommend: []
+      warn: "Add hoodi to this stack to rehearse the next fork with the same software before mainnet activation."

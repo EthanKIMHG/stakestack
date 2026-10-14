@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stakestack.dev/schema/component.schema.json",
+  "title": "stakestack component list",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["slug", "name", "roles", "repo", "status", "assessor"],
+    "properties": {
+      "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,48}$" },
+      "name": { "type": "string", "minLength": 1 },
+      "vendor": { "type": "string" },
+      "summary": { "type": "string", "maxLength": 200 },
+      "roles": {
+        "type": "array", "minItems": 1, "uniqueItems": true,
+        "items": { "type": "string", "enum": [
+          "execution", "consensus", "validator", "dvt", "remote-signer", "mev",
+          "node-manager", "monitoring", "protocol", "key-tooling", "ui",
+          "network-config", "spec", "infra"
+        ] }
+      },
+      "repo": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" },
+      "release_source": { "type": "string", "enum": ["releases", "tags"], "default": "releases" },
+      "stable_tag_pattern": { "type": "string", "description": "Regex. Tags not matching are treated as pre-release." },
+      "homepage": { "type": "string", "format": "uri" },
+      "docs": { "type": "string", "format": "uri" },
+      "docker_image": { "type": "string" },
+      "language": { "type": "string" },
+      "license": { "type": "string" },
+      "networks": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+      "status": { "type": "string", "enum": ["active", "beta", "experimental", "maintenance", "deprecated", "archived"] },
+      "assessor": { "type": "string", "enum": [
+        "lighthouse-table", "reth-table", "nimbus-urgency", "geth-prose",
+        "teku-notes", "prysm-notes", "charon-notes", "generic"
+      ] },
+      "embeds": {
+        "type": "array", "items": { "type": "string", "enum": ["validator", "consensus"] },
+        "description": "Roles this component can fulfil in the same process (e.g. a CL client with built-in VC)."
+      },
+      "supports": {
+        "type": "object", "additionalProperties": false,
+        "properties": {
+          "charon": { "type": "boolean" },
+          "ssv": { "type": "boolean" },
+          "web3signer": { "type": "boolean" },
+          "dirk": { "type": "boolean" },
+          "mev_boost": { "type": "boolean" },
+          "commit_boost": { "type": "boolean" },
+          "keymanager_api": { "type": "boolean" },
+          "doppelganger": { "type": "boolean" }
+        }
+      },
+      "tags": { "type": "array", "items": { "type": "string" } },
+      "priority_weight": {
+        "type": "number", "minimum": 0, "maximum": 2, "default": 1,
+        "description": "Multiplier applied to assessed severity when ranking a stack timeline. Consensus-critical software gets > 1."
+      },
+      "notes": { "type": "string" }
+    }
+  }
+}

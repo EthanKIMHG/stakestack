@@ -1,0 +1,53 @@
+name: ingest
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'      # every 30 min; GitHub may delay scheduled runs by several minutes
+  workflow_dispatch:
+    inputs:
+      backfill:
+        description: Fetch INGEST_BACKFILL_RELEASES_PER_REPO for every repo
+        type: boolean
+        default: false
+      dry_run:
+        description: Do not write to Supabase
+        type: boolean
+        default: false
+
+concurrency:
+  group: ingest
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      # ETag + cursor cache. Restoring it is what keeps advisories polling free (304s).
+      - uses: actions/cache@v4
+        with:
+          path: packages/ingest/.cache
+          key: ingest-state-${{ github.run_id }}
+          restore-keys: ingest-state-
+      - name: ingest
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          GITHUB_TOKEN: ${{ secrets.STAKESTACK_GITHUB_TOKEN }}   # dedicated PAT; do NOT use github.token (60-point budget, repo-scoped)
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+          INGEST_GRAPHQL_BUDGET_POINTS_PER_RUN: ${{ vars.INGEST_GRAPHQL_BUDGET_POINTS_PER_RUN || 25 }}
+          INGEST_REST_BUDGET_REQUESTS_PER_RUN: ${{ vars.INGEST_REST_BUDGET_REQUESTS_PER_RUN || 120 }}
+          INGEST_MIN_REMAINING_POINTS: ${{ vars.INGEST_MIN_REMAINING_POINTS || 1000 }}
+          INGEST_MIN_REMAINING_REST: ${{ vars.INGEST_MIN_REMAINING_REST || 1000 }}
+          INGEST_DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+          INGEST_USER_AGENT: stakestack-ingest/0.1 (+https://github.com/${{ github.repository }})
+        run: pnpm ingest ${{ inputs.backfill && '-- --backfill' || '' }}
