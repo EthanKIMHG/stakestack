@@ -45,6 +45,7 @@
     "catalog:sync": "pnpm --filter @stakestack/ingest sync-catalog",
     "ingest": "pnpm --filter @stakestack/ingest ingest",
     "ingest:dry": "pnpm --filter @stakestack/ingest ingest -- --dry-run",
+    "reassess": "pnpm --filter @stakestack/ingest reassess",
     "db:migrate": "pnpm --filter @stakestack/ingest migrate",
     "db:migrate:psql": "bash scripts/db-migrate.sh"
   },
