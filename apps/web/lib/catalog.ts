@@ -3,6 +3,7 @@ import { cache } from 'react';
 import { resolve } from 'node:path';
 import type { Catalog, Component, Network, Release, Rule, Slot, Upgrade, Wave, Stack } from '@stakestack/shared/types';
 import { supabase } from './supabase';
+import { withLogos } from './logos';
 
 /**
  * Catalog from Supabase; falls back to the YAML files in ../../catalog when the
@@ -17,7 +18,7 @@ export const getCatalog = cache(async (): Promise<Catalog> => {
       sb.from('networks').select('*').order('rollout_order'), sb.from('fork_waves').select('*'), sb.from('network_upgrades').select('*'), sb.from('catalog_meta').select('*').eq('id', 'rollout_sequence').maybeSingle(),
     ]);
     if (!c.error && (c.data?.length ?? 0) > 0) {
-      return {
+      return withLogos({
         components: (c.data ?? []) as Component[],
         slots: (s.data ?? []).map(x => ({ id: x.id, label: x.label, description: x.description ?? undefined, role: x.role, cardinality: x.cardinality, required: x.required, hidden_by_default: x.hidden_by_default, order: x.sort_order, include_tag: x.include_tag ?? undefined, exclude_tag: x.exclude_tag ?? undefined })) as Slot[],
         rules: (r.data ?? []).map(x => ({ id: x.id, description: x.description ?? undefined, when: x.when_clause, then: x.then_clause })) as Rule[],
@@ -25,11 +26,11 @@ export const getCatalog = cache(async (): Promise<Catalog> => {
         rollout_sequence: (m.data?.value as string[] | undefined) ?? ['sepolia', 'hoodi', 'mainnet'],
         waves: (w.data ?? []) as Wave[],
         upgrades: (u.data ?? []).map(x => ({ id: x.id, wave: x.wave_id, network: x.network_id, status: x.status, activation_epoch: x.activation_epoch, activation_time: x.activation_time, announcement: x.announcement_url, verified: x.verified, tentative: x.tentative ?? false, required_versions: x.required_versions ?? {}, notes: x.notes ?? undefined })) as Upgrade[],
-      };
+      });
     }
   }
   const { loadCatalog } = await import('@stakestack/shared/catalog');
-  return loadCatalog(resolve(process.cwd(), '../../catalog'));
+  return withLogos(loadCatalog(resolve(process.cwd(), '../../catalog')));
 });
 
 export async function getReleases(componentSlugs: string[], limit = 200): Promise<Release[]> {

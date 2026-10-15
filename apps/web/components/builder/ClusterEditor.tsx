@@ -1,9 +1,11 @@
 'use client';
+import { Copy, Minus, Plus, Shuffle } from 'lucide-react';
 import type { ClusterNode, ClusterRole, ClusterSpec, Component } from '@stakestack/shared/types';
 import { ROLE_LABEL, clusterThreshold, faultTolerance, resize, type TopologyAnalysis } from '@stakestack/shared/topology';
 import { Diag } from '../ui';
+import { Logo } from '../Logo';
 
-const PALETTE = ['#4f46e5', '#0891b2', '#059669', '#d97706', '#db2777', '#7c3aed', '#0d9488', '#ea580c'];
+const PALETTE = ['#3d5bd9', '#0e8fb0', '#13946b', '#c27c14', '#d4407f', '#7c5cf6', '#0d9488', '#bf5a17'];
 
 export function ClusterEditor({ spec, nodes, onChange, allowed, analysis, middleware, onDiversify }: {
   spec: ClusterSpec;
@@ -38,47 +40,53 @@ export function ClusterEditor({ spec, nodes, onChange, allowed, analysis, middle
     <div>
       <div className="cluster-bar">
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 13, fontWeight: 600 }}>Nodes</span>
+          <span className="h3">Nodes</span>
           <div className="stepper">
-            <button type="button" aria-label="Remove node" onClick={() => n > 1 && onChange(resize(nodes, n - 1))}>−</button>
-            <span>{n}</span>
-            <button type="button" aria-label="Add node" onClick={() => n < 10 && onChange(resize(nodes, n + 1))}>+</button>
+            <button type="button" aria-label="Remove node" onClick={() => n > 1 && onChange(resize(nodes, n - 1))}><Minus aria-hidden /></button>
+            <span aria-live="polite">{n}</span>
+            <button type="button" aria-label="Add node" onClick={() => n < 10 && onChange(resize(nodes, n + 1))}><Plus aria-hidden /></button>
           </div>
         </div>
         <span className="muted" style={{ fontSize: 13 }}>
-          {n >= 3 ? <>Signs with <b>{threshold} of {n}</b> · tolerates <b>{tolerance}</b> offline</> : <>{middleware} {n === 1 ? 'single operator node' : `${n} nodes`}</>}
+          {n >= 3 ? <><b>{threshold} of {n}</b> sign · <b>{tolerance}</b> can be offline</> : <>{middleware} · {n === 1 ? 'single node' : `${n} nodes`}</>}
         </span>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
-          <button type="button" className="btn btn-sm" onClick={() => onDiversify(n)} title="Assign a different EL/CL pair to every node">Auto-diversify</button>
-          <button type="button" className="btn btn-sm btn-ghost" onClick={copyFirst} disabled={n < 2} title="Copy node 1's clients to every node">Same as node 1</button>
+          <button type="button" className="btn btn-sm" onClick={() => onDiversify(n)} title="A different EL/CL pair on every node"><Shuffle aria-hidden />Diversify</button>
+          <button type="button" className="btn btn-sm btn-quiet" onClick={copyFirst} disabled={n < 2} title="Copy node 1's clients to every node"><Copy aria-hidden />Same as node 1</button>
         </div>
       </div>
 
       <div className="scroll-x">
         <table className="node-table">
           <thead>
-            <tr><th style={{ width: 160 }}>Node</th>{spec.roles.map(r => <th key={r}>{ROLE_LABEL[r]} · {r}</th>)}</tr>
+            <tr><th style={{ width: 150 }}>Node</th>{spec.roles.map(r => <th key={r}>{ROLE_LABEL[r]}</th>)}</tr>
           </thead>
           <tbody>
             {nodes.map((node, i) => (
               <tr key={i}>
                 <td>
-                  <input className="input" style={{ height: 32, fontSize: 13 }} value={node.label ?? ''} placeholder={`node-${i + 1}`} aria-label={`Node ${i + 1} name`}
+                  <input className="field field-sm" value={node.label ?? ''} placeholder={`node-${i + 1}`} aria-label={`Node ${i + 1} name`}
                     onChange={e => setNode(i, { label: e.target.value })} />
                 </td>
-                {spec.roles.map(role => (
-                  <td key={role}>
-                    <select className={`select ${node[role] ? '' : 'missing'}`} value={node[role] ?? ''} aria-label={`Node ${i + 1} ${role} client`}
-                      onChange={e => setNode(i, { [role]: e.target.value || undefined })}>
-                      <option value="">Choose {ROLE_LABEL[role]}…</option>
-                      {allowed[role].map(c => (
-                        <option key={c.slug} value={c.slug}>
-                          {c.name}{role === 'validator' && c.slug === node.consensus ? ' (built-in)' : ''}{c.status !== 'active' ? ` · ${c.status}` : ''}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                ))}
+                {spec.roles.map(role => {
+                  const c = node[role] ? bySlug.get(node[role]!) : undefined;
+                  return (
+                    <td key={role}>
+                      <div className="node-cell">
+                        <Logo logo={c?.logo} name={c?.name ?? '?'} size={26} />
+                        <select className={`field field-sm ${node[role] ? '' : 'missing'}`} value={node[role] ?? ''} aria-label={`Node ${i + 1} ${role} client`}
+                          onChange={e => setNode(i, { [role]: e.target.value || undefined })}>
+                          <option value="">Choose {ROLE_LABEL[role]}…</option>
+                          {allowed[role].map(o => (
+                            <option key={o.slug} value={o.slug}>
+                              {o.name}{role === 'validator' && o.slug === node.consensus ? ' (built-in)' : ''}{o.status !== 'active' ? ` · ${o.status}` : ''}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>
@@ -98,14 +106,16 @@ export function ClusterEditor({ spec, nodes, onChange, allowed, analysis, middle
                       {s.name} ×{s.nodes.length}
                     </div>
                   ))}
-                  {shares.length === 0 && <div className="faint" style={{ padding: '0 8px', fontSize: 11 }}>not set</div>}
+                  {shares.length === 0 && <div className="faint" style={{ padding: '0 8px', fontSize: 11, alignSelf: 'center' }}>not set</div>}
                 </div>
               </div>
             );
           })}
-          <div style={{ marginTop: 4 }}>
-            {analysis.diagnostics.filter(d => d.level !== 'error').map((d, i) => <Diag key={i} level={d.level}>{d.message}</Diag>)}
-          </div>
+          {analysis.diagnostics.some(d => d.level !== 'error') && (
+            <div style={{ marginTop: 4 }}>
+              {analysis.diagnostics.filter(d => d.level !== 'error').map((d, i) => <Diag key={i} level={d.level}>{d.message}</Diag>)}
+            </div>
+          )}
         </div>
       )}
     </div>

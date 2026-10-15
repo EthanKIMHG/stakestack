@@ -8,9 +8,9 @@ Open-source stack builder and release-intelligence tracker for Ethereum validato
 Compose your execution, consensus and validator clients, DVT cluster (Obol Charon, SSV), MEV sidecar, remote signer and protocol modules,
 then get every relevant release rated by severity and see hard fork readiness network by network: **Sepolia → Hoodi → Mainnet**.
 
-[**Live app**](https://stakestack-eth.vercel.app) ·
-[Fork timeline](https://stakestack-eth.vercel.app/upgrades) ·
+[**Website**](https://stakestack-eth.vercel.app) ·
 [Build a stack](https://stakestack-eth.vercel.app/build) ·
+[Fork timeline](https://stakestack-eth.vercel.app/upgrades) ·
 [Releases](https://stakestack-eth.vercel.app/releases)
 
 [![CI](https://github.com/kimhg2/stakestack/actions/workflows/ci.yml/badge.svg)](https://github.com/kimhg2/stakestack/actions/workflows/ci.yml)
@@ -20,7 +20,7 @@ then get every relevant release rated by severity and see hard fork readiness ne
 ![Next.js](https://img.shields.io/badge/Next.js-16-black)
 ![Supabase](https://img.shields.io/badge/Supabase-Postgres-3ecf8e)
 
-<img src="docs/images/home.png" alt="stakestack home: Glamsterdam rollout across Sepolia, Hoodi and Mainnet, and severity-rated client releases" width="860">
+<img src="docs/images/home.png" alt="stakestack landing page: the next fork activation, client logos grouped by EL, CL/VC and DVT/MEV/signer, and a Launch button" width="860">
 
 </div>
 
@@ -53,7 +53,7 @@ Generic GitHub release notifiers tell you *that* something was released. stakest
 
 <table>
 <tr>
-<td width="50%"><img src="docs/images/dvt-cluster.png" alt="DVT cluster editor: four Charon nodes with different execution and consensus clients, threshold 3 of 4"><br><sub><b>DVT cluster editor.</b> One EL/CL/VC per node, threshold and client-diversity check, live "Your stack" panel.</sub></td>
+<td width="50%"><img src="docs/images/dvt-cluster.png" alt="DVT cluster editor: four Charon nodes with different execution and consensus clients, threshold 3 of 4"><br><sub><b>DVT cluster editor.</b> One EL/CL/VC per node, threshold and client-diversity check, and the "Your stack" panel with every pick, check and fork status.</sub></td>
 <td width="50%"><img src="docs/images/readiness.png" alt="Fork readiness matrix for Sepolia, Hoodi and Mainnet"><br><sub><b>Fork readiness.</b> Latest release per network vs the minimum version each upgrade requires.</sub></td>
 </tr>
 <tr>
@@ -171,11 +171,15 @@ flowchart LR
 | [`catalog/`](catalog) | YAML catalog (components, slots and composition rules, networks and fork waves) with JSON Schemas |
 | [`packages/shared`](packages/shared) | Types, catalog loader/validator, `compose()` rules engine, DVT `topology`, `computeReadiness()`, presets |
 | [`packages/ingest`](packages/ingest) | Budgeted GitHub ingester, release assessors, catalog sync, migrations, stats |
-| [`apps/web`](apps/web) | Next.js 16 app: builder, stack pages, fork timeline, releases, RSS/JSON feeds |
+| [`apps/web`](apps/web) | Next.js 16 app: landing page, builder, stack pages, fork timeline, releases, RSS/JSON feeds |
 | [`supabase/migrations`](supabase/migrations) | SQL schema with row-level security |
 | [`.github/workflows`](.github/workflows) | CI, 30-minute ingest cron, catalog validate/sync |
 
 The same `compose()` function runs in the browser, in the API and in the readiness engine, so the builder, saved stacks and feeds never disagree.
+
+The UI follows the Parataxis design system shared with stakeops: tokens (colour, type scale, radii, shadows) live once in
+[`apps/web/app/globals.css`](apps/web/app/globals.css), type is Figtree with IBM Plex Mono for versions, and icons come from
+[Lucide](https://lucide.dev). The app header carries a live UTC clock because fork activations are announced in UTC.
 
 ## Self-hosting
 
@@ -244,6 +248,7 @@ Add an entry to the matching file in [`catalog/components/`](catalog/components)
 ```
 
 Then run `pnpm catalog:validate` and open a pull request. CI checks the schema and that the repository exists.
+For its logo, save `apps/web/public/logos/<slug>.svg` (or `.png`); [docs/LOGOS.md](docs/LOGOS.md) lists sources and the components still missing one.
 Composition rules (for example "Lido CSM requires the validator-ejector") live in [`catalog/slots.yaml`](catalog/slots.yaml).
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 

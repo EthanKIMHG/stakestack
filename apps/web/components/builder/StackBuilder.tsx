@@ -1,15 +1,17 @@
 'use client';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { compose } from '@stakestack/shared/composer';
 import { diversify } from '@stakestack/shared/topology';
-import { upgradePhase } from '@stakestack/shared/readiness';
 import { PRESETS, type Preset } from '@stakestack/shared/presets';
 import type { Catalog, ClusterNode, ClusterRole, Component, StackSelection } from '@stakestack/shared/types';
-import { fmtDate, relative, waveName } from '@/lib/format';
-import { NetDot } from '../ui';
-import { OptionGrid } from './OptionGrid';
+import { ChevronRight, CircleCheck, Info, Network, Search, Server, ShoppingBag } from 'lucide-react';
 import { ClusterEditor } from './ClusterEditor';
+import { NetworkPicker } from './NetworkPicker';
+import { ProductGrid, matches } from './ProductGrid';
 import { StackPanel, type LiveReadiness } from './StackPanel';
+import { StepCard } from './StepCard';
+import { TemplatePicker, presetMatches } from './TemplatePicker';
+import { DEFAULT_SLOT_ICON, SLOT_ICON, slotShort } from './meta';
 
 const DRAFT_KEY = 'stakestack:draft:v2';
 const CORE: ClusterRole[] = ['execution', 'consensus', 'validator'];
@@ -27,7 +29,9 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
   const [rLoading, setRLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState<string | null>(null);
-  const loaded = useRef(false);
+  // State, not a ref: the save effect must not run in the same commit as the load, or it writes the
+  // defaults over the stored draft (and under StrictMode the second load then reads those defaults).
+  const [loaded, setLoaded] = useState(false);
 
   const bySlug = useMemo(() => new Map(catalog.components.map(c => [c.slug, c])), [catalog]);
   const result = useMemo(() => compose(catalog, sel, nodes.length ? { nodes } : null), [catalog, sel, nodes]);
@@ -41,16 +45,18 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
       const raw = localStorage.getItem(DRAFT_KEY);
       if (raw) {
         const d = JSON.parse(raw) as { sel: StackSelection; nodes: ClusterNode[]; name: string; mode: Mode };
-        setSel(d.sel); setNodes(d.nodes ?? []); setName(d.name ?? 'My validator stack'); setMode(d.mode ?? (d.sel.dvt?.length ? 'dvt' : 'single'));
+        if (d?.sel && typeof d.sel === 'object') {
+          setSel(d.sel); setNodes(d.nodes ?? []); setName(d.name ?? 'My validator stack'); setMode(d.mode ?? (d.sel.dvt?.length ? 'dvt' : 'single'));
+        }
       }
     } catch { /* storage unavailable */ }
-    loaded.current = true;
+    setLoaded(true);
   }, []);
   useEffect(() => {
-    if (!loaded.current) return;
+    if (!loaded) return;
     try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ sel, nodes, name, mode })); } catch { /* ignore */ }
     setSaved(null);
-  }, [sel, nodes, name, mode]);
+  }, [loaded, sel, nodes, name, mode]);
 
   // ------------------------------------------------------- live readiness --
   const readinessKey = JSON.stringify([result.selection, nodes]);
@@ -162,122 +168,86 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
   };
 
   // ------------------------------------------------------------- render --
-  const networks = catalog.networks.filter(n => !n.deprecated).sort((a, b) => (a.rollout_order || 9) - (b.rollout_order || 9));
-  const dvtSlot = slotView('dvt');
   const middleware = sel.dvt?.[0];
+  const dvtSlot = slotView('dvt');
   const addons = result.slots.filter(s => s.visible && !['network', 'execution', 'consensus', 'validator', 'dvt'].includes(s.slot.id));
   const clBuiltIn = (sel.consensus ?? []).find(s => bySlug.get(s)?.embeds?.includes('validator'));
+  const netNames = result.networks.map(n => catalog.networks.find(x => x.id === n)?.name ?? n);
+  const applied = PRESETS.find(p => presetMatches(p, sel, nodes)) ?? null;
+  const coreDone = mode === 'dvt'
+    ? !!middleware && nodes.length > 0 && !!result.cluster && nodes.every(n => result.cluster!.roles.every(r => n[r]))
+    : !!sel.execution?.length && !!sel.consensus?.length && (!!sel.validator?.length || !!clBuiltIn || !slotView('validator')?.visible);
+  const addonCount = addons.reduce((n, s) => n + s.selected.length, 0);
+  const errors = result.diagnostics.filter(d => d.level === 'error').length;
+  const warns = result.diagnostics.filter(d => d.level === 'warn').length;
+  const coreSummary = mode === 'dvt'
+    ? (middleware ? `${bySlug.get(middleware)?.name ?? middleware} · ${nodes.length} node${nodes.length === 1 ? '' : 's'}` : 'Pick middleware')
+    : [sel.execution?.[0], sel.consensus?.[0]].filter(Boolean).map(s => bySlug.get(s!)?.name ?? s).join(' + ');
 
   return (
     <div className="builder">
-      <div style={{ display: 'grid', gap: 20, minWidth: 0 }}>
-        {/* 0. presets */}
-        <section>
-          <div className="step"><span className="step-num">1</span><div><h2>Start from a template</h2><p>Or skip and pick everything below. Your draft is saved in this browser.</p></div></div>
-          <div className="presets">
-            {PRESETS.map(p => (
-              <button key={p.id} type="button" className="preset" onClick={() => applyPreset(p)}>
-                <b>{p.name}</b><span>{p.blurb}</span>
-              </button>
-            ))}
-          </div>
-        </section>
+      <div className="builder-main">
+        <StepCard n={1} title="Template" done={!!applied} value={<span className="truncate">{applied ? applied.name : 'Optional'}</span>}>
+          <TemplatePicker presets={PRESETS} bySlug={bySlug} sel={sel} nodes={nodes} onApply={applyPreset} />
+        </StepCard>
 
-        {/* 1. networks */}
-        <section>
-          <div className="step"><span className="step-num">2</span><div><h2>Networks</h2><p>Forks roll out Sepolia → Hoodi → Mainnet. Add Hoodi to rehearse each upgrade.</p></div></div>
-          <div className="net-pick">
-            {networks.map(n => {
-              const on = (sel.network ?? []).includes(n.id);
-              const up = catalog.upgrades
-                .filter(u => u.network === n.id && u.status !== 'cancelled' && u.status !== 'draft')
-                .sort((a, b) => (b.activation_time ?? '9999').localeCompare(a.activation_time ?? '9999'))[0] ?? null;
-              const ph = upgradePhase(up);
-              return (
-                <button key={n.id} type="button" className="opt" aria-pressed={on} onClick={() => toggle('network', n.id)}>
-                  <span className="name" style={{ display: 'flex', alignItems: 'center', gap: 7 }}><NetDot id={n.id} />{n.name}</span>
-                  <span className="meta">{n.kind === 'mainnet' ? 'Production' : n.kind === 'ephemeral' ? 'Resets periodically' : 'Testnet'}</span>
-                  {up && (
-                    <span className="badges">
-                      <span className={`chip ${ph === 'activated' ? 'chip-ok' : ph === 'upcoming' ? 'chip-accent' : ''}`}>
-                        {waveName(up.wave)} · {ph === 'activated' ? `live ${fmtDate(up.activation_time)}` : ph === 'upcoming' ? `${up.tentative ? '~' : ''}${relative(up.activation_time)}` : 'TBA'}
-                      </span>
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </section>
+        <StepCard n={2} title="Network" done={netNames.length > 0} value={<span className="truncate">{netNames.join(' · ') || 'Pick at least one'}</span>}>
+          <NetworkPicker catalog={catalog} selected={sel.network ?? []} onToggle={id => toggle('network', id)} />
+        </StepCard>
 
-        {/* 2. setup */}
-        <section className="card">
-          <div className="card-head">
-            <div className="step" style={{ margin: 0 }}><span className="step-num">3</span><div><h2>Clients</h2><p>One machine, or a distributed validator cluster with different clients per node.</p></div></div>
+        <StepCard
+          n={3} title="Clients" done={coreDone}
+          value={<span className="truncate">{coreSummary}</span>}
+          actions={
             <div className="seg" role="group" aria-label="Setup type">
-              <button type="button" aria-pressed={mode === 'single'} onClick={() => switchMode('single')}>Single node</button>
-              <button type="button" aria-pressed={mode === 'dvt'} onClick={() => switchMode('dvt')}>DVT cluster</button>
+              <button type="button" aria-pressed={mode === 'single'} onClick={() => switchMode('single')}><Server aria-hidden />Single node</button>
+              <button type="button" aria-pressed={mode === 'dvt'} onClick={() => switchMode('dvt')}><Network aria-hidden />DVT cluster</button>
             </div>
-          </div>
-
+          }
+        >
           {mode === 'dvt' && (
-            <div className="slot">
-              <div className="slot-head"><h3>DVT middleware<span className="req">*</span></h3></div>
-              <OptionGrid options={dvtSlot?.options ?? []} selected={sel.dvt ?? []} onToggle={pickMiddleware} />
+            <div className="step-body">
+              <SubHead title="DVT middleware" required hint={dvtSlot?.slot.description} />
+              <ProductGrid options={dvtSlot?.options ?? []} selected={sel.dvt ?? []} onToggle={pickMiddleware} />
             </div>
           )}
-
-          {mode === 'dvt' && result.cluster ? (
-            <div style={{ borderTop: '1px solid var(--border)' }}>
-              <ClusterEditor
-                spec={result.cluster}
-                nodes={nodes}
-                onChange={setNodes}
-                allowed={{ execution: allowed('execution'), consensus: allowed('consensus'), validator: allowed('validator') }}
-                analysis={result.topology}
-                middleware={bySlug.get(middleware ?? '')?.name ?? 'DVT'}
-                onDiversify={n => setNodes(nodesFor(sel, n))}
-              />
-            </div>
-          ) : (
-            (mode === 'single' || middleware) && CORE.map(id => {
-              const s = slotView(id);
-              if (!s?.visible) return null;
-              return (
-                <div key={id} className="slot">
-                  <div className="slot-head">
-                    <h3>{s.slot.label}{s.required && !(id === 'validator' && clBuiltIn) && <span className="req">*</span>}</h3>
-                    {id === 'validator' && clBuiltIn && <span className="faint" style={{ fontSize: 12.5 }}>Optional: {bySlug.get(clBuiltIn)?.name} has a built-in VC</span>}
-                  </div>
-                  {s.slot.description && <p className="slot-desc">{s.slot.description}</p>}
-                  <OptionGrid options={s.options} selected={s.selected} onToggle={slug => toggle(id, slug)} recommended={recommended} query={query} builtIn={id === 'validator' ? clBuiltIn : undefined} />
-                </div>
-              );
-            })
+          {mode === 'dvt' && result.cluster && (
+            <ClusterEditor
+              spec={result.cluster}
+              nodes={nodes}
+              onChange={setNodes}
+              allowed={{ execution: allowed('execution'), consensus: allowed('consensus'), validator: allowed('validator') }}
+              analysis={result.topology}
+              middleware={bySlug.get(middleware ?? '')?.name ?? 'DVT'}
+              onDiversify={n => setNodes(nodesFor(sel, n))}
+            />
           )}
-          {mode === 'dvt' && !middleware && <div className="empty">Pick the DVT middleware to configure the cluster.</div>}
-        </section>
+          {(mode === 'single' || (!!middleware && !result.cluster)) && CORE.map(id => {
+            const s = slotView(id);
+            if (!s?.visible) return null;
+            return (
+              <div key={id} className="step-body">
+                <SubHead
+                  title={SLOT_TITLE[id] ?? s.slot.label} required={s.required && !(id === 'validator' && clBuiltIn)} hint={s.slot.description}
+                  aside={id === 'validator' && clBuiltIn ? <><CircleCheck aria-hidden width={13} height={13} />{bySlug.get(clBuiltIn)?.name} has one built in</> : undefined}
+                />
+                <ProductGrid options={s.options} selected={s.selected} onToggle={slug => toggle(id, slug)} recommended={recommended} builtIn={id === 'validator' ? clBuiltIn : undefined} />
+              </div>
+            );
+          })}
+        </StepCard>
 
-        {/* 3. add-ons */}
-        <section className="card">
-          <div className="card-head">
-            <div className="step" style={{ margin: 0 }}><span className="step-num">4</span><div><h2>Add-ons</h2><p>Signers, MEV, protocol modules, orchestration and monitoring.</p></div></div>
-          </div>
-          <div style={{ padding: '12px 20px', borderBottom: '1px solid var(--border)' }}>
-            <div className="search-wrap"><input className="search" placeholder="Search components (name, vendor, tag)…" value={query} onChange={e => setQuery(e.target.value)} aria-label="Search components" /></div>
-          </div>
-          {addons.map(s => (
-            <AddonSection key={s.slot.id} label={s.slot.label} description={s.slot.description} count={s.selected.length} forceOpen={!!query || s.selected.length > 0 || s.options.some(o => recommended.has(o.slug))}>
-              <OptionGrid options={s.options} selected={s.selected} onToggle={slug => toggle(s.slot.id, slug)} recommended={recommended} query={query} />
-            </AddonSection>
-          ))}
-        </section>
+        <StepCard n={4} title="Add-ons" done={addonCount > 0} value={<span className="truncate">{addonCount ? `${addonCount} added` : 'Optional'}</span>}>
+          <AddonShelf addons={addons} recommended={recommended} query={query} onQuery={setQuery} onToggle={toggle} />
+        </StepCard>
       </div>
 
-      <button type="button" className="mobile-stack-bar" onClick={() => document.getElementById('your-stack')?.scrollIntoView({ behavior: 'smooth' })}>
-        <span><b>Your stack</b> · {result.effectiveComponents.length} components{result.cluster && nodes.length ? ` · ${nodes.length} nodes` : ''}</span>
-        {(() => { const e = result.diagnostics.filter(d => d.level === 'error').length; const w = result.diagnostics.filter(d => d.level === 'warn').length;
-          return e ? <span className="chip chip-err">{e} to fix</span> : w ? <span className="chip chip-warn">{w} warnings</span> : <span className="chip chip-ok">Valid</span>; })()}
+      <button type="button" className="mobile-cart" onClick={() => document.getElementById('your-stack')?.scrollIntoView({ behavior: 'smooth' })}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <ShoppingBag aria-hidden width={18} height={18} />
+          <span><b>Your stack</b> · {result.effectiveComponents.length} items{errors ? ` · ${errors} to fix` : warns ? ` · ${warns} warnings` : ''}</span>
+        </span>
+        <span className="go">View<ChevronRight aria-hidden /></span>
       </button>
 
       <StackPanel
@@ -288,22 +258,67 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
   );
 }
 
-function AddonSection({ label, description, count, forceOpen, children }: { label: string; description?: string; count: number; forceOpen: boolean; children: React.ReactNode }) {
-  const [open, setOpen] = useState(forceOpen);
-  useEffect(() => { if (forceOpen) setOpen(true); }, [forceOpen]);
+const SLOT_TITLE: Record<string, string> = { execution: 'Execution client', consensus: 'Consensus client', validator: 'Validator client' };
+
+function SubHead({ title, required, hint, aside }: { title: string; required?: boolean; hint?: string; aside?: React.ReactNode }) {
   return (
-    <details className="addon" open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
-      <summary>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="caret">▸</span><b style={{ fontWeight: 600, fontSize: 14.5 }}>{label}</b>
-          {count > 0 && <span className="chip chip-accent">{count} selected</span>}
-        </span>
-      </summary>
-      <div className="addon-body">
-        {description && <p className="slot-desc" style={{ margin: '0 0 10px' }}>{description}</p>}
-        {children}
+    <div className="sub-head">
+      <span className="h3">
+        {title}{required && <span className="req" aria-label="required">*</span>}
+        {hint && <span className="faint" title={hint} style={{ display: 'inline-flex', cursor: 'help' }}><Info aria-label={hint} width={14} height={14} /></span>}
+      </span>
+      {aside && <span className="aside">{aside}</span>}
+    </div>
+  );
+}
+
+type SlotList = ReturnType<typeof compose>['slots'];
+
+/** Add-ons as a shop shelf: one category at a time, or every match while searching. */
+function AddonShelf({ addons, recommended, query, onQuery, onToggle }: {
+  addons: SlotList; recommended: Set<string>; query: string; onQuery: (q: string) => void; onToggle: (slot: string, slug: string) => void;
+}) {
+  const [tab, setTab] = useState<string | null>(null);
+  const active = addons.find(s => s.slot.id === tab) ?? addons[0];
+  const searching = query.trim().length > 0;
+  const hits = searching ? addons.filter(s => s.options.some(o => matches(o, query))) : [];
+  return (
+    <>
+      <div className="step-body" style={{ display: 'grid', gap: 12 }}>
+        <label className="search">
+          <Search aria-hidden />
+          <input className="field" placeholder="Search signers, MEV, protocols, monitoring…" value={query} onChange={e => onQuery(e.target.value)} aria-label="Search add-ons" />
+        </label>
+        {!searching && (
+          <div className="tabs" role="tablist" aria-label="Add-on categories">
+            {addons.map(s => {
+              const Icon = SLOT_ICON[s.slot.id] ?? DEFAULT_SLOT_ICON;
+              const rec = s.options.some(o => recommended.has(o.slug) && !s.selected.includes(o.slug));
+              return (
+                <button key={s.slot.id} type="button" role="tab" className="tab" aria-selected={active?.slot.id === s.slot.id} onClick={() => setTab(s.slot.id)} title={s.slot.description}>
+                  <Icon aria-hidden />{slotShort(s.slot.id, s.slot.label)}
+                  {s.selected.length > 0 ? <span className="tab-count">{s.selected.length}</span> : rec ? <span className="tab-dot" aria-label="has recommendations" /> : null}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
-    </details>
+      {searching ? (
+        hits.length === 0
+          ? <div className="empty"><Search aria-hidden />Nothing matches “{query}”.</div>
+          : hits.map(s => (
+            <div key={s.slot.id} className="step-body">
+              <SubHead title={slotShort(s.slot.id, s.slot.label)} />
+              <ProductGrid options={s.options} selected={s.selected} onToggle={slug => onToggle(s.slot.id, slug)} recommended={recommended} query={query} />
+            </div>
+          ))
+      ) : active && (
+        <div className="step-body" role="tabpanel" aria-label={slotShort(active.slot.id, active.slot.label)}>
+          <ProductGrid options={active.options} selected={active.selected} onToggle={slug => onToggle(active.slot.id, slug)} recommended={recommended} />
+        </div>
+      )}
+    </>
   );
 }
 

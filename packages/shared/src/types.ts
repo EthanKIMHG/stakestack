@@ -38,7 +38,12 @@ export interface Component {
   tags?: string[];
   priority_weight?: number;
   notes?: string;
+  /** Resolved by the web app from apps/web/public/logos; never stored in the catalog. */
+  logo?: ComponentLogo;
 }
+
+/** `bleed` logos carry their own opaque background and are drawn edge to edge. */
+export interface ComponentLogo { src: string; bleed?: boolean }
 
 export interface Slot {
   id: string;

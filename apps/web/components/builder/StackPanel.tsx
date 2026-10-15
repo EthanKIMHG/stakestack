@@ -1,10 +1,13 @@
 'use client';
 import { useState } from 'react';
+import { Check, Copy, Link2, RotateCcw, Rss, Share2, ShoppingBag, Sparkles, X } from 'lucide-react';
 import type { Catalog, ClusterNode } from '@stakestack/shared/types';
 import type { ComposeResult } from '@stakestack/shared/composer';
 import { ROLE_LABEL } from '@stakestack/shared/topology';
 import { fmtDate, relative, waveName } from '@/lib/format';
-import { Diag, NetDot } from '../ui';
+import { Diag, NetDot, Pill, StatusPill } from '../ui';
+import { Logo } from '../Logo';
+import { ROLE_SHORT, slotShort } from './meta';
 
 export interface LiveReadiness {
   networks: Array<{
@@ -16,6 +19,7 @@ export interface LiveReadiness {
 
 const CORE = ['execution', 'consensus', 'validator'];
 
+/** The "cart": everything picked so far, its checks, fork readiness and the save action. */
 export function StackPanel({ catalog, result, nodes, name, onName, onRemove, onAddRecommended, readiness, readinessLoading, onSave, saving, saved, canSave, onReset }: {
   catalog: Catalog;
   result: ComposeResult;
@@ -33,6 +37,7 @@ export function StackPanel({ catalog, result, nodes, name, onName, onRemove, onA
   onReset: () => void;
 }) {
   const bySlug = new Map(catalog.components.map(c => [c.slug, c]));
+  const comp = (s?: string) => (s ? bySlug.get(s) : undefined);
   const nm = (s?: string) => (s ? bySlug.get(s)?.name ?? s : '—');
   const errors = result.diagnostics.filter(d => d.level === 'error');
   const warns = result.diagnostics.filter(d => d.level === 'warn');
@@ -40,153 +45,152 @@ export function StackPanel({ catalog, result, nodes, name, onName, onRemove, onA
   const addons = result.slots.filter(s => s.visible && s.slot.id !== 'network' && !CORE.includes(s.slot.id) && s.slot.id !== 'dvt' && s.selected.length);
   const middleware = result.selection.dvt?.[0];
   const [copied, setCopied] = useState(false);
-
   const copy = async (text: string) => {
     try { await navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 1500); } catch { /* clipboard blocked */ }
   };
 
+  const core = CORE.flatMap(id => {
+    const s = result.slots.find(x => x.slot.id === id);
+    if (!s?.visible || result.cluster) return [];
+    if (s.selected.length === 0) {
+      const embedded = id === 'validator' && (result.selection.consensus ?? []).some(c => bySlug.get(c)?.embeds?.includes('validator'));
+      return [{ id, slug: null as string | null, embedded }];
+    }
+    return s.selected.map(slug => ({ id, slug, embedded: false }));
+  });
+  const itemCount = result.effectiveComponents.length;
+
   return (
-    <aside className="builder-aside" id="your-stack">
-      <div className="card">
-        <div className="card-head" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 8 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2>Your stack</h2>
-            {errors.length > 0 ? <span className="chip chip-err">{errors.length} to fix</span>
-              : warns.length > 0 ? <span className="chip chip-warn">{warns.length} warning{warns.length > 1 ? 's' : ''}</span>
-              : <span className="chip chip-ok">Valid</span>}
-          </div>
-          <input className="input" value={name} onChange={e => onName(e.target.value)} aria-label="Stack name" placeholder="Stack name" />
-        </div>
+    <aside className="card cart" id="your-stack" aria-label="Your stack">
+      <div className="cart-head">
+        <div className="cart-title"><ShoppingBag aria-hidden />Your stack<StatusPill errors={errors.length} warnings={warns.length} /></div>
+        <input className="field field-sm" value={name} onChange={e => onName(e.target.value)} aria-label="Stack name" placeholder="Stack name" />
+      </div>
 
-        {/* networks */}
-        <div className="panel-section">
-          <div className="panel-label">Networks</div>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            {result.networks.length === 0 && <span className="faint" style={{ fontSize: 13 }}>None selected</span>}
-            {result.networks.map(n => <span key={n} className="sel-chip static"><NetDot id={n} />&nbsp;{catalog.networks.find(x => x.id === n)?.name ?? n}</span>)}
-          </div>
+      <div className="cart-section">
+        <div className="cart-label"><span className="eyebrow">Networks</span></div>
+        <div className="cart-nets">
+          {result.networks.length === 0 && <span className="meta">None selected</span>}
+          {result.networks.map(n => <Pill key={n} className="pill-outline"><NetDot id={n} />{catalog.networks.find(x => x.id === n)?.name ?? n}</Pill>)}
         </div>
+      </div>
 
-        {/* core / cluster */}
-        <div className="panel-section">
-          <div className="panel-label">
-            {result.cluster ? `Cluster · ${nm(middleware)}` : 'Clients'}
-            {result.topology && result.topology.n >= 3 && <span className="faint" style={{ textTransform: 'none', letterSpacing: 0 }}>{result.topology.threshold}/{result.topology.n} · tolerates {result.topology.tolerance}</span>}
-          </div>
-          {result.cluster ? (
-            <table className="mini-table">
-              <thead><tr><th>Node</th>{result.cluster.roles.map(r => <th key={r}>{ROLE_LABEL[r]}</th>)}</tr></thead>
-              <tbody>
-                {nodes.map((node, i) => (
-                  <tr key={i}>
-                    <td className="node-name" title={node.label || undefined}>{node.label || `node-${i + 1}`}</td>
-                    {result.cluster!.roles.map(r => <td key={r} className={node[r] ? '' : 'faint'} title={nm(node[r])}>{node[r] ? nm(node[r]) : 'not set'}</td>)}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <dl className="kv">
-              {CORE.map(id => {
-                const s = result.slots.find(x => x.slot.id === id);
-                if (!s?.visible) return null;
-                const embedded = id === 'validator' && s.selected.length === 0 && (result.selection.consensus ?? []).some(c => bySlug.get(c)?.embeds?.includes('validator'));
-                return (
-                  <div key={id} style={{ display: 'contents' }}>
-                    <dt>{ROLE_LABEL[id as 'execution']} · {id}</dt>
-                    <dd>
-                      {s.selected.map(slug => (
-                        <span key={slug} className="sel-chip">{nm(slug)}<button type="button" className="icon-btn" aria-label={`Remove ${nm(slug)}`} onClick={() => onRemove(id, slug)}>×</button></span>
-                      ))}
-                      {s.selected.length === 0 && <span className={embedded ? 'muted' : 'faint'} style={{ fontSize: 13 }}>{embedded ? 'Built into CL' : 'Not chosen'}</span>}
-                    </dd>
-                  </div>
-                );
-              })}
-            </dl>
-          )}
+      <div className="cart-section">
+        <div className="cart-label">
+          <span className="eyebrow">{result.cluster ? `Cluster · ${nm(middleware)}` : 'Clients'}</span>
+          {result.topology && result.topology.n >= 3 && <span className="meta">{result.topology.threshold}/{result.topology.n} · tolerates {result.topology.tolerance}</span>}
         </div>
-
-        {/* add-ons */}
-        <div className="panel-section">
-          <div className="panel-label">
-            Add-ons
-            {result.recommended.length > 0 && <button type="button" className="btn btn-sm btn-ghost" style={{ height: 24, textTransform: 'none', letterSpacing: 0 }} onClick={onAddRecommended}>+ {result.recommended.length} recommended</button>}
-          </div>
-          {addons.length === 0 ? <span className="faint" style={{ fontSize: 13 }}>Nothing added yet</span> : (
-            <dl className="kv">
-              {addons.map(s => (
-                <div key={s.slot.id} style={{ display: 'contents' }}>
-                  <dt>{s.slot.label.replace(/ \(.+\)$/, '')}</dt>
-                  <dd>{s.selected.map(slug => <span key={slug} className="sel-chip">{nm(slug)}<button type="button" className="icon-btn" aria-label={`Remove ${nm(slug)}`} onClick={() => onRemove(s.slot.id, slug)}>×</button></span>)}</dd>
-                </div>
+        {result.cluster ? (
+          <table className="mini-table">
+            <thead><tr><th>Node</th>{result.cluster.roles.map(r => <th key={r}>{ROLE_LABEL[r]}</th>)}</tr></thead>
+            <tbody>
+              {nodes.map((node, i) => (
+                <tr key={i}>
+                  <td title={node.label || undefined} style={{ fontWeight: 600 }}>{node.label || `node-${i + 1}`}</td>
+                  {result.cluster!.roles.map(r => (
+                    <td key={r} title={nm(node[r])}>
+                      {node[r] ? <span className="comp-cell"><Logo logo={comp(node[r])?.logo} name={nm(node[r])} size={18} /><span>{nm(node[r])}</span></span> : <span className="faint">—</span>}
+                    </td>
+                  ))}
+                </tr>
               ))}
-            </dl>
-          )}
-        </div>
+            </tbody>
+          </table>
+        ) : (
+          <div className="cart-items">
+            {core.map(item => item.slug ? (
+              <div key={`${item.id}-${item.slug}`} className="cart-item">
+                <Logo logo={comp(item.slug)?.logo} name={nm(item.slug)} size={30} />
+                <span><b>{nm(item.slug)}</b><span className="meta">{ROLE_SHORT[item.id]} · {slotShort(item.id, item.id)}</span></span>
+                <button type="button" className="icon-btn icon-btn-sm" aria-label={`Remove ${nm(item.slug)}`} onClick={() => onRemove(item.id, item.slug!)}><X aria-hidden /></button>
+              </div>
+            ) : (
+              <div key={item.id} className="cart-item">
+                <span className="logo" style={{ width: 30, height: 30, borderRadius: 8, background: 'var(--color-inset)', boxShadow: 'inset 0 0 0 1px var(--color-line)' }} aria-hidden />
+                <span><b className={item.embedded ? '' : 'faint'} style={{ fontWeight: 500 }}>{item.embedded ? 'Built into CL' : `No ${ROLE_SHORT[item.id]} yet`}</b><span className="meta">{ROLE_SHORT[item.id]} · {slotShort(item.id, item.id)}</span></span>
+                <span />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
-        {/* checks */}
-        <div className="panel-section">
-          <div className="panel-label">Checks</div>
-          {errors.length === 0 && warns.length === 0 && <Diag level="info">No problems found.</Diag>}
-          {errors.map((d, i) => <Diag key={`e${i}`} level="error">{d.message}</Diag>)}
-          {warns.map((d, i) => <Diag key={`w${i}`} level="warn">{d.message}</Diag>)}
-          {notes.length > 0 && (
-            <details style={{ marginTop: 8 }}>
-              <summary className="faint" style={{ fontSize: 12.5, cursor: 'pointer' }}>Operator notes ({notes.length})</summary>
-              <div style={{ marginTop: 6 }}>{notes.map((d, i) => <Diag key={`n${i}`} level="info">{d.message}</Diag>)}</div>
-            </details>
-          )}
+      <div className="cart-section">
+        <div className="cart-label">
+          <span className="eyebrow">Add-ons</span>
+          {result.recommended.length > 0 && <button type="button" className="btn btn-xs btn-ghost" onClick={onAddRecommended}><Sparkles aria-hidden />Add {result.recommended.length} recommended</button>}
         </div>
+        {addons.length === 0 ? <span className="meta">Nothing added yet</span> : (
+          <div className="cart-items">
+            {addons.flatMap(s => s.selected.map(slug => (
+              <div key={`${s.slot.id}-${slug}`} className="cart-item">
+                <Logo logo={comp(slug)?.logo} name={nm(slug)} size={30} />
+                <span><b>{nm(slug)}</b><span className="meta">{slotShort(s.slot.id, s.slot.label)}</span></span>
+                <button type="button" className="icon-btn icon-btn-sm" aria-label={`Remove ${nm(slug)}`} onClick={() => onRemove(s.slot.id, slug)}><X aria-hidden /></button>
+              </div>
+            )))}
+          </div>
+        )}
+      </div>
 
-        {/* readiness */}
-        <div className="panel-section">
-          <div className="panel-label">Fork readiness {readinessLoading && <span className="faint" style={{ textTransform: 'none', letterSpacing: 0 }}>updating…</span>}</div>
-          {!readiness || readiness.networks.length === 0 ? <span className="faint" style={{ fontSize: 13 }}>Pick a network and clients.</span> : readiness.networks.map(n => {
-            const behind = n.components.filter(c => c.state === 'behind');
-            return (
-              <div key={n.id}>
-                <div className="mini-net">
-                  <NetDot id={n.id} />
-                  <div className="grow">
-                    <b style={{ fontWeight: 600 }}>{n.name}</b>
-                    <div className="faint" style={{ fontSize: 12 }}>
-                      {n.wave ? `${waveName(n.wave)} · ` : ''}
-                      {n.phase === 'activated' ? `activated ${fmtDate(n.activation_time)}` : n.phase === 'upcoming' ? `${n.tentative ? 'tentative ' : ''}${fmtDate(n.activation_time)} (${relative(n.activation_time)})` : n.phase === 'tba' ? 'date TBA' : 'no upgrade'}
-                    </div>
+      <div className="cart-section">
+        <div className="cart-label"><span className="eyebrow">Checks</span></div>
+        {errors.length === 0 && warns.length === 0 && <Diag level="ok">No problems found</Diag>}
+        {errors.map((d, i) => <Diag key={`e${i}`} level="error">{d.message}</Diag>)}
+        {warns.map((d, i) => <Diag key={`w${i}`} level="warn">{d.message}</Diag>)}
+        {notes.length > 0 && (
+          <details className="rel-evidence" style={{ marginTop: 8 }}>
+            <summary>Operator notes ({notes.length})</summary>
+            <div style={{ marginTop: 6 }}>{notes.map((d, i) => <Diag key={`n${i}`} level="info">{d.message}</Diag>)}</div>
+          </details>
+        )}
+      </div>
+
+      <div className="cart-section">
+        <div className="cart-label"><span className="eyebrow">Fork readiness</span>{readinessLoading && <span className="meta">updating…</span>}</div>
+        {!readiness || readiness.networks.length === 0 ? <span className="meta">Pick a network and clients.</span> : readiness.networks.map(n => {
+          const behind = n.components.filter(c => c.state === 'behind');
+          return (
+            <div key={n.id}>
+              <div className="ready-row">
+                <NetDot id={n.id} />
+                <div className="grow">
+                  <b>{n.name}</b>
+                  <div className="meta">
+                    {n.wave ? `${waveName(n.wave)} · ` : ''}
+                    {n.phase === 'activated' ? `live ${fmtDate(n.activation_time)}` : n.phase === 'upcoming' ? `${n.tentative ? '~' : ''}${relative(n.activation_time)}` : n.phase === 'tba' ? 'date TBA' : 'no upgrade'}
                   </div>
-                  {behind.length > 0 ? <span className="chip chip-err">{behind.length} behind</span>
-                    : n.components.some(c => c.required) ? <span className="chip chip-ok">Ready</span>
-                    : <span className="chip">No min. versions</span>}
                 </div>
-                {behind.length > 0 && (
-                  <div style={{ margin: '0 0 6px 17px', fontSize: 12.5 }} className="muted">
-                    {behind.map(c => <div key={c.slug}>{nm(c.slug)}: needs ≥ <span className="mono">{c.required}</span>, latest seen <span className="mono">{c.latest ?? '—'}</span></div>)}
-                  </div>
-                )}
+                {behind.length > 0 ? <Pill tone="danger">{behind.length} behind</Pill>
+                  : n.components.some(c => c.required) ? <Pill tone="ok"><Check aria-hidden />Ready</Pill>
+                  : <Pill>No minimums</Pill>}
               </div>
-            );
-          })}
-        </div>
-
-        {/* actions */}
-        <div className="panel-section" style={{ display: 'grid', gap: 8 }}>
-          <button type="button" className="btn btn-primary btn-block" disabled={!canSave || saving || errors.length > 0} onClick={onSave}>
-            {saving ? 'Saving…' : errors.length > 0 ? 'Fix the checks to save' : 'Save & get share link'}
-          </button>
-          {saved && (
-            <div className="diag diag-info" style={{ flexDirection: 'column', gap: 6 }}>
-              <span>Saved. <a href={`/s/${saved}`}>Open stack page →</a></span>
-              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                <button type="button" className="btn btn-sm" onClick={() => copy(`${location.origin}/s/${saved}`)}>{copied ? 'Copied' : 'Copy link'}</button>
-                <a className="btn btn-sm" href={`/api/feed/${saved}.rss`}>RSS</a>
-                <a className="btn btn-sm" href={`/api/feed/${saved}.json`}>JSON</a>
-              </div>
+              {behind.length > 0 && (
+                <div className="ready-behind">
+                  {behind.map(c => <div key={c.slug}>{nm(c.slug)} needs ≥ <span className="mono">{c.required}</span> · latest <span className="mono">{c.latest ?? '—'}</span></div>)}
+                </div>
+              )}
             </div>
-          )}
-          {!canSave && <span className="faint" style={{ fontSize: 12.5 }}>Saving is disabled on this deployment.</span>}
-          <button type="button" className="btn btn-ghost btn-sm" onClick={onReset}>Reset builder</button>
-        </div>
+          );
+        })}
+      </div>
+
+      <div className="cart-section cart-actions">
+        <button type="button" className="btn btn-primary btn-block" disabled={!canSave || saving || errors.length > 0} onClick={onSave}>
+          <Share2 aria-hidden />{saving ? 'Saving…' : errors.length > 0 ? 'Fix checks to save' : `Save & share · ${itemCount} items`}
+        </button>
+        {saved && (
+          <div className="share-box">
+            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Check aria-hidden width={15} height={15} />Saved. <a href={`/s/${saved}`}>Open stack page</a></span>
+            <div className="row">
+              <button type="button" className="btn btn-xs" onClick={() => copy(`${location.origin}/s/${saved}`)}>{copied ? <Check aria-hidden /> : <Copy aria-hidden />}{copied ? 'Copied' : 'Copy link'}</button>
+              <a className="btn btn-xs" href={`/api/feed/${saved}.rss`}><Rss aria-hidden />RSS</a>
+              <a className="btn btn-xs" href={`/api/feed/${saved}.json`}><Link2 aria-hidden />JSON</a>
+            </div>
+          </div>
+        )}
+        {!canSave && <span className="meta">Saving is off on this deployment.</span>}
+        <button type="button" className="btn btn-sm btn-quiet" onClick={onReset}><RotateCcw aria-hidden />Reset</button>
       </div>
     </aside>
   );

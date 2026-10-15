@@ -1,7 +1,10 @@
 import type { Metadata, Viewport } from 'next';
-import { NavLinks } from '@/components/NavLinks';
-import { REPO_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, SITE_TITLE, siteUrl } from '@/lib/site';
+import { Figtree, IBM_Plex_Mono } from 'next/font/google';
+import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, SITE_TITLE, siteUrl } from '@/lib/site';
 import './globals.css';
+
+const sans = Figtree({ subsets: ['latin'], variable: '--font-figtree', display: 'swap' });
+const mono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-plex-mono', display: 'swap' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -17,26 +20,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [{ media: '(prefers-color-scheme: light)', color: '#f6f7f9' }, { media: '(prefers-color-scheme: dark)', color: '#0b0e14' }],
+  themeColor: [{ media: '(prefers-color-scheme: light)', color: '#f9fafc' }, { media: '(prefers-color-scheme: dark)', color: '#1b1b1b' }],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen">
-        <header className="site-header">
-          <nav className="container">
-            <a href="/" className="brand"><span className="brand-mark">S</span>stakestack</a>
-            <NavLinks />
-            <a href={REPO_URL} className="nav-link nav-github" style={{ marginLeft: "auto" }} target="_blank" rel="noreferrer">GitHub ↗</a>
-          </nav>
-        </header>
-        <main className="container" style={{ paddingTop: 24, paddingBottom: 48 }}>{children}</main>
-        <footer className="container faint" style={{ fontSize: 12.5, paddingBottom: 32 }}>
-          Severity ratings are rule-based and always show their evidence. Read the release notes before upgrading production validators.
-          Fork dates come from Ethereum Foundation announcements; tentative dates are marked.
-        </footer>
-      </body>
+    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+      <body>{children}</body>
     </html>
   );
 }

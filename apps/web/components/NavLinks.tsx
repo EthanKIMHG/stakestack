@@ -1,19 +1,22 @@
 'use client';
 import { usePathname } from 'next/navigation';
+import { Blocks, Tag, Waves } from 'lucide-react';
 
 const LINKS = [
-  { href: '/build', label: 'Build a stack' },
-  { href: '/upgrades', label: 'Fork waves' },
-  { href: '/releases', label: 'Releases' },
+  { href: '/build', label: 'Build', icon: Blocks },
+  { href: '/upgrades', label: 'Fork waves', icon: Waves },
+  { href: '/releases', label: 'Releases', icon: Tag },
 ];
 
 export function NavLinks() {
   const path = usePathname();
   return (
-    <>
-      {LINKS.map(l => (
-        <a key={l.href} href={l.href} className="nav-link" aria-current={path?.startsWith(l.href) ? 'page' : undefined}>{l.label}</a>
+    <nav className="nav" aria-label="Main">
+      {LINKS.map(({ href, label, icon: Icon }) => (
+        <a key={href} href={href} className="nav-link" aria-current={path?.startsWith(href) ? 'page' : undefined} title={label}>
+          <Icon aria-hidden /><span className="label">{label}</span>
+        </a>
       ))}
-    </>
+    </nav>
   );
 }

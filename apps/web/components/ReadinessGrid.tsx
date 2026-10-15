@@ -1,37 +1,34 @@
+import type { ComponentLogo } from '@stakestack/shared/types';
 import type { NetworkReadiness } from '@stakestack/shared/readiness';
 import { phaseText, relative, waveName } from '@/lib/format';
-import { NetDot } from './ui';
-
-export const STATE_LABEL: Record<string, string> = {
-  ready: 'Ready', 'update-available': 'OK', behind: 'Behind', unknown: '—', 'no-release': 'No data',
-};
+import { NetDot, Pill } from './ui';
+import { Logo } from './Logo';
 
 /**
- * Network summary cards (phase, countdown, how many components are behind)
- * followed by one component x network matrix. A matrix stays readable when a
- * stack has 15+ components and 3 networks; per-network tables did not.
+ * Network summary tiles (phase, countdown, how many components are behind) followed by one
+ * component x network matrix. A matrix stays readable with 15+ components and 3 networks.
  */
-export function ReadinessGrid({ nets, names }: { nets: NetworkReadiness[]; names: Record<string, string> }) {
+export function ReadinessGrid({ nets, names, logos = {} }: { nets: NetworkReadiness[]; names: Record<string, string>; logos?: Record<string, ComponentLogo> }) {
   if (nets.length === 0) return <div className="card empty">Select a network to see fork readiness.</div>;
   const slugs = [...new Set(nets.flatMap(n => n.components.map(c => c.component_slug)))]
     .sort((a, b) => rank(nets, b) - rank(nets, a) || (names[a] ?? a).localeCompare(names[b] ?? b));
 
   return (
-    <div style={{ display: 'grid', gap: 14 }}>
-      <div className="ready-grid" style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${nets.length > 2 ? 200 : 240}px, 1fr))` }}>
+    <div style={{ display: 'grid', gap: 12 }}>
+      <div className="net-tiles" style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${nets.length > 2 ? 200 : 240}px, 1fr))` }}>
         {nets.map(n => (
-          <section key={n.network.id} className="card card-pad" style={{ padding: '14px 16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-              <b style={{ display: 'flex', alignItems: 'center', gap: 7, fontWeight: 650 }}><NetDot id={n.network.id} />{n.network.name}</b>
-              {n.phase === 'upcoming' && n.activation_time && <span className="chip chip-accent">{relative(n.activation_time)}</span>}
-              {n.phase === 'activated' && <span className="chip chip-ok">Live</span>}
-              {n.phase === 'tba' && <span className="chip">TBA</span>}
+          <section key={n.network.id} className="card net-tile">
+            <div className="net-tile-head">
+              <b><NetDot id={n.network.id} />{n.network.name}</b>
+              {n.phase === 'upcoming' && n.activation_time && <Pill tone="accent">{relative(n.activation_time)}</Pill>}
+              {n.phase === 'activated' && <Pill tone="ok">Live</Pill>}
+              {n.phase === 'tba' && <Pill>TBA</Pill>}
             </div>
-            <div className="muted" style={{ fontSize: 13, marginTop: 4 }}>{n.upgrade ? `${waveName(n.upgrade.wave)} · ${phaseText(n.phase, n.upgrade)}` : 'No upgrade on record'}</div>
-            <div style={{ marginTop: 10, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-              {n.summary.behind > 0 ? <span className="chip chip-err">{n.summary.behind} behind</span>
-                : n.components.some(c => c.required) ? <span className="chip chip-ok">All required versions met</span>
-                : <span className="chip">No minimum versions published</span>}
+            <div className="meta" style={{ marginTop: 4, fontSize: 12.5 }}>{n.upgrade ? `${waveName(n.upgrade.wave)} · ${phaseText(n.phase, n.upgrade)}` : 'No upgrade on record'}</div>
+            <div style={{ marginTop: 10 }}>
+              {n.summary.behind > 0 ? <Pill tone="danger">{n.summary.behind} behind</Pill>
+                : n.components.some(c => c.required) ? <Pill tone="ok">All minimums met</Pill>
+                : <Pill>No minimums published</Pill>}
             </div>
           </section>
         ))}
@@ -49,7 +46,7 @@ export function ReadinessGrid({ nets, names }: { nets: NetworkReadiness[]; names
             <tbody>
               {slugs.map(slug => (
                 <tr key={slug}>
-                  <td><a href={`/c/${slug}`}>{names[slug] ?? slug}</a></td>
+                  <td><a href={`/c/${slug}`} className="comp-cell"><Logo logo={logos[slug]} name={names[slug] ?? slug} size={24} />{names[slug] ?? slug}</a></td>
                   {nets.map(n => {
                     const c = n.components.find(x => x.component_slug === slug);
                     if (!c) return <td key={n.network.id} className="faint">—</td>;
@@ -68,9 +65,7 @@ export function ReadinessGrid({ nets, names }: { nets: NetworkReadiness[]; names
             </tbody>
           </table>
         </div>
-        <p className="faint" style={{ fontSize: 12.5, padding: '10px 14px', borderTop: '1px solid var(--border)' }}>
-          Latest release seen per network (testnets include pre-releases). A green or red mark appears where the upgrade announcement sets a minimum version.
-        </p>
+        <div className="card-foot">Latest release seen per network; testnets include pre-releases.</div>
       </section>
     </div>
   );

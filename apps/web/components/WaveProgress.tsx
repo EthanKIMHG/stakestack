@@ -1,10 +1,11 @@
+import { Check } from 'lucide-react';
 import type { Catalog, Upgrade, Wave } from '@stakestack/shared/types';
 import { upgradePhase } from '@stakestack/shared/readiness';
 import { fmtDateTime, relative } from '@/lib/format';
 import { NetDot } from './ui';
 
 /** Sepolia -> Hoodi -> Mainnet stepper for one fork wave. */
-export function WaveProgress({ catalog, wave, now = new Date() }: { catalog: Catalog; wave: Wave; now?: Date }) {
+export function WaveProgress({ catalog, wave, now = new Date(), compact = false }: { catalog: Catalog; wave: Wave; now?: Date; compact?: boolean }) {
   const steps = catalog.rollout_sequence.map(net => ({
     net,
     name: catalog.networks.find(n => n.id === net)?.name ?? net,
@@ -20,11 +21,11 @@ export function WaveProgress({ catalog, wave, now = new Date() }: { catalog: Cat
         return (
           <div key={s.net} className={`wave-step ${cls}`}>
             <div className="rail" />
-            <div className="wave-node">{p === 'activated' ? '✓' : i + 1}</div>
+            <div className="wave-node">{p === 'activated' ? <Check strokeWidth={3} aria-label="activated" /> : i + 1}</div>
             <div>
               <div className="wave-label"><NetDot id={s.net} />{s.name}</div>
               <div className="wave-meta">{stepText(p, s.up, now)}</div>
-              <div className="wave-sub">{stepSub(p, s.up)}</div>
+              {!compact && <div className="wave-sub">{stepSub(p, s.up)}</div>}
             </div>
           </div>
         );
@@ -35,9 +36,9 @@ export function WaveProgress({ catalog, wave, now = new Date() }: { catalog: Cat
 
 function stepText(p: string, u: Upgrade | null, now: Date): string {
   if (!u) return 'Not scheduled';
-  if (p === 'activated') return `Activated ${relative(u.activation_time, now.getTime())}`;
-  if (p === 'upcoming') return `${u.tentative ? 'Tentatively ' : ''}${relative(u.activation_time, now.getTime())}`;
-  return 'Date not announced';
+  if (p === 'activated') return `Live · ${relative(u.activation_time, now.getTime())}`;
+  if (p === 'upcoming') return `${u.tentative ? '~' : ''}${relative(u.activation_time, now.getTime())}`;
+  return 'Date TBA';
 }
 function stepSub(p: string, u: Upgrade | null): string {
   if (!u) return '';

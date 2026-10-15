@@ -1,24 +1,42 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { ImageResponse } from 'next/og';
+import { MARK_PATH } from '@/components/Brand';
 
 export const alt = 'stakestack: Ethereum staking stack builder and client release tracker';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
+const LOGOS = ['geth.png', 'nethermind.png', 'reth.png', 'lighthouse.png', 'teku.png', 'lodestar.png', 'obol.png', 'ssv.png', 'flashbots.png', 'web3signer.png'];
+
+function dataUri(file: string): string | null {
+  try { return `data:image/png;base64,${readFileSync(join(process.cwd(), 'public/logos', file)).toString('base64')}`; } catch { return null; }
+}
+
 export default function OgImage() {
-  const pills = ['Geth', 'Nethermind', 'Reth', 'Lighthouse', 'Teku', 'Prysm', 'Obol Charon', 'SSV', 'MEV-Boost', 'Web3Signer'];
+  const logos = LOGOS.map(dataUri).filter((x): x is string => !!x);
   return new ImageResponse(
     (
-      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 64, background: 'linear-gradient(135deg, #0b0e14 0%, #151b2b 60%, #1b1f4a 100%)', color: '#e8ecf3', fontFamily: 'sans-serif' }}>
+      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 64, background: 'radial-gradient(120% 90% at 85% 10%, #2c3560 0%, #21273f 45%, #161b2e 100%)', color: '#f9fafc', fontFamily: 'sans-serif', position: 'relative' }}>
+        <svg width="560" height="560" viewBox="0 0 200 200" style={{ position: 'absolute', right: -40, bottom: -150, opacity: 0.07 }}><path d={MARK_PATH} fill="#fff" /></svg>
         <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-          <div style={{ width: 56, height: 56, borderRadius: 14, background: 'linear-gradient(135deg, #4f46e5, #06b6d4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, fontWeight: 800, color: '#fff' }}>S</div>
-          <div style={{ fontSize: 36, fontWeight: 800 }}>stakestack</div>
+          <svg width="56" height="56" viewBox="0 0 200 200" style={{ borderRadius: 14 }}><rect width="200" height="200" fill="#000" /><path d={MARK_PATH} fill="#fff" /></svg>
+          <div style={{ fontSize: 38, fontWeight: 700, letterSpacing: -1 }}>stakestack</div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-          <div style={{ fontSize: 60, fontWeight: 800, lineHeight: 1.08, letterSpacing: -1.5 }}>Every Ethereum staking release that matters, for your exact stack.</div>
-          <div style={{ fontSize: 28, color: '#a7b0c0' }}>Severity-rated client releases · fork readiness for Sepolia, Hoodi and Mainnet · DVT cluster builder</div>
+          <div style={{ display: 'flex', flexDirection: 'column', fontSize: 68, fontWeight: 600, lineHeight: 1.04, letterSpacing: -2.5 }}>
+            <span>Your staking stack,</span>
+            <span style={{ color: '#c4d3fe' }}>always fork-ready.</span>
+          </div>
+          <div style={{ fontSize: 27, color: 'rgba(255,255,255,0.7)' }}>Severity-rated releases · fork readiness, Sepolia to Mainnet · DVT clusters</div>
         </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-          {pills.map(p => <div key={p} style={{ padding: '8px 16px', borderRadius: 999, background: '#1f2737', border: '1px solid #313c51', fontSize: 22, color: '#c9d1de' }}>{p}</div>)}
+        <div style={{ display: 'flex', gap: 14 }}>
+          {logos.map((src, i) => (
+            <div key={i} style={{ width: 64, height: 64, borderRadius: 16, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={src} width={48} height={48} alt="" />
+            </div>
+          ))}
         </div>
       </div>
     ),

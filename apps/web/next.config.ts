@@ -2,6 +2,6 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   transpilePackages: ['@stakestack/shared'],
-  outputFileTracingIncludes: { '/*': ['../../catalog/**/*'] },
+  outputFileTracingIncludes: { '/*': ['../../catalog/**/*', './public/logos/**/*'] },
 };
 export default nextConfig;
