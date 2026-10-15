@@ -134,13 +134,18 @@ rules:
           source: https://docs.obol.org/advanced-and-troubleshooting/advanced/enable-mev
 
   - id: lido-simple-dvt-needs-dvt
-    description: Lido Simple DVT validators run on a DVT cluster (Obol or SSV).
+    description: Lido Simple DVT validators run on a DVT cluster (Obol or SSV). Regular clusters were wound down in 2026.
     sources:
       - https://operatorportal.lido.fi/modules/simple-dvt-module
+      - https://research.lido.fi/t/proposal-wind-down-the-simple-dvt-module-regular-clusters/11571
     verified_at: "2026-10-15"
     when: { component: lido-simple-dvt }
     then:
       require_slots: [dvt]
+      checks:
+        - message: "The Lido DAO wound down Simple DVT's regular clusters (completed 2026-09-18); only the Super Clusters remain. New DVT operators are pointed to the Community Staking Module."
+          level: warn
+          source: https://research.lido.fi/t/proposal-wind-down-the-simple-dvt-module-regular-clusters/11571
 
   - id: lido-simple-dvt-obol-exits
     description: Lido operators on Charon pre-sign exits with lido-dv-exit for the validator-ejector.

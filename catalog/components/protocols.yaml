@@ -18,7 +18,7 @@
 - slug: lido-simple-dvt
   name: Lido SimpleDVT (operator)
   vendor: Lido
-  summary: Lido module for DVT clusters (Obol / SSV).
+  summary: Lido module for DVT clusters (Obol / SSV). Regular clusters were wound down in 2026; Super Clusters remain.
   roles: [protocol]
   repo: lidofinance/lido-dao
   stable_tag_pattern: '^v\d+\.\d+\.\d+$'
@@ -26,10 +26,11 @@
   language: Solidity
   license: GPL-3.0
   networks: [mainnet, hoodi, holesky]
-  status: active
+  status: maintenance
   assessor: generic
   priority_weight: 0.8
   tags: [lido, dvt]
+  notes: The Lido DAO wound down regular Simple DVT clusters from 2026-07-01 (completed 2026-09-18). New DVT operators are pointed to CSM.
 
 - slug: validator-ejector
   name: Lido Validator Ejector
@@ -156,10 +157,11 @@
   language: Rust
   license: Apache-2.0
   networks: [mainnet, hoodi]
-  status: beta
+  status: maintenance
   assessor: generic
   priority_weight: 0.8
   tags: [puffer, lrt]
+  notes: Last release 1.2.0 (Sep 2024) and no commits since Oct 2024 as of 2026-10-15.
 
 - slug: diva-operator
   name: Diva Operator
@@ -172,7 +174,8 @@
   language: Shell
   license: UNLICENSED
   networks: [mainnet, hoodi]
-  status: beta
+  status: archived
   assessor: generic
   priority_weight: 0.7
   tags: [dvt-middleware, diva, dvt]
+  notes: The diva-alpha-net repository is archived (last push Apr 2024) and Diva rebranded to Nektar Network.

@@ -89,8 +89,7 @@ export const PRESETS: Preset[] = [
     group: 'dvt',
     selection: {
       network: NETS,
-      dvt: ['charon'], 'dvt-extras': ['charon-distributed-validator-node'],
-      mev: ['mev-boost'], monitoring: ['obol-monitoring', 'ethereum-metrics-exporter'],
+      dvt: ['charon'], mev: ['mev-boost'], monitoring: ['obol-monitoring'],
     },
     topology: {
       nodes: [
@@ -104,24 +103,23 @@ export const PRESETS: Preset[] = [
     verified_at: '2026-10-15',
   },
   {
-    id: 'lido-simple-dvt-obol',
-    name: 'Lido Simple DVT on Obol',
-    blurb: 'A 4-node Charon cluster in Lido Simple DVT, with lido-dv-exit pre-signing exits for the validator-ejector.',
+    id: 'obol-web3signer',
+    name: 'Obol DVT + Web3Signer',
+    blurb: 'The 4-node Charon cluster with each key share held in Web3Signer instead of the validator client.',
     group: 'dvt',
     selection: {
       network: NETS,
-      dvt: ['charon'], 'dvt-extras': ['lido-dv-exit'],
-      protocol: ['lido-simple-dvt', 'validator-ejector'], mev: ['mev-boost'], monitoring: ['obol-monitoring'],
+      dvt: ['charon'], 'remote-signer': ['web3signer'], mev: ['mev-boost'], monitoring: ['obol-monitoring'],
     },
     topology: {
       nodes: [
-        { label: 'node-1', execution: 'nethermind', consensus: 'teku', validator: 'teku' },
-        { label: 'node-2', execution: 'besu', consensus: 'lighthouse', validator: 'lighthouse' },
-        { label: 'node-3', execution: 'geth', consensus: 'lodestar', validator: 'lodestar' },
-        { label: 'node-4', execution: 'reth', consensus: 'nimbus-eth2', validator: 'nimbus-eth2' },
+        { label: 'node-1', execution: 'nethermind', consensus: 'lighthouse', validator: 'lighthouse' },
+        { label: 'node-2', execution: 'geth', consensus: 'teku', validator: 'teku' },
+        { label: 'node-3', execution: 'besu', consensus: 'nimbus-eth2', validator: 'nimbus-eth2' },
+        { label: 'node-4', execution: 'reth', consensus: 'lodestar', validator: 'lodestar' },
       ],
     },
-    sources: ['https://operatorportal.lido.fi/modules/simple-dvt-module', 'https://github.com/ObolNetwork/lido-charon-distributed-validator-node', 'https://github.com/ObolNetwork/lido-dv-exit'],
+    sources: ['https://docs.obol.org/run-a-dv/prepare/deployment-best-practices', 'https://docs.web3signer.consensys.com/concepts/slashing-protection'],
     verified_at: '2026-10-15',
   },
   {
