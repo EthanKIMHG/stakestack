@@ -215,6 +215,7 @@ The full annotated list is in [`.env.example`](.env.example). The required ones:
 | `REVALIDATE_SECRET` | web, ingest | `openssl rand -hex 32` |
 | `NEXT_PUBLIC_SITE_URL` | web, ingest | Your deployment URL. The ingester only sends the secret to a host that identifies itself as stakestack. |
 | `NEXT_PUBLIC_PRIVY_APP_ID`, `PRIVY_APP_SECRET` | web (optional) | Privy dashboard › App settings. Turns on GitHub / Google sign-in; setup in [docs/AUTH.md](docs/AUTH.md). |
+| `GOOGLE_SITE_VERIFICATION` | web (optional) | Google Search Console › HTML tag. Indexing steps in [docs/SEO.md](docs/SEO.md). |
 
 ### 3. Deploy
 

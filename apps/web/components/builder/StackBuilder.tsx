@@ -13,12 +13,16 @@ import { StepCard } from './StepCard';
 import { TemplatePicker, presetMatches } from './TemplatePicker';
 import { DEFAULT_SLOT_ICON, SLOT_ICON, slotShort } from './meta';
 import { MyStacksBar } from './MyStacksBar';
+import { SaveModal, type SaveState } from './SaveModal';
 import { AUTH_ENABLED, useAuth } from '../auth/store';
 import { myStacks, useMyStacks, type MyStack } from '../auth/myStacks';
 
 const DRAFT_KEY = 'stakestack:draft:v2';
 /** Set when an anonymous user signs up from the save prompt; the draft is saved to their account after login. */
 const CLAIM_KEY = 'stakestack:claim-after-login';
+/** Keep the save loader up at least this long so a fast save does not flash. */
+const MIN_LOADER_MS = 700;
+const pause = (ms: number) => new Promise(r => setTimeout(r, ms));
 const CORE: ClusterRole[] = ['execution', 'consensus', 'validator'];
 type Mode = 'single' | 'dvt';
 
@@ -34,6 +38,8 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
   const [rLoading, setRLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState<string | null>(null);
+  const [saveState, setSaveState] = useState<SaveState | null>(null);
+  const retry = useRef<() => void>(() => {});
   // State, not a ref: the save effect must not run in the same commit as the load, or it writes the
   // defaults over the stored draft (and under StrictMode the second load then reads those defaults).
   const [loaded, setLoaded] = useState(false);
@@ -175,11 +181,18 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
   };
 
   const save = async () => {
-    setSaving(true); setSaved(null);
+    retry.current = () => void save();
+    setSaving(true); setSaved(null); setSaveState({ phase: 'saving', kind: 'guest' });
     try {
-      const res = await fetch('/api/stacks', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name, selection: sel, topology: result.cluster ? { nodes } : null }) });
-      const json = await res.json() as { slug?: string; error?: string };
-      if (json.slug) setSaved(json.slug); else alert(json.error ?? 'Saving failed');
+      const [json] = await Promise.all([
+        fetch('/api/stacks', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name, selection: sel, topology: result.cluster ? { nodes } : null }) })
+          .then(r => r.json() as Promise<{ slug?: string; error?: string }>),
+        pause(MIN_LOADER_MS),
+      ]);
+      if (json.slug) { setSaved(json.slug); setSaveState({ phase: 'done', kind: 'guest', slug: json.slug, title: 'Stack saved' }); }
+      else setSaveState({ phase: 'error', kind: 'guest', error: json.error ?? 'Saving failed.' });
+    } catch {
+      setSaveState({ phase: 'error', kind: 'guest', error: 'Could not reach the server. Check your connection and try again.' });
     } finally { setSaving(false); }
   };
 
@@ -209,13 +222,22 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
     } catch (e) { alert((e as Error).message); }
   };
   const saveMember = async (asNew: boolean) => {
+    retry.current = () => void saveMember(asNew);
     const nm = asNew && currentId ? `${name} (copy)` : name;
-    setSaving(true);
+    const title = asNew && currentId ? 'Saved as a new stack' : currentId ? 'Changes saved' : 'Saved to My stacks';
+    setSaving(true); setSaveState({ phase: 'saving', kind: 'member' });
     try {
-      const stack = await myStacks.save({ name: nm, selection: sel, topology: result.cluster ? { nodes } : null }, asNew ? null : currentId);
+      const [stack] = await Promise.all([
+        myStacks.save({ name: nm, selection: sel, topology: result.cluster ? { nodes } : null }, asNew ? null : currentId),
+        pause(MIN_LOADER_MS),
+      ]);
       setName(nm); setCurrentId(stack.id); setBaseline(JSON.stringify({ name: nm, sel, nodes }));
-    } catch (e) { alert((e as Error).message); } finally { setSaving(false); }
+      setSaveState({ phase: 'done', kind: 'member', slug: stack.slug, title });
+    } catch (e) {
+      setSaveState({ phase: 'error', kind: 'member', error: (e as Error).message });
+    } finally { setSaving(false); }
   };
+  const share = (slug: string) => setSaveState({ phase: 'done', kind: mine.signedIn ? 'member' : 'guest', slug, title: 'Share this stack' });
   const signUpToKeep = () => {
     try { sessionStorage.setItem(CLAIM_KEY, '1'); } catch { /* storage unavailable */ }
     auth.login();
@@ -330,9 +352,15 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
         catalog={catalog} result={result} nodes={nodes} name={name} onName={setName} onRemove={remove} onAddRecommended={addRecommended}
         readiness={readiness} readinessLoading={rLoading} onSave={save} saving={saving} saved={saved} canSave={canSave} onReset={reset}
         member={{
-          enabled: AUTH_ENABLED, signedIn: mine.signedIn, currentId, dirty, slug: currentStack?.slug ?? null,
-          onSave: asNew => void saveMember(asNew), onSignUp: signUpToKeep,
+          signedIn: mine.signedIn, currentId, dirty, slug: currentStack?.slug ?? null,
+          onSave: asNew => void saveMember(asNew),
         }}
+        onShare={share}
+      />
+
+      <SaveModal
+        state={saveState} name={name} items={result.effectiveComponents.length} canSignUp={AUTH_ENABLED}
+        onClose={() => setSaveState(null)} onRetry={() => retry.current()} onSignUp={() => { setSaveState(null); signUpToKeep(); }}
       />
     </div>
   );

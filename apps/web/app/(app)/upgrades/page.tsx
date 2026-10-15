@@ -2,6 +2,7 @@ import { ChevronRight, ExternalLink } from 'lucide-react';
 import { getCatalog, currentWave } from '@/lib/catalog';
 import { WaveProgress } from '@/components/WaveProgress';
 import { Logo } from '@/components/Logo';
+import { Breadcrumbs } from '@/components/JsonLd';
 import { NetDot, Pill } from '@/components/ui';
 import { fmtDateTime } from '@/lib/format';
 import type { Catalog, Wave } from '@stakestack/shared/types';
@@ -20,6 +21,7 @@ export default async function UpgradesPage() {
   const others = [...catalog.waves].reverse().filter(w => w.id !== current?.id);
   return (
     <div style={{ display: 'grid', gap: 20 }}>
+      <Breadcrumbs items={[{ name: 'Fork waves', path: '/upgrades' }]} />
       <div className="page-head">
         <div>
           <h1 className="page-title">Fork waves</h1>

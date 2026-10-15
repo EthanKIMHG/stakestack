@@ -1,6 +1,7 @@
 import { getCatalog } from '@/lib/catalog';
 import { StackBuilder } from '@/components/builder/StackBuilder';
 import { supabase } from '@/lib/supabase';
+import { Breadcrumbs } from '@/components/JsonLd';
 
 export const revalidate = 300;
 
@@ -15,6 +16,7 @@ export default async function BuildPage() {
   const canSave = !!supabase() && process.env.NEXT_PUBLIC_ENABLE_ANON_STACKS !== 'false';
   return (
     <div style={{ display: 'grid', gap: 20 }}>
+      <Breadcrumbs items={[{ name: 'Build a stack', path: '/build' }]} />
       <div className="page-head">
         <h1 className="page-title">Build a stack</h1>
         <span className="meta">Draft saves in this browser</span>

@@ -5,7 +5,7 @@ import { ReleaseList } from '@/components/ReleaseList';
 import { Card, NetDot, Pill } from '@/components/ui';
 import { Logo } from '@/components/Logo';
 import { GitHubIcon } from '@/components/icons';
-import { JsonLd } from '@/components/JsonLd';
+import { Breadcrumbs, JsonLd } from '@/components/JsonLd';
 import { siteUrl } from '@/lib/site';
 import { waveName } from '@/lib/format';
 import type { Metadata } from 'next';
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description,
     alternates: { canonical: `/c/${slug}` },
     openGraph: { title, description, url: `/c/${slug}`, type: 'website' },
-    twitter: { card: 'summary', title, description },
+    twitter: { card: 'summary_large_image', title, description },
   };
 }
 
@@ -58,6 +58,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ slug
         url: `${siteUrl()}/c/${c.slug}`,
         ...(rows.find(r => !r.is_prerelease) ? { version: rows.find(r => !r.is_prerelease)!.tag } : {}),
       }} />
+      <Breadcrumbs items={[{ name: 'Releases', path: '/releases' }, { name: c.name, path: `/c/${c.slug}` }]} />
       <section className="card card-body comp-hero">
         <Logo logo={c.logo} name={c.name} size={64} />
         <div style={{ minWidth: 0, flex: 1, display: 'grid', gap: 8 }}>

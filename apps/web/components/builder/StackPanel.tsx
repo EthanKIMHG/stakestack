@@ -1,6 +1,5 @@
 'use client';
-import { useState } from 'react';
-import { Check, Copy, CopyPlus, Link2, RotateCcw, Rss, Save, Share2, ShoppingBag, Sparkles, UserPlus, X } from 'lucide-react';
+import { Check, CopyPlus, Link2, RotateCcw, Save, Share2, ShoppingBag, Sparkles, X } from 'lucide-react';
 import type { Catalog, ClusterNode } from '@stakestack/shared/types';
 import type { ComposeResult } from '@stakestack/shared/composer';
 import { ROLE_LABEL } from '@stakestack/shared/topology';
@@ -9,16 +8,14 @@ import { Diag, NetDot, Pill, StatusPill } from '../ui';
 import { Logo } from '../Logo';
 import { ROLE_SHORT, slotShort } from './meta';
 
-/** Save state for signed-in members; `enabled` is false when the deployment has no sign-in. */
+/** Save state for signed-in members. */
 export interface MemberSave {
-  enabled: boolean;
   signedIn: boolean;
   currentId: string | null;
   dirty: boolean;
   /** Share slug of the open saved stack. */
   slug: string | null;
   onSave: (asNew: boolean) => void;
-  onSignUp: () => void;
 }
 
 export interface LiveReadiness {
@@ -32,7 +29,7 @@ export interface LiveReadiness {
 const CORE = ['execution', 'consensus', 'validator'];
 
 /** The "cart": everything picked so far, its checks, fork readiness and the save action. */
-export function StackPanel({ catalog, result, nodes, name, onName, onRemove, onAddRecommended, readiness, readinessLoading, onSave, saving, saved, canSave, onReset, member }: {
+export function StackPanel({ catalog, result, nodes, name, onName, onRemove, onAddRecommended, readiness, readinessLoading, onSave, saving, saved, canSave, onReset, member, onShare }: {
   catalog: Catalog;
   result: ComposeResult;
   nodes: ClusterNode[];
@@ -48,6 +45,8 @@ export function StackPanel({ catalog, result, nodes, name, onName, onRemove, onA
   canSave: boolean;
   onReset: () => void;
   member: MemberSave;
+  /** Opens the share dialog for a saved stack. */
+  onShare: (slug: string) => void;
 }) {
   const bySlug = new Map(catalog.components.map(c => [c.slug, c]));
   const comp = (s?: string) => (s ? bySlug.get(s) : undefined);
@@ -57,21 +56,6 @@ export function StackPanel({ catalog, result, nodes, name, onName, onRemove, onA
   const notes = result.diagnostics.filter(d => d.level === 'info');
   const addons = result.slots.filter(s => s.visible && s.slot.id !== 'network' && !CORE.includes(s.slot.id) && s.slot.id !== 'dvt' && s.selected.length);
   const middleware = result.selection.dvt?.[0];
-  const [copied, setCopied] = useState(false);
-  const copy = async (text: string) => {
-    try { await navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 1500); } catch { /* clipboard blocked */ }
-  };
-  const share = (slug: string, title: string) => (
-    <div className="share-box">
-      <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Check aria-hidden width={15} height={15} />{title} <a href={`/s/${slug}`}>Open stack page</a></span>
-      <div className="row">
-        <button type="button" className="btn btn-xs" onClick={() => copy(`${location.origin}/s/${slug}`)}>{copied ? <Check aria-hidden /> : <Copy aria-hidden />}{copied ? 'Copied' : 'Copy link'}</button>
-        <a className="btn btn-xs" href={`/api/feed/${slug}.rss`}><Rss aria-hidden />RSS</a>
-        <a className="btn btn-xs" href={`/api/feed/${slug}.json`}><Link2 aria-hidden />JSON</a>
-      </div>
-    </div>
-  );
-
   const core = CORE.flatMap(id => {
     const s = result.slots.find(x => x.slot.id === id);
     if (!s?.visible || result.cluster) return [];
@@ -206,21 +190,14 @@ export function StackPanel({ catalog, result, nodes, name, onName, onRemove, onA
               {saving ? 'Saving…' : errors.length > 0 ? 'Fix checks to save' : member.currentId ? (member.dirty ? 'Save changes' : 'Saved to my stacks') : `Save to my stacks · ${itemCount} items`}
             </button>
             {member.currentId && <button type="button" className="btn btn-sm" disabled={saving || errors.length > 0} onClick={() => member.onSave(true)}><CopyPlus aria-hidden />Save as new stack</button>}
-            {member.slug && !member.dirty && share(member.slug, 'Share link')}
+            {member.slug && !member.dirty && <button type="button" className="btn btn-sm" onClick={() => onShare(member.slug!)}><Link2 aria-hidden />Share link</button>}
           </>
         ) : (
           <>
             <button type="button" className="btn btn-primary btn-block" disabled={!canSave || saving || errors.length > 0} onClick={onSave}>
               <Share2 aria-hidden />{saving ? 'Saving…' : errors.length > 0 ? 'Fix checks to save' : `Save & share · ${itemCount} items`}
             </button>
-            {saved && share(saved, 'Saved.')}
-            {saved && member.enabled && (
-              <div className="signup-cta">
-                <b><UserPlus aria-hidden />Keep it in your account</b>
-                <p>Sign up with GitHub or Google to save this stack, build more, and see your tools first.</p>
-                <button type="button" className="btn btn-sm btn-primary" onClick={member.onSignUp}><UserPlus aria-hidden />Sign up free</button>
-              </div>
-            )}
+            {saved && <button type="button" className="btn btn-sm" onClick={() => onShare(saved)}><Link2 aria-hidden />Share link</button>}
             {!canSave && <span className="meta">Saving is off on this deployment.</span>}
           </>
         )}

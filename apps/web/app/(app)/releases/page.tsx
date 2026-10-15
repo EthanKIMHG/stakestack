@@ -1,6 +1,7 @@
 import { getCatalog, getLatestAssessedAll } from '@/lib/catalog';
 import { logoMap } from '@/lib/logos';
 import { ReleaseList } from '@/components/ReleaseList';
+import { Breadcrumbs } from '@/components/JsonLd';
 
 export const revalidate = 300;
 
@@ -16,6 +17,7 @@ export default async function ReleasesPage() {
   const roles = Object.fromEntries(catalog.components.filter(c => slugs.has(c.slug)).map(c => [c.slug, c.roles as string[]]));
   return (
     <div style={{ display: 'grid', gap: 20 }}>
+      <Breadcrumbs items={[{ name: 'Releases', path: '/releases' }]} />
       <div className="page-head">
         <div>
           <h1 className="page-title">Releases</h1>

@@ -52,7 +52,8 @@ export default async function Landing() {
           { '@type': 'WebSite', name: SITE_NAME, url: siteUrl(), description: SITE_DESCRIPTION },
           { '@type': 'SoftwareApplication', name: SITE_NAME, applicationCategory: 'DeveloperApplication', operatingSystem: 'Web', url: siteUrl(),
             description: SITE_DESCRIPTION, isAccessibleForFree: true, license: 'https://opensource.org/licenses/MIT', codeRepository: REPO_URL,
-            offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+            offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+            publisher: { '@type': 'Organization', name: 'Parataxis' }, sameAs: [REPO_URL] },
         ],
       }} />
 

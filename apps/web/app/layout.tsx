@@ -6,8 +6,15 @@ import './globals.css';
 const sans = Figtree({ subsets: ['latin'], variable: '--font-figtree', display: 'swap' });
 const mono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-plex-mono', display: 'swap' });
 
+/** Search engine ownership tokens (docs/SEO.md). Values come from env so no code change is needed to verify. */
+const env = (k: string) => process.env[k]?.trim().replace(/^["']|["']$/g, '') || undefined;
+const otherVerification = Object.fromEntries(
+  [['naver-site-verification', env('NAVER_SITE_VERIFICATION')], ['msvalidate.01', env('BING_SITE_VERIFICATION')]].filter(([, v]) => v),
+) as Record<string, string>;
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
+  verification: { google: env('GOOGLE_SITE_VERIFICATION'), other: otherVerification },
   title: { default: SITE_TITLE, template: `%s · ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
   keywords: SITE_KEYWORDS,
