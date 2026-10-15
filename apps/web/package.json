@@ -11,6 +11,8 @@
     "test": "echo 'no web tests yet'"
   },
   "dependencies": {
+    "@privy-io/node": "0.35.0",
+    "@privy-io/react-auth": "3.46.0",
     "@stakestack/shared": "workspace:*",
     "@supabase/supabase-js": "^2.47.10",
     "lucide-react": "1.48.0",

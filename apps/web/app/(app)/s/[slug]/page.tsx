@@ -34,6 +34,7 @@ export default async function StackPage({ params, searchParams }: { params: Prom
   const readiness = computeReadiness(catalog, { ...stack, selection: result.selection }, releases);
   const names = Object.fromEntries(catalog.components.map(c => [c.slug, c.name]));
   const logos = Object.fromEntries(catalog.components.filter(c => c.logo).map(c => [c.slug, c.logo!]));
+  const roles = Object.fromEntries(catalog.components.map(c => [c.slug, c.roles as string[]]));
   const behind = readiness.reduce((n, r) => n + r.summary.behind, 0);
 
   return (
@@ -63,7 +64,7 @@ export default async function StackPage({ params, searchParams }: { params: Prom
             <ReadinessGrid nets={readiness} names={names} logos={logos} />
           </section>
           <Card title="Releases for this stack">
-            <ReleaseList rows={timeline} logos={logos} />
+            <ReleaseList rows={timeline} logos={logos} roles={roles} facets={['sev', 'type', 'cat', 'net']} search />
           </Card>
         </div>
         <StackSummary catalog={catalog} result={result} topology={stack.topology ?? null} />

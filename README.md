@@ -44,7 +44,7 @@ Generic GitHub release notifiers tell you *that* something was released. stakest
 |---|---|
 | **Stack builder** | Pick clients slot by slot or start from a template (solo staker, minority clients, Obol 4-node DVT, SSV operator, Lido CSM, Rocket Pool). Composition rules enforce what fits together. |
 | **DVT cluster editor** | For Charon and SSV, assign EL/CL/VC per node. stakestack computes the signing threshold (`ceil(2n/3)`), fault tolerance, and warns when one client runs on more nodes than the cluster can lose. One click auto-diversifies. |
-| **Severity-rated releases** | Every release gets `critical`, `high`, `recommended`, `optional` or `unrated`, plus flags such as `security`, `mandatory`, `hardfork`, `breaking`. The rating always shows the release-note evidence it came from. |
+| **Severity-rated releases** | Every release gets `critical`, `high`, `recommended`, `optional` or `unrated`, plus flags such as `security`, `mandatory`, `hardfork`, `breaking`. The rating always shows the release-note evidence it came from. The releases page filters by severity, type (security, hard fork, mandatory, breaking, …), component role, network, fork, channel and date; every badge is a filter and the view is shareable by URL. |
 | **Fork readiness per network** | For each network in your stack: the current upgrade, its activation date or countdown, the minimum version per client from the EF announcement, and whether a compliant release exists. |
 | **Fork timeline** | Glamsterdam, Fusaka and Pectra across Sepolia, Hoodi and Mainnet, with epochs, dates and a client × network version matrix. Tentative dates are labelled as such. |
 | **Feeds** | Each saved stack has an RSS and a JSON feed. Pipe them into Slack, Telegram, Discord, n8n or an email digest. |
@@ -209,16 +209,17 @@ The full annotated list is in [`.env.example`](.env.example). The required ones:
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | web, ingest | Supabase › Project Settings › API |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | web | Supabase › API Keys › Publishable key (`sb_publishable_…`) |
-| `SUPABASE_SECRET_KEY` | ingest only | Supabase › API Keys › Secret key (`sb_secret_…`). Never put it in Vercel. |
+| `SUPABASE_SECRET_KEY` | ingest, web (server only) | Supabase › API Keys › Secret key (`sb_secret_…`). The web server uses it only for member stacks after verifying the sign-in; give Vercel its own key (e.g. `stakestack-web`) and never prefix it with `NEXT_PUBLIC_`. |
 | `SUPABASE_DB_URL` | migrations | Supabase › Connect › Session pooler |
 | `GITHUB_TOKEN` | ingest (local runs) | Fine-grained PAT, public repositories, **no permissions**. In Actions the built-in token is used unless you set `STAKESTACK_GITHUB_TOKEN`. |
 | `REVALIDATE_SECRET` | web, ingest | `openssl rand -hex 32` |
 | `NEXT_PUBLIC_SITE_URL` | web, ingest | Your deployment URL. The ingester only sends the secret to a host that identifies itself as stakestack. |
+| `NEXT_PUBLIC_PRIVY_APP_ID`, `PRIVY_APP_SECRET` | web (optional) | Privy dashboard › App settings. Turns on GitHub / Google sign-in; setup in [docs/AUTH.md](docs/AUTH.md). |
 
 ### 3. Deploy
 
 1. **GitHub:** add secrets `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `REVALIDATE_SECRET`, variable `NEXT_PUBLIC_SITE_URL`, and create a `production` environment. `STAKESTACK_GITHUB_TOKEN` is optional: without it the workflow uses the built-in `github.token`, which is plenty for ~2 GraphQL points per run.
-2. **Vercel:** import the repo with root directory `apps/web`; set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `REVALIDATE_SECRET`, `NEXT_PUBLIC_SITE_URL`.
+2. **Vercel:** import the repo with root directory `apps/web`; set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `REVALIDATE_SECRET`, `NEXT_PUBLIC_SITE_URL`. For sign-in and member stacks also set `NEXT_PUBLIC_PRIVY_APP_ID`, `PRIVY_APP_SECRET` and a web-only `SUPABASE_SECRET_KEY` ([docs/AUTH.md](docs/AUTH.md)).
 3. Push to `main`. The `catalog` workflow syncs the catalog, `ingest` runs every 30 minutes.
 
 ### GitHub API budget

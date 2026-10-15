@@ -13,9 +13,7 @@ export function Pill({ tone = 'neutral', children, className = '', title }: { to
 const FLAG_TONE: Record<string, Tone> = {
   security: 'danger', hotfix: 'danger', mandatory: 'flag', breaking: 'flag', hardfork: 'accent', 'testnet-only': 'accent',
 };
-export function Flag({ flag }: { flag: string }) {
-  return <Pill tone={FLAG_TONE[flag] ?? 'neutral'} className="pill-sm">{flag}</Pill>;
-}
+export const flagTone = (flag: string): Tone => FLAG_TONE[flag] ?? 'neutral';
 
 export function NetDot({ id }: { id: string }) {
   return <span className={`net-dot net-${id}`} aria-hidden />;

@@ -2,6 +2,8 @@ import { NavLinks } from '@/components/NavLinks';
 import { UtcClock } from '@/components/UtcClock';
 import { BrandLockup } from '@/components/Brand';
 import { GitHubIcon } from '@/components/icons';
+import { AccountButton } from '@/components/auth/AccountButton';
+import { AuthLoader } from '@/components/auth/AuthLoader';
 import { REPO_URL } from '@/lib/site';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -15,6 +17,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <span className="nav-sep" aria-hidden />
             <NavLinks />
             <a href={REPO_URL} className="nav-link nav-github" target="_blank" rel="noreferrer" title="GitHub"><GitHubIcon /><span className="sr-only">GitHub</span></a>
+            <AccountButton />
           </div>
         </div>
       </header>
@@ -25,6 +28,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <span>Open source · MIT · <a href={REPO_URL} target="_blank" rel="noreferrer">GitHub</a></span>
         </div>
       </footer>
+      <AuthLoader />
     </>
   );
 }

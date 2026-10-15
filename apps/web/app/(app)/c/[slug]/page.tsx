@@ -91,7 +91,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ slug
         </Card>
       )}
       <Card title={<div><h2>Releases</h2><span className="meta">Rated by the <span className="mono" style={{ fontSize: 12 }}>{c.assessor}</span> rules · weight {c.priority_weight ?? 1}</span></div>}>
-        <ReleaseList rows={rows} linkComponents={false} />
+        <ReleaseList rows={rows} linkComponents={false} facets={['sev', 'type', 'net', 'fork']} />
       </Card>
     </div>
   );

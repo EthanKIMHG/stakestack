@@ -1,4 +1,4 @@
-import { getLatestAssessedAll } from '@/lib/catalog';
+import { getCatalog, getLatestAssessedAll } from '@/lib/catalog';
 import { logoMap } from '@/lib/logos';
 import { ReleaseList } from '@/components/ReleaseList';
 
@@ -11,18 +11,22 @@ export const metadata = {
 };
 
 export default async function ReleasesPage() {
-  const rows = await getLatestAssessedAll(250);
+  const [rows, catalog] = await Promise.all([getLatestAssessedAll(250), getCatalog()]);
+  const slugs = new Set(rows.map(r => r.component_slug));
+  const roles = Object.fromEntries(catalog.components.filter(c => slugs.has(c.slug)).map(c => [c.slug, c.roles as string[]]));
   return (
     <div style={{ display: 'grid', gap: 20 }}>
       <div className="page-head">
         <div>
           <h1 className="page-title">Releases</h1>
-          <p className="page-sub">Every tracked component, newest first.</p>
+          <p className="page-sub">Every tracked component, newest first. Click any badge to filter by it.</p>
         </div>
       </div>
-      <section className="card">
-        <ReleaseList rows={rows} logos={logoMap(rows.map(r => r.component_slug))} emptyText="No releases ingested yet. The ingester runs every 30 minutes." />
-      </section>
+      <ReleaseList
+        rows={rows} logos={logoMap(slugs)} roles={roles} layout="sidebar" syncUrl personalize
+        facets={['sev', 'type', 'cat', 'net', 'fork']}
+        emptyText="No releases ingested yet. The ingester runs every 30 minutes."
+      />
     </div>
   );
 }

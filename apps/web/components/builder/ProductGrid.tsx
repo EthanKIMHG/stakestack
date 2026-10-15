@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { BookOpen, Check, ExternalLink, Globe, Info, Plus, Star } from 'lucide-react';
+import { BookOpen, Check, ExternalLink, Globe, Info, Plus, Star, UserRound } from 'lucide-react';
 import type { Component } from '@stakestack/shared/types';
 import { Logo } from '../Logo';
 import { GitHubIcon } from '../icons';
@@ -17,7 +17,7 @@ const STATUS_TONE: Record<string, string> = { deprecated: 'pill-flag', archived:
  * Product tiles: logo, name and vendor only. Everything else (summary, language, licence, links)
  * sits behind the info button so the grid stays scannable.
  */
-export function ProductGrid({ options, selected, onToggle, recommended, query = '', builtIn, emptyText = 'No matching components.' }: {
+export function ProductGrid({ options, selected, onToggle, recommended, query = '', builtIn, priority, emptyText = 'No matching components.' }: {
   options: Component[];
   selected: string[];
   onToggle: (slug: string) => void;
@@ -25,17 +25,20 @@ export function ProductGrid({ options, selected, onToggle, recommended, query = 
   query?: string;
   /** The choice that is already covered by another pick (the VC built into the selected CL). */
   builtIn?: string;
+  /** Members' own tools (from their saved stacks): listed first and tagged. */
+  priority?: Set<string>;
   emptyText?: string;
 }) {
   const [info, setInfo] = useState<string | null>(null);
-  const shown = options.filter(o => matches(o, query) || selected.includes(o.slug));
+  const filtered = options.filter(o => matches(o, query) || selected.includes(o.slug));
+  const shown = priority?.size ? [...filtered.filter(o => priority.has(o.slug)), ...filtered.filter(o => !priority.has(o.slug))] : filtered;
   if (shown.length === 0) return <p className="meta">{emptyText}</p>;
   return (
     <div className="product-grid">
       {shown.map(o => (
         <ProductTile
           key={o.slug} c={o} on={selected.includes(o.slug)} onToggle={() => onToggle(o.slug)}
-          recommended={!!recommended?.has(o.slug)} builtIn={builtIn === o.slug}
+          recommended={!!recommended?.has(o.slug)} builtIn={builtIn === o.slug} yours={!!priority?.has(o.slug)}
           infoOpen={info === o.slug} onInfo={open => setInfo(open ? o.slug : null)}
         />
       ))}
@@ -43,8 +46,8 @@ export function ProductGrid({ options, selected, onToggle, recommended, query = 
   );
 }
 
-function ProductTile({ c, on, onToggle, recommended, builtIn, infoOpen, onInfo }: {
-  c: Component; on: boolean; onToggle: () => void; recommended: boolean; builtIn: boolean; infoOpen: boolean; onInfo: (open: boolean) => void;
+function ProductTile({ c, on, onToggle, recommended, builtIn, yours, infoOpen, onInfo }: {
+  c: Component; on: boolean; onToggle: () => void; recommended: boolean; builtIn: boolean; yours: boolean; infoOpen: boolean; onInfo: (open: boolean) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [alignLeft, setAlignLeft] = useState(false);
@@ -66,6 +69,7 @@ function ProductTile({ c, on, onToggle, recommended, builtIn, infoOpen, onInfo }
 
   const tags = [
     builtIn && <span key="b" className="pill pill-ok pill-sm">Built into CL</span>,
+    yours && !on && <span key="y" className="pill pill-sm pill-yours"><UserRound aria-hidden />Yours</span>,
     recommended && <span key="r" className="pill pill-accent pill-sm"><Star aria-hidden />Recommended</span>,
     c.status !== 'active' && <span key="s" className={`pill pill-sm ${STATUS_TONE[c.status] ?? ''}`}>{c.status}</span>,
   ].filter(Boolean);
