@@ -32,4 +32,5 @@ export const SITE_KEYWORDS = [
   'geth', 'nethermind', 'besu', 'reth', 'erigon', 'lighthouse', 'prysm', 'teku', 'nimbus', 'lodestar', 'grandine',
   'lido csm', 'rocket pool', 'eth-docker',
 ];
+export const CONTACT_EMAIL = 'kimhg@parataxiseth.co.kr';
 export const REPO_URL = process.env.NEXT_PUBLIC_GITHUB_REPO_URL || 'https://github.com/kimhg2/stakestack';

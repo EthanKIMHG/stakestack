@@ -1,7 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 import { BrandLockup, BrandMark } from '@/components/Brand';
 import { GitHubIcon } from '@/components/icons';
-import { REPO_URL } from '@/lib/site';
+import { CONTACT_EMAIL, REPO_URL } from '@/lib/site';
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -27,6 +27,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <a href="/upgrades">Fork waves</a>
             <a href="/releases">Releases</a>
             <a href={REPO_URL} target="_blank" rel="noreferrer">GitHub</a>
+            <a href={`mailto:${CONTACT_EMAIL}`}>Contact</a>
           </nav>
           <div className="lp-legal">
             <span>Open source under the MIT license · by Parataxis</span>

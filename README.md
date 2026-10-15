@@ -282,6 +282,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 Issues and pull requests are welcome: new components, better assessors for a client's release-note format, fork data corrections, UI improvements.
 Please include a real release-note excerpt as a test case when you change an assessor.
 
+## Contact
+
+Questions, feedback or partnerships: [kimhg@parataxiseth.co.kr](mailto:kimhg@parataxiseth.co.kr).
+
 ## License
 
 [MIT](LICENSE). Not affiliated with the Ethereum Foundation or any client team. Client names and logos belong to their owners.

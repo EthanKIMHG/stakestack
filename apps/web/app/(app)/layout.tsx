@@ -4,7 +4,7 @@ import { BrandLockup } from '@/components/Brand';
 import { GitHubIcon } from '@/components/icons';
 import { AccountButton } from '@/components/auth/AccountButton';
 import { AuthLoader } from '@/components/auth/AuthLoader';
-import { REPO_URL } from '@/lib/site';
+import { CONTACT_EMAIL, REPO_URL } from '@/lib/site';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -25,7 +25,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <footer className="app-footer">
         <div className="wrap app-footer-inner">
           <span>Ratings are rule-based and show their evidence. Read release notes before upgrading.</span>
-          <span>Open source · MIT · <a href={REPO_URL} target="_blank" rel="noreferrer">GitHub</a></span>
+          <span>Open source · MIT · <a href={REPO_URL} target="_blank" rel="noreferrer">GitHub</a> · <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></span>
         </div>
       </footer>
       <AuthLoader />

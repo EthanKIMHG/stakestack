@@ -9,7 +9,7 @@ import { GitHubIcon } from '@/components/icons';
 import { WaveProgress } from '@/components/WaveProgress';
 import { SeverityBadge } from '@/components/ui';
 import { relative, waveName } from '@/lib/format';
-import { REPO_URL, SITE_DESCRIPTION, SITE_NAME, siteUrl } from '@/lib/site';
+import { CONTACT_EMAIL, REPO_URL, SITE_DESCRIPTION, SITE_NAME, siteUrl } from '@/lib/site';
 
 export const revalidate = 300;
 
@@ -53,7 +53,7 @@ export default async function Landing() {
           { '@type': 'SoftwareApplication', name: SITE_NAME, applicationCategory: 'DeveloperApplication', operatingSystem: 'Web', url: siteUrl(),
             description: SITE_DESCRIPTION, isAccessibleForFree: true, license: 'https://opensource.org/licenses/MIT', codeRepository: REPO_URL,
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-            publisher: { '@type': 'Organization', name: 'Parataxis' }, sameAs: [REPO_URL] },
+            publisher: { '@type': 'Organization', name: 'Parataxis', email: CONTACT_EMAIL, contactPoint: { '@type': 'ContactPoint', email: CONTACT_EMAIL, contactType: 'customer support' } }, sameAs: [REPO_URL] },
         ],
       }} />
 
