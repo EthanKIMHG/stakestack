@@ -12,7 +12,8 @@ export function StackSummary({ catalog, result, topology }: { catalog: Catalog; 
   const nm = (s?: string) => (s ? bySlug.get(s)?.name ?? s : '—');
   const nodes = topology?.nodes ?? [];
   const rows = result.slots.filter(s => s.visible && s.slot.id !== 'network' && s.selected.length && !(result.cluster && s.managedByCluster));
-  const issues = result.diagnostics.filter(d => d.level !== 'info');
+  const issues = result.diagnostics.filter(d => d.level !== 'info' && !d.check);
+  const checklist = result.diagnostics.filter(d => d.check);
   const errors = issues.filter(d => d.level === 'error').length;
   return (
     <aside className="card cart" aria-label="Composition">
@@ -55,7 +56,13 @@ export function StackSummary({ catalog, result, topology }: { catalog: Catalog; 
       {issues.length > 0 && (
         <div className="cart-section">
           <div className="cart-label"><span className="eyebrow">Checks</span></div>
-          {issues.map((d, i) => <Diag key={i} level={d.level}>{d.message}</Diag>)}
+          {issues.map((d, i) => <Diag key={i} level={d.level} source={d.source}>{d.message}</Diag>)}
+        </div>
+      )}
+      {checklist.length > 0 && (
+        <div className="cart-section">
+          <div className="cart-label"><span className="eyebrow">Before you go live</span></div>
+          {checklist.map((d, i) => <Diag key={i} level={d.level === 'warn' ? 'warn' : 'info'} source={d.source}>{d.message}</Diag>)}
         </div>
       )}
     </aside>

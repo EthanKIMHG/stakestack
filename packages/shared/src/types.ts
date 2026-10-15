@@ -58,16 +58,31 @@ export interface Slot {
   exclude_tag?: string;
 }
 
-export interface RuleWhen { component?: string; any_of?: string[]; slot_filled?: string; network?: string }
+export interface RuleWhen { component?: string; any_of?: string[]; all_of?: string[]; slot_filled?: string; network?: string }
 export interface RuleRestrict { slot: string; to?: string[]; to_supporting?: keyof ComponentSupports }
 export type ClusterRole = 'execution' | 'consensus' | 'validator';
-export interface ClusterSpec { default_nodes?: number; roles: ClusterRole[] }
+export interface ClusterSpec {
+  default_nodes?: number; roles: ClusterRole[];
+  /** Smallest cluster the middleware accepts (error below it). */
+  min_nodes?: number;
+  /** Smallest cluster the vendor recommends (warning below it). */
+  recommended_nodes?: number;
+}
+/** An operator checklist item a rule adds: protocol policy that software picks alone cannot satisfy (fee recipient, relay allowlist, exits). */
+export interface RuleCheck { message: string; level?: 'info' | 'warn'; source?: string }
 export interface RuleThen {
   open_slots?: string[]; hide_slots?: string[]; require_slots?: string[];
   allow_many?: string[]; cluster?: ClusterSpec;
   restrict?: RuleRestrict[]; recommend?: string[]; require?: string[]; conflict?: string[]; warn?: string;
+  checks?: RuleCheck[];
 }
-export interface Rule { id: string; description?: string; when: RuleWhen; then: RuleThen }
+export interface Rule {
+  id: string; description?: string; when: RuleWhen; then: RuleThen;
+  /** Official documentation the rule is based on. Required by catalog validation. */
+  sources?: string[];
+  /** Date (YYYY-MM-DD) someone last checked the rule against its sources. */
+  verified_at?: string;
+}
 export interface SlotsFile { slots: Slot[]; rules: Rule[] }
 
 export interface Network {
@@ -137,7 +152,7 @@ export interface StackSelection {
   [slotId: string]: string[];
 }
 /** One machine in a DVT cluster. Each node may run different clients. */
-export interface ClusterNode { label?: string; execution?: string; consensus?: string; validator?: string }
+export interface ClusterNode { label?: string; execution?: string; consensus?: string; validator?: string; /** Hosting provider or data center operator, free text (e.g. "OVH", "AWS", "home"). */ host?: string }
 export interface Topology { nodes: ClusterNode[]; threshold?: number }
 
 export interface Stack {

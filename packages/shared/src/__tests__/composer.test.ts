@@ -57,9 +57,10 @@ describe('compose', () => {
     expect(r.slots.find(s => s.slot.id === 'validator')!.visible).toBe(false);
     expect(errors(r)).toEqual([]);
   });
-  it('lido csm requires the ejector', () => {
+  it('lido csm recommends the ejector (manual exits are allowed)', () => {
     const r = compose(catalog, { network: ['mainnet'], execution: ['geth'], consensus: ['teku'], protocol: ['lido-csm'] });
-    expect(errors(r).some(d => d.rule === 'lido-csm')).toBe(true);
+    expect(errors(r).some(d => d.rule === 'lido-csm')).toBe(false);
+    expect(r.recommended).toContain('validator-ejector');
   });
   it('mainnet-only stacks get a testnet hint, hoodi+mainnet do not', () => {
     expect(compose(catalog, { network: ['mainnet'], execution: ['geth'], consensus: ['teku'] }).diagnostics.some(d => d.message.startsWith('No testnet'))).toBe(true);

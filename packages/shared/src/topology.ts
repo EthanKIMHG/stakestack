@@ -55,6 +55,8 @@ export function analyzeTopology(catalog: Catalog, t: Topology, spec: ClusterSpec
     diagnostics.push({ level: 'error', message: 'Add at least one node to the cluster.' });
     return { n, threshold, tolerance, shares, diagnostics, healthy: false };
   }
+  if (spec.min_nodes && n < spec.min_nodes) diagnostics.push({ level: 'error', message: `A cluster needs at least ${spec.min_nodes} nodes; ${n} ${n === 1 ? 'is' : 'are'} not supported.` });
+  else if (spec.recommended_nodes && n < spec.recommended_nodes) diagnostics.push({ level: 'warn', message: `${n} nodes tolerate a crashed node but not a faulty one. ${spec.recommended_nodes} or more nodes are recommended.` });
   if (threshold > n) diagnostics.push({ level: 'error', message: `Threshold ${threshold} is larger than the ${n} nodes in the cluster.` });
 
   t.nodes.forEach((node, i) => {
@@ -79,6 +81,23 @@ export function analyzeTopology(catalog: Catalog, t: Topology, spec: ClusterSpec
         message: all
           ? `Every node runs ${share.name} (${ROLE_LABEL[role]}). One ${share.name} bug stops the whole cluster.`
           : `${share.name} (${ROLE_LABEL[role]}) runs on ${share.nodes.length} of ${n} nodes. The cluster needs ${threshold} online, so it tolerates only ${tolerance} failing node${tolerance === 1 ? '' : 's'}.`,
+      });
+    }
+  }
+
+  // Hosting diversity: client diversity does not help when one provider outage takes every node down.
+  const hosts = t.nodes.map(node => node.host?.trim().toLowerCase()).filter((h): h is string => !!h);
+  if (n >= 3 && hosts.length === n) {
+    const counts = new Map<string, number>();
+    for (const h of hosts) counts.set(h, (counts.get(h) ?? 0) + 1);
+    const [top, count] = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]!;
+    const label = t.nodes.find(node => node.host?.trim().toLowerCase() === top)!.host!.trim();
+    if (count > tolerance) {
+      diagnostics.push({
+        level: 'warn',
+        message: count === n
+          ? `Every node is hosted on ${label}. One ${label} outage or account suspension stops the whole cluster.`
+          : `${label} hosts ${count} of ${n} nodes. The cluster tolerates only ${tolerance} offline node${tolerance === 1 ? '' : 's'}.`,
       });
     }
   }

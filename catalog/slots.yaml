@@ -112,26 +112,59 @@ rules:
   # ---------------------------------------------------------------- Charon --
   - id: charon-opens-stack
     description: Charon sits between the beacon node and the VC. It needs a Charon-compatible VC and optionally Web3Signer/Dirk.
+    sources:
+      - https://docs.obol.org/learn/charon/cluster-configuration
+      - https://docs.obol.org/run-a-dv/prepare/deployment-best-practices
+      - https://github.com/ObolNetwork/charon/releases
+    verified_at: "2026-10-15"
     when: { component: charon }
     then:
-      cluster: { default_nodes: 4, roles: [execution, consensus, validator] }
+      cluster: { default_nodes: 4, min_nodes: 3, recommended_nodes: 4, roles: [execution, consensus, validator] }
       allow_many: [execution, consensus, validator]
       open_slots: [dvt-extras, remote-signer]
       restrict:
         - { slot: validator, to_supporting: charon }
       recommend: [charon-distributed-validator-node, obol-monitoring]
       warn: "Charon requires the VC to be configured against Charon's validator API (default :3600), not the beacon node directly. Keep CL and Charon versions inside Obol's compatibility matrix."
+      checks:
+        - message: "Check each node's BN/VC pair against the compatibility table in the current Charon release notes. Prysm, Lighthouse and Nimbus VCs have a known issue with a Lodestar beacon node, and Vouch does not yet support aggregation or sync contributions."
+          source: https://github.com/ObolNetwork/charon/releases
+        - message: "Every operator must enable the builder API (MEV) on their node, or the cluster risks missing proposals. Relay lists may differ between nodes."
+          level: warn
+          source: https://docs.obol.org/advanced-and-troubleshooting/advanced/enable-mev
 
-  - id: charon-lido
-    description: Lido SimpleDVT clusters on Charon need the exit sidecar.
+  - id: lido-simple-dvt-needs-dvt
+    description: Lido Simple DVT validators run on a DVT cluster (Obol or SSV). Regular clusters were wound down in 2026.
+    sources:
+      - https://operatorportal.lido.fi/modules/simple-dvt-module
+      - https://research.lido.fi/t/proposal-wind-down-the-simple-dvt-module-regular-clusters/11571
+    verified_at: "2026-10-15"
     when: { component: lido-simple-dvt }
     then:
-      require: [charon]
-      recommend: [lido-dv-exit]
+      require_slots: [dvt]
+      checks:
+        - message: "The Lido DAO wound down Simple DVT's regular clusters (completed 2026-09-18); only the Super Clusters remain. New DVT operators are pointed to the Community Staking Module."
+          level: warn
+          source: https://research.lido.fi/t/proposal-wind-down-the-simple-dvt-module-regular-clusters/11571
+
+  - id: lido-simple-dvt-obol-exits
+    description: Lido operators on Charon pre-sign exits with lido-dv-exit for the validator-ejector.
+    sources:
+      - https://github.com/ObolNetwork/lido-dv-exit
+    verified_at: "2026-10-15"
+    when: { all_of: [charon, lido-simple-dvt] }
+    then:
+      recommend: [lido-dv-exit, validator-ejector]
+      warn: "lido-dv-exit pre-signs voluntary exits for the cluster and writes them where the Lido validator-ejector picks them up."
 
   # -------------------------------------------------------------------- SSV --
   - id: ssv-replaces-vc
     description: The SSV node performs validator duties itself; a separate VC is not run.
+    sources:
+      - https://docs.ssv.network/operators/operator-node/node-setup/
+      - https://docs.ssv.network/learn/network-overview/clusters/cluster-creation
+      - https://docs.ssv.network/operators/operator-node/setup-sidecars/configuring-mev
+    verified_at: "2026-10-15"
     when: { any_of: [ssv-node, anchor] }
     then:
       cluster: { default_nodes: 1, roles: [execution, consensus] }
@@ -139,68 +172,172 @@ rules:
       hide_slots: [validator, remote-signer]
       open_slots: [dvt-extras]
       recommend: [ssv-dkg]
-      warn: "With SSV/Anchor the operator does not run a validator client. Keyshares come from DKG; MEV is configured on the SSV node."
+      warn: "With SSV/Anchor the operator runs an EL, a beacon node and the SSV node, but no validator client. Validator clusters span 4, 7, 10 or 13 operators; the nodes here are your own."
+      checks:
+        - message: "MEV for SSV is configured on the beacon node's builder API, not on the SSV node. Register as many relays as you can; if the leading operator has no MEV, the block is proposed without it."
+          source: https://docs.ssv.network/operators/operator-node/setup-sidecars/configuring-mev
 
   # ------------------------------------------------------------ Embedded VC --
   - id: standalone-vc-needs-compatible-bn
-    description: Vouch and Vero are standalone VCs; any CL works as a beacon node.
+    description: Vouch and Vero are standalone VCs that spread duties over several beacon nodes.
+    sources:
+      - https://github.com/attestantio/vouch
+      - https://vero.docs.serenita.io/reference/using_multiple_beacon_nodes/
+    verified_at: "2026-10-15"
     when: { any_of: [vouch, vero] }
     then:
+      allow_many: [execution, consensus]
       open_slots: [remote-signer]
-      warn: "Standalone VCs can fan out to multiple beacon nodes. Add every CL you run to monitoring."
+      warn: "Standalone VCs connect to several beacon nodes. Pick every EL/CL pair you run; different clients protect against a single client bug."
 
   - id: vouch-dirk
+    description: Vouch signs through Dirk (distributed keys) or a local wallet. Web3Signer is not a Vouch account manager.
+    sources:
+      - https://github.com/attestantio/vouch/blob/master/docs/accountmanager.md
+      - https://github.com/attestantio/dirk
+    verified_at: "2026-10-15"
     when: { component: vouch }
     then:
+      restrict:
+        - { slot: remote-signer, to: [dirk] }
       recommend: [dirk]
+
+  - id: vero-remote-signer
+    description: Vero holds no keys; it signs only through a remote signer.
+    sources:
+      - https://vero.docs.serenita.io/
+      - https://vero.docs.serenita.io/usage/mev/
+    verified_at: "2026-10-15"
+    when: { component: vero }
+    then:
+      require_slots: [remote-signer]
+      restrict:
+        - { slot: remote-signer, to: [web3signer] }
+      warn: "Vero attests only when a majority of its beacon nodes agree (--attestation-consensus-threshold). For MEV, connect the beacon nodes to MEV-Boost or Commit-Boost and start Vero with --use-external-builder."
+
+  - id: caplin-external-vc
+    description: Caplin has no validator client of its own; an external VC connects to its Beacon API.
+    sources:
+      - https://docs.erigon.tech/staking/caplin
+    verified_at: "2026-10-15"
+    when: { component: caplin }
+    then:
+      warn: "Caplin has no built-in validator client. Point an external VC at Erigon's Beacon API (default :5555); Erigon documents the Lighthouse VC setup."
+
+  # --------------------------------------------------------------- Signers --
+  - id: web3signer-slashing-db
+    description: Web3Signer's slashing protection runs on PostgreSQL.
+    sources:
+      - https://docs.web3signer.consensys.com/concepts/slashing-protection
+    verified_at: "2026-10-15"
+    when: { component: web3signer }
+    then:
+      checks:
+        - message: "Web3Signer slashing protection needs a PostgreSQL database. Several Web3Signer instances can share one database; its locking lets only one of them sign for a given key."
+          source: https://docs.web3signer.consensys.com/concepts/slashing-protection
 
   # ------------------------------------------------------------------- MEV --
   - id: mev-boost-needs-relay-config
+    description: Relays are configured per network.
+    sources:
+      - https://github.com/flashbots/mev-boost
+    verified_at: "2026-10-15"
     when: { component: mev-boost }
     then:
-      warn: "Relay list is network-specific. Re-check relays after every fork; relays lag client releases."
+      warn: "Relay URLs are network-specific (mainnet, Hoodi, Sepolia). Re-check the relay list after every fork."
 
   - id: commit-boost
+    description: Commit-Boost's PBS module serves the same builder API as MEV-Boost and talks to the same relays.
+    sources:
+      - https://commit-boost.github.io/commit-boost-client/get_started/overview
+      - https://commit-boost.github.io/commit-boost-client/get_started/configuration
+    verified_at: "2026-10-15"
     when: { component: commit-boost }
     then:
-      conflict: [mev-boost]
+      warn: "Point the beacon node's builder endpoint at Commit-Boost's PBS service (default :18550) and list relays under [[relays]] in its config. It replaces MEV-Boost in the stack."
 
   # ------------------------------------------------------------- Protocols --
   - id: lido-csm
+    description: CSM operators process exit requests, send rewards to the Lido vault and use allowlisted relays.
+    sources:
+      - https://docs.lido.fi/staking-modules/validator-exits
+      - https://docs.lido.fi/run-on-lido/csm/penalties
+      - https://docs.lido.fi/run-on-lido/csm/troubleshooting/setting-the-fee-recipient-for-csm-validators
+      - https://docs.lido.fi/run-on-lido/csm/troubleshooting/mev-install
+    verified_at: "2026-10-15"
     when: { component: lido-csm }
     then:
-      require: [validator-ejector]
-      recommend: [lido-keys-api, ethereum-validators-monitoring]
-      warn: "CSM requires the validator-ejector to process exit requests. Missing it leads to penalties under the Lido exit policy."
+      recommend: [validator-ejector, lido-keys-api, ethereum-validators-monitoring]
+      warn: "Exit requests must be processed within 4 days (5 for ICS/IDVTC). The validator-ejector automates it; manual exits or your own tooling also work."
+      checks:
+        - message: "Set the fee recipient to the Lido Execution Layer Rewards Vault (mainnet 0x388C818CA8B9251b393131C08a736A67ccB19297, Hoodi 0x9b108015fe433F173696Af3Aa0CF7CDb3E104258). Any other address is penalised from your bond."
+          level: warn
+          source: https://docs.lido.fi/run-on-lido/csm/troubleshooting/setting-the-fee-recipient-for-csm-validators
+        - message: "Use only relays on Lido's allowlist, including at least one relay marked \"must use some\"."
+          level: warn
+          source: https://docs.lido.fi/contracts/mev-boost-relays-allowed-list
+        - message: "A late exit triggers a forced exit (EIP-7002) and charges your bond an exit delay penalty plus the withdrawal request fee."
+          source: https://docs.lido.fi/run-on-lido/csm/penalties
 
   - id: rocket-pool
+    description: Smartnode runs the EL, CL, VC and MEV-Boost containers itself, from a fixed list of supported clients.
+    sources:
+      - https://docs.rocketpool.net/node-staking/install-modes
+      - https://docs.rocketpool.net/node-staking/eth-clients
+      - https://docs.rocketpool.net/node-staking/fee-distrib-sp
+      - https://docs.rocketpool.net/node-staking/mev
+    verified_at: "2026-10-15"
     when: { component: rocketpool-smartnode }
     then:
       hide_slots: [node-manager]
+      restrict:
+        - { slot: execution, to: [geth, besu, nethermind, reth, erigon] }
+        - { slot: consensus, to: [lighthouse, lodestar, nimbus-eth2, prysm, teku] }
+        - { slot: validator, to: [lighthouse, lodestar, nimbus-eth2, prysm, teku] }
       warn: "Smartnode manages EL/CL/VC/MEV-Boost containers itself. Pick the clients it will run; do not pair it with another orchestrator."
+      checks:
+        - message: "The fee recipient must be one Rocket Pool accepts: the Smoothing Pool if you opted in, otherwise your fee distributor, megapool contract, the Smoothing Pool or rETH. The Oracle DAO penalises any other address."
+          level: warn
+          source: https://docs.rocketpool.net/node-staking/fee-distrib-sp
+        - message: "MEV-Boost is optional for now (opt-out phase), but if you use it, only Rocket Pool's trusted relays are allowed."
+          source: https://docs.rocketpool.net/node-staking/mev
 
   - id: nodeset-hyperdrive
+    description: Hyperdrive manages the client pair in Local mode, like Smartnode.
+    sources:
+      - https://docs.nodeset.io/node-operators/hyperdrive/configuration.html
+      - https://docs.nodeset.io/constellation/introduction.html
+    verified_at: "2026-10-15"
     when: { component: hyperdrive }
     then:
       hide_slots: [node-manager]
+      warn: "In Local mode Hyperdrive runs your EL/CL pair itself; External mode uses clients you already run. The Constellation module is deprecated; StakeWise is the active module."
 
   - id: stakewise
+    description: The v3 operator service registers validators and rotates exit signatures; your own VC performs duties.
+    sources:
+      - https://github.com/stakewise/v3-operator
+      - https://docs.stakewise.io/operator/alternative-key-management/overview
+    verified_at: "2026-10-15"
     when: { component: stakewise-v3-operator }
     then:
-      recommend: [web3signer]
+      warn: "The operator service registers validators, rotates exit signatures and updates vault state; it does not sign duties. Import its keystores into your VC, or use Web3Signer or HashiCorp Vault instead of local keystores."
 
-  - id: eigenlayer
+  - id: eigenlayer-cli-is-for-avs
+    description: eigenlayer-cli manages AVS operator keys and registration; native restakers do not need it.
+    sources:
+      - https://github.com/Layr-Labs/eigenlayer-cli
+    verified_at: "2026-10-15"
     when: { component: eigenlayer-cli }
     then:
-      warn: "EigenPod restaking changes withdrawal credentials. Verify validator withdrawal address strategy before enabling."
+      recommend: [eigenpod-proofs]
+      warn: "eigenlayer-cli is for AVS operators (keys and registration). To restake your own validators, point withdrawal credentials at an EigenPod and submit proofs with the EigenPod proofs CLI."
 
-  # --------------------------------------------------------- Node managers --
-  - id: eth-docker
-    when: { component: eth-docker }
+  - id: eigenpod-restaking
+    description: Native restaking points withdrawal credentials at an EigenPod and needs credential and checkpoint proofs.
+    sources:
+      - https://github.com/Layr-Labs/eigenpod-proofs-generation/blob/master/cli/README.md
+    verified_at: "2026-10-15"
+    when: { component: eigenpod-proofs }
     then:
-      recommend: [ethereum-metrics-exporter]
-
-  - id: dappnode
-    when: { component: dappnode }
-    then:
-      warn: "DAppNode ships its own packaged versions; the upstream release date and the DAppNode package date differ. stakestack tracks upstream."
+      warn: "Withdrawal credentials must point to your EigenPod. The proofs CLI needs EL and beacon node RPC URLs to build credential and checkpoint proofs."

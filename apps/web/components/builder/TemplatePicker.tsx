@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
-import { Check, CircleCheck, WandSparkles } from 'lucide-react';
-import type { Preset } from '@stakestack/shared/presets';
+import { Check, CircleCheck, ExternalLink, WandSparkles } from 'lucide-react';
+import { PRESET_GROUPS, type Preset, type PresetGroup } from '@stakestack/shared/presets';
 import type { ClusterNode, Component, StackSelection } from '@stakestack/shared/types';
 import { Logo } from '../Logo';
 import { ROLE_SHORT, slotShort } from './meta';
@@ -41,11 +41,23 @@ export function TemplatePicker({ presets, bySlug, sel, nodes, onApply }: {
   const applied = presets.find(p => presetMatches(p, sel, nodes))?.id ?? null;
   const [focus, setFocus] = useState<string | null>(null);
   const shown = presets.find(p => p.id === (focus ?? applied)) ?? null;
+  const groups = PRESET_GROUPS.filter(g => presets.some(p => p.group === g.id));
+  const [group, setGroup] = useState<PresetGroup>(presets.find(p => p.id === applied)?.group ?? groups[0]?.id ?? 'single');
+  const visible = presets.filter(p => p.group === group);
 
   return (
     <div className="step-body">
+      {groups.length > 1 && (
+        <div className="seg template-groups" role="group" aria-label="Template type">
+          {groups.map(g => (
+            <button key={g.id} type="button" aria-pressed={group === g.id} title={g.hint} onClick={() => { setGroup(g.id); setFocus(null); }}>
+              {g.label}<span className="count">{presets.filter(p => p.group === g.id).length}</span>
+            </button>
+          ))}
+        </div>
+      )}
       <div className="template-grid" role="group" aria-label="Templates">
-        {presets.map(p => {
+        {visible.map(p => {
           const logos = headline(p).slice(0, 4);
           return (
             <button key={p.id} type="button" className="template" aria-pressed={shown?.id === p.id} onClick={() => setFocus(p.id)}>
@@ -84,10 +96,22 @@ function TemplateDetail({ p, bySlug, applied, onApply }: { p: Preset; bySlug: Ma
           })}
           {nodes.length > 0 && <span className="chip-logo" style={{ paddingLeft: 10 }}>{nodes.length} node{nodes.length > 1 ? 's' : ''}<span className="role">{[...new Set(nodes.map(n => n.execution))].length} EL · {[...new Set(nodes.map(n => n.consensus))].length} CL</span></span>}
         </div>
+        <p className="template-sources">
+          Based on{' '}
+          {p.sources.map((u, i) => (
+            <span key={u}>{i > 0 && ', '}<a href={u} target="_blank" rel="noopener noreferrer">{sourceLabel(u)}<ExternalLink aria-hidden /></a></span>
+          ))}
+          {' '}· checked {p.verified_at}
+        </p>
       </div>
       {applied
         ? <span className="pill pill-ok" style={{ height: 32, padding: '0 12px' }}><Check aria-hidden />Applied</span>
         : <button type="button" className="btn btn-primary btn-sm" onClick={onApply}><WandSparkles aria-hidden />Use template</button>}
     </div>
   );
+}
+
+/** "docs.obol.org/docs/..." -> "docs.obol.org" so a row of sources stays short. */
+function sourceLabel(url: string): string {
+  try { const u = new URL(url); return u.hostname === 'github.com' ? u.pathname.split('/').slice(1, 3).join('/') : u.hostname.replace(/^www\./, ''); } catch { return url; }
 }

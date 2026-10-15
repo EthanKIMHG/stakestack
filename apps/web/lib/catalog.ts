@@ -21,7 +21,7 @@ export const getCatalog = cache(async (): Promise<Catalog> => {
       return withLogos({
         components: (c.data ?? []) as Component[],
         slots: (s.data ?? []).map(x => ({ id: x.id, label: x.label, description: x.description ?? undefined, role: x.role, cardinality: x.cardinality, required: x.required, hidden_by_default: x.hidden_by_default, order: x.sort_order, include_tag: x.include_tag ?? undefined, exclude_tag: x.exclude_tag ?? undefined })) as Slot[],
-        rules: (r.data ?? []).map(x => ({ id: x.id, description: x.description ?? undefined, when: x.when_clause, then: x.then_clause })) as Rule[],
+        rules: (r.data ?? []).map(x => ({ id: x.id, description: x.description ?? undefined, when: x.when_clause, then: x.then_clause, sources: x.sources ?? undefined, verified_at: x.verified_at ?? undefined })) as Rule[],
         networks: (n.data ?? []) as Network[],
         rollout_sequence: (m.data?.value as string[] | undefined) ?? ['sepolia', 'hoodi', 'mainnet'],
         waves: (w.data ?? []) as Wave[],

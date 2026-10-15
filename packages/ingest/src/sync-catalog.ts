@@ -19,7 +19,15 @@ async function main() {
     assessor: c.assessor, embeds: c.embeds ?? null, supports: c.supports ?? {}, tags: c.tags ?? [], priority_weight: c.priority_weight ?? 1, notes: c.notes ?? null,
   })), 'slug');
   await upsert(client, 'slots', cat.slots.map(s => ({ id: s.id, label: s.label, description: s.description ?? null, role: s.role, cardinality: s.cardinality, required: s.required, hidden_by_default: !!s.hidden_by_default, sort_order: s.order ?? 0, include_tag: s.include_tag ?? null, exclude_tag: s.exclude_tag ?? null })), 'id');
-  await upsert(client, 'composition_rules', cat.rules.map(r => ({ id: r.id, description: r.description ?? null, when_clause: r.when, then_clause: r.then })), 'id');
+  const ruleRows = cat.rules.map(r => ({ id: r.id, description: r.description ?? null, when_clause: r.when, then_clause: r.then, sources: r.sources ?? [], verified_at: r.verified_at ?? null }));
+  try {
+    await upsert(client, 'composition_rules', ruleRows, 'id');
+  } catch (e) {
+    // Database without migration 0006: keep syncing the rules themselves, without their sources.
+    if (!/sources|verified_at/.test((e as Error).message)) throw e;
+    log.warn('composition_rules has no sources/verified_at columns; apply supabase/migrations/0006_rule_sources.sql. Syncing rules without sources.');
+    await upsert(client, 'composition_rules', ruleRows.map(({ sources: _s, verified_at: _v, ...r }) => r), 'id');
+  }
   // Rules deleted from YAML must not linger in the database.
   const ruleIds = cat.rules.map(r => r.id);
   const { error: delErr } = await client.from('composition_rules').delete().not('id', 'in', `(${ruleIds.map(id => `"${id}"`).join(',')})`);

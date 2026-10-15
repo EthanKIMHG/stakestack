@@ -12,7 +12,7 @@ export interface SlotView {
   /** Filled by the cluster editor rather than by direct picking. */
   managedByCluster: boolean;
 }
-export interface Diagnostic { level: 'error' | 'warn' | 'info'; rule?: string; slot?: string; node?: number; message: string }
+export interface Diagnostic { level: 'error' | 'warn' | 'info'; rule?: string; slot?: string; node?: number; message: string; /** Documentation backing the message. */ source?: string; /** Operator checklist item (protocol policy to configure), not a problem with the picks. */ check?: boolean }
 export interface ComposeResult {
   slots: SlotView[];
   diagnostics: Diagnostic[];
@@ -25,6 +25,8 @@ export interface ComposeResult {
   topology: TopologyAnalysis | null;
   /** The selection actually evaluated (cluster roles replaced by the union of node clients). */
   selection: StackSelection;
+  /** Ids of the composition rules that fired, in catalog order. */
+  rules: string[];
 }
 
 function selectedSlugs(sel: StackSelection): Set<string> {
@@ -37,6 +39,7 @@ function ruleFires(rule: Rule, sel: StackSelection, selected: Set<string>): bool
   const w = rule.when;
   if (w.component && !selected.has(w.component)) return false;
   if (w.any_of && !w.any_of.some(s => selected.has(s))) return false;
+  if (w.all_of && !w.all_of.every(s => selected.has(s))) return false;
   if (w.slot_filled && !(sel[w.slot_filled]?.length)) return false;
   if (w.network && !(sel.network ?? []).includes(w.network)) return false;
   return true;
@@ -71,8 +74,10 @@ export function compose(catalog: Catalog, input: StackSelection, topology?: Topo
   const many = new Set<string>();
   const restrictions = new Map<string, Array<(c: Component) => boolean>>();
 
+  const fired: string[] = [];
   for (const rule of catalog.rules) {
     if (!ruleFires(rule, selection, selected)) continue;
+    fired.push(rule.id);
     const t = rule.then;
     for (const s of t.open_slots ?? []) hidden.delete(s);
     for (const s of t.hide_slots ?? []) hidden.add(s);
@@ -84,11 +89,14 @@ export function compose(catalog: Catalog, input: StackSelection, topology?: Topo
       if (r.to_supporting) { const key = r.to_supporting; preds.push(c => !!c.supports?.[key]); }
       restrictions.set(r.slot, preds);
     }
+    const source = rule.sources?.[0];
     for (const s of t.recommend ?? []) if (!selected.has(s)) recommended.add(s);
-    for (const s of t.require ?? []) if (!selected.has(s)) diagnostics.push({ level: 'error', rule: rule.id, message: `${bySlug.get(s)?.name ?? s} is required by this selection.` });
-    for (const s of t.conflict ?? []) if (selected.has(s)) diagnostics.push({ level: 'error', rule: rule.id, message: `${bySlug.get(s)?.name ?? s} conflicts with this selection.` });
+    for (const s of t.require ?? []) if (!selected.has(s)) diagnostics.push({ level: 'error', rule: rule.id, source, message: `${bySlug.get(s)?.name ?? s} is required by this selection.` });
+    for (const s of t.conflict ?? []) if (selected.has(s)) diagnostics.push({ level: 'error', rule: rule.id, source, message: `${bySlug.get(s)?.name ?? s} conflicts with this selection.` });
     // Rule `warn` texts are operator guidance, shown as notes; real problems come from require/conflict/topology.
-    if (t.warn) diagnostics.push({ level: 'info', rule: rule.id, message: t.warn });
+    if (t.warn) diagnostics.push({ level: 'info', rule: rule.id, source, message: t.warn });
+    // Protocol policy the picks cannot express (fee recipient, relay allowlist, exits): a checklist for the operator.
+    for (const c of t.checks ?? []) diagnostics.push({ level: c.level ?? 'info', rule: rule.id, source: c.source ?? source, message: c.message, check: true });
   }
 
   // A CL with embeds:[validator] covers the VC slot when no standalone VC is picked.
@@ -155,6 +163,7 @@ export function compose(catalog: Catalog, input: StackSelection, topology?: Topo
     cluster,
     topology: topo,
     selection,
+    rules: fired,
   };
 }
 
