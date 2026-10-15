@@ -61,12 +61,14 @@ function Account() {
   return (
     <div className="account" ref={ref}>
       <button type="button" className="account-btn" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen(o => !o)} title={`Signed in as ${handle}`}>
+        {/* eslint-disable-next-line @next/next/no-img-element -- GitHub serves the avatar pre-sized; the image optimizer would only add cost */}
         {avatar ? <img src={avatar} alt="" width={26} height={26} /> : <span className="account-initial" aria-hidden>{initial}</span>}
         <span className="label">{handle}</span>
       </button>
       {open && (
         <div className="popover account-menu" role="menu">
           <div className="account-who">
+            {/* eslint-disable-next-line @next/next/no-img-element -- GitHub serves the avatar pre-sized; the image optimizer would only add cost */}
             {avatar ? <img src={avatar} alt="" width={36} height={36} /> : <span className="account-initial lg" aria-hidden>{initial}</span>}
             <div style={{ minWidth: 0 }}>
               <b>{user?.name ?? handle}</b>

@@ -51,6 +51,7 @@ export function ReleaseList({ rows: allRows, logos = {}, roles = {}, facets = ['
   const rows = useMemo(() => (effScope === 'mine' ? allRows.filter(r => mine.tools.has(r.component_slug)) : allRows), [effScope, allRows, mine.tools]);
 
   // URL -> filters once, then filters -> URL. `ready` keeps the first write from wiping the query.
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- read after hydration so the first client render matches the server's
   useEffect(() => { if (syncUrl) setF(fromQuery(window.location.search)); setReady(true); }, [syncUrl]);
   useEffect(() => {
     if (!syncUrl || !ready) return;
@@ -58,7 +59,7 @@ export function ReleaseList({ rows: allRows, logos = {}, roles = {}, facets = ['
   }, [f, ready, syncUrl]);
 
   const vals = useMemo(() => rows.map(r => rowValues(r, roles)), [rows, roles]);
-  const now = useMemo(() => Date.now(), [f]); // eslint-disable-line react-hooks/exhaustive-deps
+  const now = useMemo(() => Date.now(), [f]); // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/purity -- re-read the clock only when the filters change
 
   const filtered = useMemo(() => {
     const out = rows.filter((r, i) => matches(r, vals[i]!, f, now));

@@ -33,7 +33,6 @@ export default function OgImage() {
         <div style={{ display: 'flex', gap: 14 }}>
           {logos.map((src, i) => (
             <div key={i} style={{ width: 64, height: 64, borderRadius: 16, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={src} width={48} height={48} alt="" />
             </div>
           ))}

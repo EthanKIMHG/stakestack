@@ -35,7 +35,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
           <div style={{ width: 168, height: 168, borderRadius: 40, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
             {logo
-              // eslint-disable-next-line @next/next/no-img-element
               ? <img src={logo} width={c?.logo?.bleed ? 168 : 124} height={c?.logo?.bleed ? 168 : 124} alt="" style={{ objectFit: c?.logo?.bleed ? 'cover' : 'contain' }} />
               : <div style={{ fontSize: 64, fontWeight: 700, color: '#21273f' }}>{initials}</div>}
           </div>

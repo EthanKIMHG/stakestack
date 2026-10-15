@@ -8,6 +8,7 @@ export default function NotFound() {
         <h1 className="page-title">Page not found</h1>
         <p className="muted">That stack, component or page does not exist.</p>
         <div style={{ display: 'flex', gap: 8 }}>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- full page load, like every internal link in the app */}
           <a className="btn" href="/">Home</a>
           <a className="btn btn-primary" href="/build">Build a stack</a>
         </div>

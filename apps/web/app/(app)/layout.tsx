@@ -11,6 +11,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <>
       <header className="app-header">
         <div className="wrap app-header-inner">
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- full page load, like every internal link in the app */}
           <a href="/" className="brand" aria-label="stakestack home"><BrandLockup size={28} /></a>
           <div className="header-right">
             <UtcClock />

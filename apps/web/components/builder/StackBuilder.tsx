@@ -63,6 +63,7 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
       if (raw) {
         const d = JSON.parse(raw) as { sel: StackSelection; nodes: ClusterNode[]; name: string; mode: Mode; currentId?: string | null; baseline?: string | null };
         if (d?.sel && typeof d.sel === 'object') {
+          // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is browser-only, so the draft loads after hydration
           setSel(d.sel); setNodes(d.nodes ?? []); setName(d.name ?? 'My validator stack'); setMode(d.mode ?? (d.sel.dvt?.length ? 'dvt' : 'single'));
           setCurrentId(d.currentId ?? null); setBaseline(d.baseline ?? null);
         }
@@ -73,6 +74,7 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
   useEffect(() => {
     if (!loaded) return;
     try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ sel, nodes, name, mode, currentId, baseline })); } catch { /* ignore */ }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- an edited draft no longer matches the saved share link
     setSaved(null);
   }, [loaded, sel, nodes, name, mode, currentId, baseline]);
 
@@ -80,6 +82,7 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
   const readinessKey = JSON.stringify([result.selection, nodes]);
   useEffect(() => {
     const ctl = new AbortController();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- show loading at once; only the fetch is debounced
     setRLoading(true);
     const t = setTimeout(() => {
       fetch('/api/readiness', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ selection: sel, topology: nodes.length ? { nodes } : null }), signal: ctl.signal })
@@ -252,6 +255,7 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
     try { claim = sessionStorage.getItem(CLAIM_KEY) === '1'; sessionStorage.removeItem(CLAIM_KEY); } catch { /* storage unavailable */ }
     if (claim && !currentId) { void saveMember(false); return; }
     const open = currentId ? mine.stacks.find(s => s.id === currentId) : undefined;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time sync once the member's stacks load (see above)
     if (currentId && !open) { setCurrentId(null); setBaseline(null); return; }
     if (open && !dirty && JSON.stringify({ name: open.name, sel: open.selection, nodes: open.topology?.nodes ?? [] }) !== baseline) { openStack(open); return; }
     if (!currentId && pristine && mine.stacks[0]) openStack(mine.stacks[0]);

@@ -8,6 +8,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
     <div className="lp">
       <header className="lp-header">
         <div className="wrap lp-header-inner">
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- full page load, like every internal link in the app */}
           <a href="/" className="brand" aria-label="stakestack home"><BrandLockup size={30} /></a>
           <nav className="lp-nav" aria-label="Landing">
             <a href="#features">Features</a>
