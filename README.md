@@ -16,7 +16,7 @@ then get every relevant release rated by severity and see hard fork readiness ne
 [![CI](https://github.com/kimhg2/stakestack/actions/workflows/ci.yml/badge.svg)](https://github.com/kimhg2/stakestack/actions/workflows/ci.yml)
 [![Ingest](https://github.com/kimhg2/stakestack/actions/workflows/ingest.yml/badge.svg)](https://github.com/kimhg2/stakestack/actions/workflows/ingest.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![Components tracked](https://img.shields.io/badge/components%20tracked-78-6e56cf)
+![Components tracked](https://img.shields.io/badge/components%20tracked-79-6e56cf)
 ![Next.js](https://img.shields.io/badge/Next.js-16-black)
 ![Supabase](https://img.shields.io/badge/Supabase-Postgres-3ecf8e)
 
@@ -42,13 +42,13 @@ Generic GitHub release notifiers tell you *that* something was released. stakest
 
 | | |
 |---|---|
-| **Stack builder** | Pick clients slot by slot or start from a template (solo staker, minority clients, Obol 4-node DVT, SSV operator, Lido CSM, Rocket Pool). Composition rules enforce what fits together. |
+| **Stack builder** | Pick clients slot by slot or start from one of 14 templates in four groups: single node, DVT cluster (Obol, Lido Simple DVT, SSV, Anchor), staking protocol (Lido CSM, Rocket Pool, StakeWise, native restaking) and multi-node VC (Vouch + Dirk, Vero). Composition rules enforce what fits together, and every rule and template links the official docs it is based on. |
 | **DVT cluster editor** | For Charon and SSV, assign EL/CL/VC per node. stakestack computes the signing threshold (`ceil(2n/3)`), fault tolerance, and warns when one client runs on more nodes than the cluster can lose. One click auto-diversifies. |
 | **Severity-rated releases** | Every release gets `critical`, `high`, `recommended`, `optional` or `unrated`, plus flags such as `security`, `mandatory`, `hardfork`, `breaking`. The rating always shows the release-note evidence it came from. The releases page filters by severity, type (security, hard fork, mandatory, breaking, …), component role, network, fork, channel and date; every badge is a filter and the view is shareable by URL. |
 | **Fork readiness per network** | For each network in your stack: the current upgrade, its activation date or countdown, the minimum version per client from the EF announcement, and whether a compliant release exists. |
 | **Fork timeline** | Glamsterdam, Fusaka and Pectra across Sepolia, Hoodi and Mainnet, with epochs, dates and a client × network version matrix. Tentative dates are labelled as such. |
 | **Feeds** | Each saved stack has an RSS and a JSON feed. Pipe them into Slack, Telegram, Discord, n8n or an email digest. |
-| **Open catalog** | 78 components defined in YAML in this repo. Adding a tool is a pull request. |
+| **Open catalog** | 79 components defined in YAML in this repo. Adding a tool is a pull request. |
 | **Budget-safe GitHub ingestion** | The whole catalog is polled with 2 GraphQL requests (~2 points). Hard per-run ceilings make it safe to share a token with other automation. |
 
 <table>
@@ -63,7 +63,7 @@ Generic GitHub release notifiers tell you *that* something was released. stakest
 
 ## What is tracked
 
-78 components across the whole staking stack. The source of truth is [`catalog/components/*.yaml`](catalog/components).
+79 components across the whole staking stack. The source of truth is [`catalog/components/*.yaml`](catalog/components).
 
 | Category | Components |
 |---|---|
@@ -72,7 +72,7 @@ Generic GitHub release notifiers tell you *that* something was released. stakest
 | **Distributed validators (DVT)** (7) | [Charon](https://github.com/ObolNetwork/charon) · [Charon Distributed Validator Node (CDVN)](https://github.com/ObolNetwork/charon-distributed-validator-node) · [lido-dv-exit](https://github.com/ObolNetwork/lido-dv-exit) · [SSV Node](https://github.com/ssvlabs/ssv) · [Anchor](https://github.com/sigp/anchor) _beta_ · [SSV DKG](https://github.com/ssvlabs/ssv-dkg) · [Diva Operator](https://github.com/ShamirLabs/diva-alpha-net) _beta_ |
 | **Remote signers** (2) | [Web3Signer](https://github.com/Consensys/web3signer) · [Dirk](https://github.com/attestantio/dirk) |
 | **MEV / PBS** (4) | [MEV-Boost](https://github.com/flashbots/mev-boost) · [Commit-Boost](https://github.com/Commit-Boost/commit-boost-client) · [MEV-Boost Relay](https://github.com/flashbots/mev-boost-relay) · [mev-rs](https://github.com/ralexstokes/mev-rs) _experimental_ |
-| **Staking protocols** (9) | [Lido CSM](https://github.com/lidofinance/community-staking-module) · [Lido SimpleDVT](https://github.com/lidofinance/lido-dao) · [Lido Validator Ejector](https://github.com/lidofinance/validator-ejector) · [Lido Keys API](https://github.com/lidofinance/lido-keys-api) · [Rocket Pool Smart Node](https://github.com/rocket-pool/smartnode) · [NodeSet Hyperdrive](https://github.com/nodeset-org/hyperdrive) · [StakeWise V3 Operator](https://github.com/stakewise/v3-operator) · [EigenLayer CLI](https://github.com/Layr-Labs/eigenlayer-cli) · [Puffer Coral](https://github.com/PufferFinance/coral) _beta_ |
+| **Staking protocols** (10) | [Lido CSM](https://github.com/lidofinance/community-staking-module) · [Lido SimpleDVT](https://github.com/lidofinance/lido-dao) · [Lido Validator Ejector](https://github.com/lidofinance/validator-ejector) · [Lido Keys API](https://github.com/lidofinance/lido-keys-api) · [Rocket Pool Smart Node](https://github.com/rocket-pool/smartnode) · [NodeSet Hyperdrive](https://github.com/nodeset-org/hyperdrive) · [StakeWise V3 Operator](https://github.com/stakewise/v3-operator) · [EigenLayer CLI](https://github.com/Layr-Labs/eigenlayer-cli) · [EigenPod proofs CLI](https://github.com/Layr-Labs/eigenpod-proofs-generation) · [Puffer Coral](https://github.com/PufferFinance/coral) _beta_ |
 | **Node managers** (8) | [Eth Docker](https://github.com/eth-educators/eth-docker) · [EthPillar](https://github.com/coincashew/EthPillar) · [Stereum](https://github.com/stereum-dev/ethereum-node) · [DAppNode](https://github.com/dappnode/DNP_DAPPMANAGER) · [Sedge](https://github.com/NethermindEth/sedge) · [NiceNode](https://github.com/NiceNode/nice-node) · [eth-docker-ansible](https://github.com/yorickdowne/eth-docker-ansible) · [Ethereum on ARM](https://github.com/diglos/ethereumonarm) |
 | **Key & deposit tooling** (6) | [ethstaker-deposit-cli](https://github.com/eth-educators/ethstaker-deposit-cli) · [staking-deposit-cli](https://github.com/ethereum/staking-deposit-cli) _deprecated_ · [Wagyu Key Gen](https://github.com/stake-house/wagyu-key-gen) · [ethdo](https://github.com/wealdtech/ethdo) · [ethereal](https://github.com/wealdtech/ethereal) _maintenance_ · [eth2-val-tools](https://github.com/protolambda/eth2-val-tools) _maintenance_ |
 | **Monitoring, UI & infra** (14) | [Obol monitoring](https://github.com/ObolNetwork/monitoring) · [Ethereum Metrics Exporter](https://github.com/ethpandaops/ethereum-metrics-exporter) · [Lido Validators Monitoring](https://github.com/lidofinance/ethereum-validators-monitoring) · [eth-validator-watcher](https://github.com/kilnfi/eth-validator-watcher) · [eth-duties](https://github.com/TobiWo/eth-duties) · [ETHDuties Tracker](https://github.com/shayanb/ethduties) · [beaconcha.in explorer](https://github.com/gobitfly/eth2-beaconchain-explorer) · [Dora](https://github.com/ethpandaops/dora) · [Checkpointz](https://github.com/ethpandaops/checkpointz) · [Contributoor](https://github.com/ethpandaops/contributoor) · [Siren](https://github.com/sigp/siren) · [Prysm Web UI](https://github.com/OffchainLabs/prysm-web-ui) _maintenance_ · [Grafana](https://github.com/grafana/grafana) · [Prometheus](https://github.com/prometheus/prometheus) |
@@ -256,7 +256,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Roadmap
 
-- [x] Catalog of 78 staking components with composition rules
+- [x] Catalog of 79 staking components with composition rules
 - [x] Budgeted GitHub ingestion and rule-based severity with evidence
 - [x] Fork waves with per-network minimum versions
 - [x] DVT cluster editor with client-diversity checks
@@ -297,7 +297,7 @@ Questions, feedback or partnerships: [kimhg@parataxiseth.co.kr](mailto:kimhg@par
 
 **stakestack**은 이더리움 밸리데이터 운영자를 위한 오픈소스 스택 구성 도구이자 릴리즈 추적기입니다.
 
-- EL, CL, VC, DVT(Obol Charon, SSV), MEV-Boost, Web3Signer, Lido CSM, Rocket Pool 등 78개 오픈소스를 원하는 조합으로 구성합니다.
+- EL, CL, VC, DVT(Obol Charon, SSV), MEV-Boost, Web3Signer, Lido CSM, Rocket Pool 등 79개 오픈소스를 원하는 조합으로 구성합니다.
 - 내가 쓰는 소프트웨어의 릴리즈만 모아 critical, high, recommended로 등급을 매기고, 근거가 된 릴리즈 노트 문장을 함께 보여줍니다.
 - 하드포크는 Sepolia, Hoodi, Mainnet 순서로 진행됩니다. 네트워크별 활성화 일정과 클라이언트 최소 버전, 내 스택의 준비 상태를 한눈에 보여줍니다.
 - DVT 클러스터는 노드마다 다른 EL/CL을 지정할 수 있고, 한 클라이언트가 허용 가능한 장애 노드 수보다 많은 노드에서 돌면 경고합니다.

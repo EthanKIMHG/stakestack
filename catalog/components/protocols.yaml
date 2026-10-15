@@ -116,13 +116,29 @@
 - slug: eigenlayer-cli
   name: EigenLayer CLI
   vendor: Eigen Labs
-  summary: Operator CLI for EigenLayer registration and EigenPod management.
+  summary: AVS operator CLI for EigenLayer keys and operator registration.
   roles: [protocol]
   repo: Layr-Labs/eigenlayer-cli
   stable_tag_pattern: '^v\d+\.\d+\.\d+$'
   docs: https://docs.eigenlayer.xyz
   language: Go
   license: BUSL-1.1
+  networks: [mainnet, hoodi]
+  status: active
+  assessor: generic
+  priority_weight: 0.9
+  tags: [restaking]
+
+- slug: eigenpod-proofs
+  name: EigenPod proofs CLI
+  vendor: Eigen Labs
+  summary: Generates and submits EigenPod credential and checkpoint proofs for native restaking.
+  roles: [protocol]
+  repo: Layr-Labs/eigenpod-proofs-generation
+  stable_tag_pattern: '^v\d+\.\d+\.\d+$'
+  docs: https://github.com/Layr-Labs/eigenpod-proofs-generation/blob/master/cli/README.md
+  language: Go
+  license: MIT
   networks: [mainnet, hoodi]
   status: active
   assessor: generic

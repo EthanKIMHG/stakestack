@@ -36,7 +36,12 @@ export function Card({ title, actions, children, className = '' }: { title?: Rea
 }
 
 const DIAG_ICON = { error: CircleAlert, warn: TriangleAlert, info: Info, ok: CircleCheck } as const;
-export function Diag({ level, children }: { level: 'error' | 'warn' | 'info' | 'ok'; children: ReactNode }) {
+export function Diag({ level, children, source }: { level: 'error' | 'warn' | 'info' | 'ok'; children: ReactNode; source?: string }) {
   const Icon = DIAG_ICON[level];
-  return <div className={`diag diag-${level}`}><Icon aria-hidden /><span>{children}</span></div>;
+  return (
+    <div className={`diag diag-${level}`}>
+      <Icon aria-hidden />
+      <span>{children}{source && <> <a className="diag-source" href={source} target="_blank" rel="noopener noreferrer">Source</a></>}</span>
+    </div>
+  );
 }

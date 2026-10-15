@@ -71,6 +71,7 @@ export function validateCatalog(dir = defaultCatalogDir()): CatalogIssue[] {
     for (const r of slotsFile.rules) {
       if (r.when.component) ref('slots.yaml', `${r.id}.when.component`, r.when.component);
       for (const s of r.when.any_of ?? []) ref('slots.yaml', `${r.id}.when.any_of`, s);
+      for (const s of r.when.all_of ?? []) ref('slots.yaml', `${r.id}.when.all_of`, s);
       for (const s of [...(r.then.recommend ?? []), ...(r.then.require ?? []), ...(r.then.conflict ?? [])]) ref('slots.yaml', `${r.id}.then`, s);
       for (const s of [...(r.then.open_slots ?? []), ...(r.then.hide_slots ?? []), ...(r.then.require_slots ?? [])]) if (!slotIds.has(s)) issues.push({ file: 'slots.yaml', path: `${r.id}.then`, message: `unknown slot "${s}"` });
       for (const rs of r.then.restrict ?? []) { if (!slotIds.has(rs.slot)) issues.push({ file: 'slots.yaml', path: `${r.id}.then.restrict`, message: `unknown slot "${rs.slot}"` }); for (const s of rs.to ?? []) ref('slots.yaml', `${r.id}.then.restrict.to`, s); }

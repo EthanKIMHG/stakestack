@@ -127,6 +127,7 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
     if (keep && keep.length) {
       return keep.slice(0, count).map(node => ({
         label: node.label,
+        host: node.host,
         execution: node.execution && al.execution.includes(node.execution) ? node.execution : undefined,
         consensus: node.consensus && al.consensus.includes(node.consensus) ? node.consensus : undefined,
         validator: r.cluster!.roles.includes('validator')
@@ -275,7 +276,7 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
     : !!sel.execution?.length && !!sel.consensus?.length && (!!sel.validator?.length || !!clBuiltIn || !slotView('validator')?.visible);
   const addonCount = addons.reduce((n, s) => n + s.selected.length, 0);
   const errors = result.diagnostics.filter(d => d.level === 'error').length;
-  const warns = result.diagnostics.filter(d => d.level === 'warn').length;
+  const warns = result.diagnostics.filter(d => d.level === 'warn' && !d.check).length;
   const coreSummary = mode === 'dvt'
     ? (middleware ? `${bySlug.get(middleware)?.name ?? middleware} · ${nodes.length} node${nodes.length === 1 ? '' : 's'}` : 'Pick middleware')
     : [sel.execution?.[0], sel.consensus?.[0]].filter(Boolean).map(s => bySlug.get(s!)?.name ?? s).join(' + ');
@@ -321,7 +322,7 @@ export function StackBuilder({ catalog, canSave }: { catalog: Catalog; canSave: 
               allowed={{ execution: allowed('execution'), consensus: allowed('consensus'), validator: allowed('validator') }}
               analysis={result.topology}
               middleware={bySlug.get(middleware ?? '')?.name ?? 'DVT'}
-              onDiversify={n => setNodes(nodesFor(sel, n))}
+              onDiversify={n => setNodes(nodesFor(sel, n).map((node, i) => ({ ...node, host: nodes[i]?.host })))}
             />
           )}
           {(mode === 'single' || (!!middleware && !result.cluster)) && CORE.map(id => {

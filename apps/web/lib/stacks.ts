@@ -28,7 +28,7 @@ export async function normalizeStack(body: StackInput | null): Promise<Result<St
   const selection: StackSelection = { network: result.networks };
   for (const s of result.slots) if (s.slot.id !== 'network' && s.visible && s.selected.length) selection[s.slot.id] = s.selected;
   const topology = result.cluster && body.topology?.nodes?.length
-    ? { nodes: body.topology.nodes.slice(0, 16).map(n => ({ label: (n.label ?? '').slice(0, 40) || undefined, execution: n.execution, consensus: n.consensus, validator: result.cluster!.roles.includes('validator') ? n.validator : undefined })), threshold: body.topology.threshold }
+    ? { nodes: body.topology.nodes.slice(0, 16).map(n => ({ label: (n.label ?? '').slice(0, 40) || undefined, host: typeof n.host === 'string' ? n.host.trim().slice(0, 40) || undefined : undefined, execution: n.execution, consensus: n.consensus, validator: result.cluster!.roles.includes('validator') ? n.validator : undefined })), threshold: body.topology.threshold }
     : null;
   return { ok: true, value: { name: (body.name ?? '').trim().slice(0, 80) || 'Untitled stack', selection, topology, running_versions: body.running_versions ?? {} } };
 }

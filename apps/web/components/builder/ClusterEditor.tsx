@@ -5,6 +5,9 @@ import { ROLE_LABEL, clusterThreshold, faultTolerance, resize, type TopologyAnal
 import { Diag } from '../ui';
 import { Logo } from '../Logo';
 
+/** Suggestions only; any provider or "home" is accepted. */
+const HOSTS = ['AWS', 'Google Cloud', 'Azure', 'OVHcloud', 'Hetzner', 'Latitude.sh', 'Cherry Servers', 'Equinix', 'Home / colocation'];
+
 const PALETTE = ['#3d5bd9', '#0e8fb0', '#13946b', '#c27c14', '#d4407f', '#7c5cf6', '#0d9488', '#bf5a17'];
 
 export function ClusterEditor({ spec, nodes, onChange, allowed, analysis, middleware, onDiversify }: {
@@ -34,7 +37,8 @@ export function ClusterEditor({ spec, nodes, onChange, allowed, analysis, middle
       return next;
     }));
   };
-  const copyFirst = () => onChange(nodes.map((node, i) => (i === 0 ? node : { ...nodes[0]!, label: node.label })));
+  // Copies clients only; each node keeps its own name and hosting.
+  const copyFirst = () => onChange(nodes.map((node, i) => (i === 0 ? node : { ...nodes[0]!, label: node.label, host: node.host })));
 
   return (
     <div>
@@ -59,7 +63,7 @@ export function ClusterEditor({ spec, nodes, onChange, allowed, analysis, middle
       <div className="scroll-x">
         <table className="node-table">
           <thead>
-            <tr><th style={{ width: 150 }}>Node</th>{spec.roles.map(r => <th key={r}>{ROLE_LABEL[r]}</th>)}</tr>
+            <tr><th style={{ width: 150 }}>Node</th>{spec.roles.map(r => <th key={r}>{ROLE_LABEL[r]}</th>)}<th style={{ width: 150 }} title="Hosting provider. Leave empty to skip the hosting diversity check.">Hosting</th></tr>
           </thead>
           <tbody>
             {nodes.map((node, i) => (
@@ -87,10 +91,15 @@ export function ClusterEditor({ spec, nodes, onChange, allowed, analysis, middle
                     </td>
                   );
                 })}
+                <td>
+                  <input className="field field-sm" value={node.host ?? ''} placeholder="Provider" list="cluster-hosts" aria-label={`Node ${i + 1} hosting provider`}
+                    onChange={e => setNode(i, { host: e.target.value || undefined })} />
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+        <datalist id="cluster-hosts">{HOSTS.map(h => <option key={h} value={h} />)}</datalist>
       </div>
 
       {analysis && n >= 2 && (

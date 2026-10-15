@@ -64,6 +64,7 @@
   assessor: generic
   priority_weight: 1
   tags: [packages, appliance]
+  notes: DAppNode ships its own packaged versions, so the package date differs from the upstream release date. stakestack tracks upstream.
 
 - slug: sedge
   name: Sedge

@@ -52,8 +52,9 @@ export function StackPanel({ catalog, result, nodes, name, onName, onRemove, onA
   const comp = (s?: string) => (s ? bySlug.get(s) : undefined);
   const nm = (s?: string) => (s ? bySlug.get(s)?.name ?? s : '—');
   const errors = result.diagnostics.filter(d => d.level === 'error');
-  const warns = result.diagnostics.filter(d => d.level === 'warn');
-  const notes = result.diagnostics.filter(d => d.level === 'info');
+  const warns = result.diagnostics.filter(d => d.level === 'warn' && !d.check);
+  const checklist = result.diagnostics.filter(d => d.check);
+  const notes = result.diagnostics.filter(d => d.level === 'info' && !d.check);
   const addons = result.slots.filter(s => s.visible && s.slot.id !== 'network' && !CORE.includes(s.slot.id) && s.slot.id !== 'dvt' && s.selected.length);
   const middleware = result.selection.dvt?.[0];
   const core = CORE.flatMap(id => {
@@ -143,12 +144,18 @@ export function StackPanel({ catalog, result, nodes, name, onName, onRemove, onA
       <div className="cart-section">
         <div className="cart-label"><span className="eyebrow">Checks</span></div>
         {errors.length === 0 && warns.length === 0 && <Diag level="ok">No problems found</Diag>}
-        {errors.map((d, i) => <Diag key={`e${i}`} level="error">{d.message}</Diag>)}
-        {warns.map((d, i) => <Diag key={`w${i}`} level="warn">{d.message}</Diag>)}
+        {errors.map((d, i) => <Diag key={`e${i}`} level="error" source={d.source}>{d.message}</Diag>)}
+        {warns.map((d, i) => <Diag key={`w${i}`} level="warn" source={d.source}>{d.message}</Diag>)}
+        {checklist.length > 0 && (
+          <div style={{ marginTop: 8 }}>
+            <div className="cart-label"><span className="eyebrow">Before you go live ({checklist.length})</span></div>
+            {checklist.map((d, i) => <Diag key={`c${i}`} level={d.level === 'warn' ? 'warn' : 'info'} source={d.source}>{d.message}</Diag>)}
+          </div>
+        )}
         {notes.length > 0 && (
           <details className="rel-evidence" style={{ marginTop: 8 }}>
             <summary>Operator notes ({notes.length})</summary>
-            <div style={{ marginTop: 6 }}>{notes.map((d, i) => <Diag key={`n${i}`} level="info">{d.message}</Diag>)}</div>
+            <div style={{ marginTop: 6 }}>{notes.map((d, i) => <Diag key={`n${i}`} level="info" source={d.source}>{d.message}</Diag>)}</div>
           </details>
         )}
       </div>
