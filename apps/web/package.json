@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "echo 'no web tests yet'"
   },
   "dependencies": {
@@ -25,6 +25,8 @@
     "@types/node": "^22.10.1",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.1",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.6.3"
   }
