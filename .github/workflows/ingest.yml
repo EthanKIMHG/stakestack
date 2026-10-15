@@ -2,7 +2,9 @@ name: ingest
 
 on:
   schedule:
-    - cron: '*/30 * * * *'      # every 30 min; GitHub may delay scheduled runs by several minutes
+    # Twice an hour at :07 and :37. GitHub delays or drops scheduled runs at :00 and :30
+    # (peak load); with */30 we observed only one run every 3-5 hours.
+    - cron: '7,37 * * * *'
   workflow_dispatch:
     inputs:
       backfill:

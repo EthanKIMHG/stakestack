@@ -125,15 +125,20 @@ async function main() {
   if (!config.dryRun) saveState(state); else log.info('dry run: cache state not saved');
   const report = budget.report();
   if (client) {
+    let revalidateStatus = 'none';
+    if (newReleases.length) {
+      revalidateStatus = !config.revalidateUrl ? 'skipped:no-site-url' : !config.revalidateSecret ? 'skipped:no-secret'
+        : await revalidate([...new Set(newReleases.map(r => r.component_slug))]);
+    }
     const { error } = await client.from('ingest_runs').insert({
+      db_requests: dbStats.requests, db_rows_written: dbStats.rowsWritten, revalidate_status: revalidateStatus,
+      trigger: process.env.GITHUB_EVENT_NAME ?? 'local',
       started_at: new Date(started).toISOString(), finished_at: new Date().toISOString(), repos: repoList.length, batches: batchesDone,
       new_releases: newReleases.length, advisories: advisoryRows, graphql_points: report.graphqlPoints, rest_requests: report.restRequests, rest_304: report.rest304,
       remaining_points: report.remainingPoints, remaining_rest: report.remainingRest, dry_run: false,
     });
     if (error) log.warn(`ingest_runs insert: ${error.message}`);
-    if (newReleases.length && config.revalidateUrl && config.revalidateSecret) {
-      await revalidate([...new Set(newReleases.map(r => r.component_slug))]);
-    }
+
   }
   log.info('usage', { durationS: Math.round((Date.now() - started) / 1000), github: { graphqlPoints: report.graphqlPoints, rest: report.restRequests, rest304: report.rest304 }, supabase: { ...dbStats } });
 }
@@ -142,14 +147,15 @@ async function main() {
  * Only send the secret to a host that identifies itself as stakestack. A typo or a
  * placeholder in NEXT_PUBLIC_SITE_URL would otherwise hand the secret to a stranger.
  */
-async function revalidate(components: string[]) {
+async function revalidate(components: string[]): Promise<string> {
   try {
     const probe = await fetch(config.revalidateUrl, { method: 'GET', redirect: 'error', signal: AbortSignal.timeout(10_000) });
     const id = probe.ok ? ((await probe.json().catch(() => ({}))) as { app?: string }).app : undefined;
-    if (id !== 'stakestack') { log.warn(`revalidate skipped: ${new URL(config.revalidateUrl).host} is not a stakestack deployment (check NEXT_PUBLIC_SITE_URL)`); return; }
+    if (id !== 'stakestack') { log.warn(`revalidate skipped: ${new URL(config.revalidateUrl).host} is not a stakestack deployment (check NEXT_PUBLIC_SITE_URL)`); return 'skipped:not-stakestack'; }
     const res = await fetch(config.revalidateUrl, { method: 'POST', redirect: 'error', headers: { 'content-type': 'application/json', 'x-revalidate-secret': config.revalidateSecret }, body: JSON.stringify({ components }) });
     log.info(`revalidate ${new URL(config.revalidateUrl).host}: HTTP ${res.status}`);
-  } catch (e) { log.warn(`revalidate: ${(e as Error).message}`); }
+    return String(res.status);
+  } catch (e) { log.warn(`revalidate: ${(e as Error).message}`); return 'error'; }
 }
 
 function maxDate(repo: GqlRepo, prev: string | null): string | null {
