@@ -10,7 +10,8 @@
     "sync-catalog": "tsx src/sync-catalog.ts",
     "build": "echo 'ingest runs from source via tsx'",
     "migrate": "tsx src/migrate.ts",
-    "stats": "tsx src/stats.ts"
+    "stats": "tsx src/stats.ts",
+    "reassess": "tsx src/reassess.ts"
   },
   "dependencies": {
     "@stakestack/shared": "workspace:*",

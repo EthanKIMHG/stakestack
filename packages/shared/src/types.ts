@@ -114,7 +114,7 @@ export interface Release {
   source: 'releases' | 'tags';
 }
 
-export interface Evidence { kind: 'table' | 'heading' | 'keyword' | 'manual'; text: string; weight: number }
+export interface Evidence { kind: 'table' | 'statement' | 'heading' | 'keyword' | 'manual'; text: string; weight: number }
 
 export interface Assessment {
   release_tag: string;

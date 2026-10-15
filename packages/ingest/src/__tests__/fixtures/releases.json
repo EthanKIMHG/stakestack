@@ -1,0 +1,650 @@
+[
+  {
+    "component_slug": "lighthouse",
+    "assessor": "lighthouse-table",
+    "tag": "v8.2.3",
+    "is_prerelease": false,
+    "name": "Kirkland Meeseeks",
+    "url": "https://github.com/sigp/lighthouse/releases/tag/v8.2.3",
+    "published_at": "2026-10-01T02:15:41+00:00",
+    "body": "## Summary\r\n\r\nThis **medium-priority** release contains fixes for security vulnerabilities and is recommended for all **mainnet** users.\r\n\r\n**If you are running a node on Sepolia you'll need v8.3.0-rc.0 instead:** https://github.com/sigp/lighthouse/releases/tag/v8.3.0-rc.0\r\n\r\n## Update Priority\r\n\r\nThis table provides priorities for which classes of users should update particular components.\r\n\r\n|User Class |Beacon Node  | Validator Client|\r\n--- | --- | ---\r\n|Staking Users| Medium | Low |\r\n|Non-Staking Users| Medium |---|\r\n\r\n*See [Update Priorities](https://lighthouse-book.sigmaprime.io/installation_priorities.html) for more information about this table.*\r\n\r\n## Security Content\r\n\r\nThis section will be updated with security advisories as they are made public. We are not disclosing the security content of this release in order to give users time to upgrade.\r\n\r\n## Known Issues\r\n\r\nData column backfill can OOM, particularly on Gnosis chain. This is fixed in [v8.3.0-rc.0](https://github.com/sigp/lighthouse/releases/tag/v8.3.0-rc.0) and will be included in v8.3.0 shortly. We do not recommend re-syncing on v8.2.x unnecessarily, as this issue affects every prior release of Lighthouse as well.\r\n\r\n## All Changes\r\n\r\n- Release v8.2.3\r\n- Bump quinn\r\n- Cherry-pick lint fixes\r\n- Cherry Pick Update Docker builder to Debian Bookworm (#9984)\r\n- Cherry Pick Attempt to fix flaky fallback simulator test (#9908)\r\n- Cherry Pick Tolerate empty sync aggregates in the basic simulator (#9781)\r\n\r\n## Binaries\r\n\r\n[See pre-built binaries documentation.](https://lighthouse-book.sigmaprime.io/installation_binaries.html)\r\n\r\nThe binaries are signed with Sigma Prime's PGP key: `15E66D941F697E28F49381F426416DC3F30674B0`\r\n\r\n| System | Architecture | Binary | PGP Signature |\r\n|:---:|:---:|:---:|:---|\r\n| <picture> <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://cdn.simpleicons.org/apple/white\" > <source media=\"(prefers-color-scheme: light)\" srcset=\"https://cdn.simpleicons.org/apple\" ><img src=\"https://cdn.simpleicons.org/apple\" width=\"32\" alt=\"Apple logo\">  </picture> | aarch64 | [lighthouse-v8.2.3-aarch64-apple-darwin.tar.gz](https://github.com/sigp/lighthouse/releases/download/v8.2.3/lighthouse-v8.2.3-aarch64-apple-darwin.tar.gz) | [PGP Signature](https://github.com/sigp/lighthouse/releases/download/v8.2.3/lighthouse-v8.2.3-aarch64-apple-darwin.tar.gz.asc) |\r\n| <picture> <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://cdn.simpleicons.org/linux/white\" > <source media=\"(prefers-color-scheme: light)\" srcset=\"https://cdn.simpleicons.org/linux/black\" ><img src=\"https://cdn.simpleicons.org/linux\" width=\"32\" alt=\"Linux logo\"> </picture> | x86_64 | [lighthouse-v8.2.3-x86_64-unknown-linux-gnu.tar.gz](https://github.com/sigp/lighthouse/releases/download/v8.2.3/lighthouse-v8.2.3-x86_64-unknown-linux-gnu.tar.gz) | [PGP Signature](https://github.com/sigp/lighthouse/releases/download/v8.2.3/lighthouse-v8.2.3-x86_64-unknown-linux-gnu.tar.gz.asc) |\r\n| <picture> <source media=\"",
+    "why": "team says medium-priority; security fixes do not lift it to critical",
+    "expect": {
+      "severity": "recommended",
+      "flags": [
+        "security"
+      ]
+    }
+  },
+  {
+    "component_slug": "lighthouse",
+    "assessor": "lighthouse-table",
+    "tag": "v8.2.2",
+    "is_prerelease": false,
+    "name": "Mr. Meeseeks",
+    "url": "https://github.com/sigp/lighthouse/releases/tag/v8.2.2",
+    "published_at": "2026-08-18T00:53:15+00:00",
+    "body": "## Summary\r\n\r\n:warning: Lighthouse v8.2.2 is a **high-priority** release containing fixes for several security vulnerabilities.\r\n\r\nAll mainnet beacon node users should **upgrade as soon as practical** to receive the security fixes in this release.\r\n\r\n## Upgrade Notes\r\n\r\nNo special action is required beyond upgrading. This release does not contain a database schema migration or any breaking CLI changes.\r\n\r\nIf upgrading from a release prior to v8.2.1, please see release notes for v8.2.1 and v8.2.0:\r\n\r\n- https://github.com/sigp/lighthouse/releases/tag/v8.2.1\r\n- https://github.com/sigp/lighthouse/releases/tag/v8.2.0\r\n\r\n## Update Priority\r\n\r\nThis table provides priorities for which classes of users should update particular components.\r\n\r\n| User Class        | Beacon Node | Validator Client |\r\n|:------------------|:------------|:-----------------|\r\n| Staking Users     | High        | Low              |\r\n| Non-Staking Users | High        | ---              |\r\n\r\nSee [Update Priorities](https://lighthouse-book.sigmaprime.io/installation_priorities.html) for more information about this table.\r\n\r\n## Security Content\r\n\r\nThis section will be updated with security advisories as they are made public. We are not disclosing the security content of this release in order to give users time to upgrade.\r\n\r\n## Known Issues\r\n\r\nData column backfill can OOM, particularly on Gnosis chain. This is fixed on `unstable` and will be included in v8.3.0: https://github.com/sigp/lighthouse/pull/9665. We do not recommend re-syncing unnecessarily, as this issue affects every prior release of Lighthouse as well.\r\n\r\n## All Changes\r\n\r\n- Release v8.2.2\r\n- update deps\r\n\r\n## Binaries\r\n\r\n[See pre-built binaries documentation.](https://lighthouse-book.sigmaprime.io/installation_binaries.html)\r\n\r\nThe binaries are signed with Sigma Prime's PGP key: `15E66D941F697E28F49381F426416DC3F30674B0`\r\n\r\n| System | Architecture | Binary | PGP Signature |\r\n|:---:|:---:|:---:|:---|\r\n| <picture> <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://cdn.simpleicons.org/apple/white\" > <source media=\"(prefers-color-scheme: light)\" srcset=\"https://cdn.simpleicons.org/apple\" ><img src=\"https://cdn.simpleicons.org/apple\" width=\"32\" alt=\"Apple logo\">  </picture> | aarch64 | [lighthouse-v8.2.2-aarch64-apple-darwin.tar.gz](https://github.com/sigp/lighthouse/releases/download/v8.2.2/lighthouse-v8.2.2-aarch64-apple-darwin.tar.gz) | [PGP Signature](https://github.com/sigp/lighthouse/releases/download/v8.2.2/lighthouse-v8.2.2-aarch64-apple-darwin.tar.gz.asc) |\r\n| <picture> <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://cdn.simpleicons.org/linux/white\" > <source media=\"(prefers-color-scheme: light)\" srcset=\"https://cdn.simpleicons.org/linux/black\" ><img src=\"https://cdn.simpleicons.org/linux\" width=\"32\" alt=\"Linux logo\"> </picture> | x86_64 | [lighthouse-v8.2.2-x86_64-unknown-linux-gnu.tar.gz](https://github.com/sigp/lighthouse/releases/download/v8.2.2/lighthouse-v8.2.2-x86_64-unknown-linux-gnu.tar",
+    "why": "high-priority + security vulnerabilities",
+    "expect": {
+      "severity": "critical",
+      "flags": [
+        "security"
+      ]
+    }
+  },
+  {
+    "component_slug": "lighthouse",
+    "assessor": "lighthouse-table",
+    "tag": "v5.2.0",
+    "is_prerelease": false,
+    "name": "Tree People",
+    "url": "https://github.com/sigp/lighthouse/releases/tag/v5.2.0",
+    "published_at": "2024-06-11T03:20:19+00:00",
+    "body": "## Summary\r\n\r\nThis **medium-priority** release contains a major improvement to how states are managed in memory (`tree-states`) and an optimised epoch and block processing implementation. The beacon node now uses considerably less memory than the previous version thanks to more efficient state caching. It also includes other performance improvements, bug fixes and groundwork preparation for the upcoming Electra fork and PeerDAS upgrade.\r\n\r\n![memory](https://github.com/sigp/lighthouse/assets/4452260/399ce0f1-a980-4d77-9763-bc1f436afee4)\r\n\r\nNotable changes in this release:\r\n- Epoch and block processing have been optimized, resulting in improved performance and security. The optimized epoch processing implementation is accompanied by a proof of correctness detailed in [this post](https://ethresear.ch/t/formally-verified-optimised-epoch-processing/17359) (#5279).\r\n- Introduce in-memory `tree-states`, providing more efficient state caching, improved overall performance and reduced memory usage (#5533).\r\n- Add server-sent events (SSE) for proposer slashing, attester slashing, and BLS to execution change (#5327, #5857).\r\n- Encode execution engine client version in block graffiti to probe execution layer client diversity, more details below (#5290).\r\n- Add new timing metrics for block availability to better reflect the actual delays caused by blob processing and other factors (#5510).\r\n- Update the proposer re-orgs feature to align with the latest spec (#5417).\r\n- Introduce new containers, presets, and configurations in preparation for the Electra fork (#5122, #5606, #5607, #5630, #5652, #5653).\r\n- Refactor and simplifications in sync and block lookup logic in preparation for PeerDAS (#5561, #5562, #5563, #5564, #5583, #5655).\r\n- Add a new`builder-header-timeout` flag, which allows for configuring timeouts for the get builder header API call (#5857)\r\n- Fix attestations not getting added to the aggregation pool. This improves the quality of aggregate attestations Lighthouse produces (#5863).\r\n\r\nThere are a few **breaking changes**. Please see the section on *Breaking Changes* below.\r\n\r\n### In-memory tree states (#5533)\r\n\r\nThis release introduces the memory-only portion of `tree-states`, marking a significant upgrade to state management. The beacon node can now hold ~64 times more states with approximately the same memory cost, significantly reducing memory usage and minimizing spikes. This enhancement also improves overall performance. Consequently, the default value for the `--state-cache-size` beacon node flag has been increased from 3 to 128. We recommend that users who had manually adjusted the state cache size try the new larger default.\r\n\r\nThis development brings us closer to the full implementation of `tree-states` (both in-memory and on-disk) in Lighthouse, an upgrade that has been in progress for over two years. Stay tuned for the remaining `tree-states` upgrades and their benefits in upcoming releases!\r\n\r\n### Encode execution engine client versi",
+    "why": "\"improved performance and security\" is not a security fix",
+    "expect": {
+      "severity": "recommended",
+      "notFlags": [
+        "security"
+      ]
+    }
+  },
+  {
+    "component_slug": "nimbus-eth2",
+    "assessor": "nimbus-urgency",
+    "tag": "v26.10.0",
+    "is_prerelease": false,
+    "name": "v26.10.0",
+    "url": "https://github.com/status-im/nimbus-eth2/releases/tag/v26.10.0",
+    "published_at": "2026-10-04T11:28:04+00:00",
+    "body": "## Notes\r\n\r\nThe Nimbus consensus client `v26.9.0`, `v26.9.1`, or `v26.10.0` are `high-urgency` releases for Sepolia due to its 6th October Glamsterdam fork activation and `medium-urgency` releases for other networks. All releases `v26.9.0` or later are compatible with the Sepolia Glamsterdam fork.\r\n\r\n### Improvements\r\n\r\n- Add Glamsterdam fork transition art:\r\n  https://github.com/status-im/nimbus-eth2/pull/9175\r\n\r\n- Improve Sepolia peering:\r\n  https://github.com/status-im/nimbus-eth2/pull/9182\r\n\r\n- Improve discovery public IP address inference:\r\n  https://github.com/status-im/nimbus-eth2/pull/9118\r\n\r\n- Prevent column req/resp from blocking event loop:\r\n  https://github.com/status-im/nimbus-eth2/pull/9192\r\n\r\n### Fixes\r\n\r\n- Ensure validator client resolves all active validators, including slashed and exiting:\r\n  https://github.com/status-im/nimbus-eth2/pull/9186\r\n\r\n- Fix validator client crash given certain invalid beacon node responses:\r\n  https://github.com/status-im/nimbus-eth2/pull/9157\r\n\r\n## Urgency guidelines\r\n\r\n`low-urgency`: update at your own convenience, sometime within our normal monthly update cycle\r\n\r\n`medium-urgency`: may contain an important stability fix, it is better to update sooner rather than later\r\n\r\n`high-urgency`: update as soon as you can, this is a critical update required for Nimbus to function correctly\r\n\r\n## SHA512 checksums\r\n\r\n```text\r\n# Linux AMD64\r\nb5e3c6d48421215c3ef727d35b011880e492ff59bb5776401ce517c6177ccdcc5c1dc10f4a5326c611e7a515b821d49be994989a681df8d97c2d84d0a00be33e  nimbus_beacon_node\r\n426c4ebf826483f43262d58f12337acec838d0675b00e367983e048c5138c332f64d58f83d43932fd6cc7b5b88b8a915ec7fb19bc0bf916dd4b9c4935ade8a84  nimbus_validator_client\r\n# Linux ARM64\r\n95dca61ca669427c9689acb82f23f78f39cc6f8defb9adf73b2bce746e87770123d2785ec08dadf94a3234868282015b8e5e5bb41393f1fabac383ae63c0ea5d  nimbus_beacon_node\r\nbc46c1152790a16bdaeed5d61d44b99e38a3fcaca23a37afcd630f037bc32a3ea4d24deec4d84fdad08d84128de0f0ed94d0e08dc6560006c8b67c8a2c31da02  nimbus_validator_client\r\n# Linux ARM\r\n177c8a6af4ffa34f8f05a88f729463bc2f96060fe2582468d851ba636555f0d030c98f1c4fd264c4a2a28e347343789346a13b55383018679187ec3099fcc6d0  nimbus_beacon_node\r\n9190fab1ca29d5f398abbaf5573b8d1c69caf2f27553c886d02f76ab17bc41fd4bcbdc788ff9f04bd2a64d4541106ce1097f58609d4cf021285fc98dc3d8b0f0  nimbus_validator_client\r\n# Windows AMD64\r\na48470a12f742848a81301733d6abd1f6011a6b1fb2bd5a9f279a359c993ae01baf5062f08de1ef0d4b73fd1a267bc013cae477bb69c17b3ed54ce7857aeda98  nimbus_beacon_node.exe\r\n1bf7b4ba0c0a7f640f04795d82b329364ec3c1e7486847de3b2ca91414d3c44a87006214807dffdd65099b76f6c584d2fbb99346bc9421a00789177be09613e8  nimbus_validator_client.exe\r\n# macOS ARM64\r\n92f0b81dd6dae80242c653630c391d2711f683b3c30cb03e5af08e0fa457a3b072a994d72d5f22884a3bf53cd78e60292390531335b145d71ca99673e5dd7ba9  nimbus_beacon_node\r\n3ba131499afc2ec0f51e17682d4ac3fb06dbb3329f242fb18004e7a3830225dca61ede65bbe6215e0ff9aa518af2eecd63226f157e717b06fabec4917c82d52b  nimbus_validator_client\r\n```\r\n",
+    "why": "high-urgency for Sepolia fork, medium elsewhere; legend lines ignored",
+    "expect": {
+      "severity": "high",
+      "flags": [
+        "hardfork"
+      ],
+      "wave": "glamsterdam"
+    }
+  },
+  {
+    "component_slug": "nimbus-eth2",
+    "assessor": "nimbus-urgency",
+    "tag": "v26.2.0",
+    "is_prerelease": false,
+    "name": "v26.2.0",
+    "url": "https://github.com/status-im/nimbus-eth2/releases/tag/v26.2.0",
+    "published_at": "2026-02-14T00:09:43+00:00",
+    "body": "## Notes\r\n\r\nThe Nimbus consensus client `v26.2.0` is a `medium-urgency` release with improved network stability. In particular, it addresses a scenario during which Nimbus clients falsely rejected as invalid a mainnet block and forked off. Cache corruption in Nimbus's implementation Merkle tree hashing causing this arose from certain size changes of SSZ `List` objects which appeared on mainnet which bypassed correct cache invalidation; https://github.com/status-im/nim-ssz-serialization/pull/150#issuecomment-3895939018 provides additional detail. Because descendants of block inaccurately determined to be invalid could not be processed without violating protocol, Nimbus could not continue to follow mainnet's canonical chain until the node was restarted. This release fills in the previously missing cases of Merkle tree root cache invalidation to prevent recurrence of such an event.\r\n\r\n### Improvements\r\n\r\n- Simplify era file-based node startup:\r\n  https://github.com/status-im/nimbus-eth2/pull/7888\r\n\r\n### Fixes\r\n\r\n- Fix `hash_tree_root` cache invalidation for SSZ `List`s:\r\n  https://github.com/status-im/nimbus-eth2/pull/7951\r\n  https://github.com/status-im/nimbus-eth2/pull/7967\r\n\r\n- Fix a validator client crash on startup with offline or unavailable beacon nodes:\r\n  https://github.com/status-im/nimbus-eth2/pull/7962\r\n\r\n- Fix handling of validator custody changes in requesting missing columns:\r\n  https://github.com/status-im/nimbus-eth2/pull/7927\r\n\r\n## Urgency guidelines\r\n\r\n`low-urgency`: update at your own convenience, sometime within our normal update cycle of two weeks\r\n\r\n`medium-urgency`: may contain an important stability fix, it is better to update sooner rather than later\r\n\r\n`high-urgency`: update as soon as you can, this is a critical update required for Nimbus to function correctly\r\n\r\n## SHA512 checksums\r\n\r\n```text\r\n# Linux AMD64\r\ncfb5ef0a22d1d019791e2c76dbf49290e0dc272e6d20f23a8d96b72ad6cd80e20375035bc48f2eefe7d7cee1caa47b9809a6ddc6c2e14d92d6add136a463bddd  nimbus_beacon_node\r\ncf7449f27e913ca38d6f2f84bd3f081cea0141b8c7d3bbf6da9a5235d1bcc8e4a572937adec1b3ddb243478e02f13d89db977cf56fdc932fec00307b2e2be9e5  nimbus_validator_client\r\n# Linux ARM64\r\na7ff47f2477881c771386e950c292415787c8a3f5e49902f143502afecce2b0d40402bf8a35dc5ba9db2a2013941fe0f43fa9e16aa750e8002e7d9d2f7c293f6  nimbus_beacon_node\r\n24c4629250a5081a66fca59d0ffdf8ef4bd158272d41708b992949a6cb86935d9708e0249d7ace58ece1be6f75f7f250309eeeefcbb212d105c775729d96e4d9  nimbus_validator_client\r\n# Linux ARM\r\na4b27a034ecd8b6da86bfa0ba8eb91c6c41c2704467df8469ed21c2d856d9d1ab06020fcc8a8c6685f3539bf50defd102eda4ccd99b29b05cfa4c28128e1e176  nimbus_beacon_node\r\n67cd90f1426bb261adf939949382fb85401c5c7e9f33f5c1a1e8b111e7cdf5d07517ac5395390b61e4dd094c56a9cb1515754c4cb50a82e9d9105eaa370ba009  nimbus_validator_client\r\n# Windows AMD64\r\neb3eb0092b1d97edb9399e028ff991ad8cdb672703860af9b142e0842a11f184e84ef06b9fc482c58a93d68ab05b37c9da2535dec08d927d5dc8a37376399617  nimbus_beacon_node.exe\r\n1b9093fb51113668d7f8",
+    "why": "new `medium-urgency` format",
+    "expect": {
+      "severity": "recommended"
+    }
+  },
+  {
+    "component_slug": "nimbus-eth2",
+    "assessor": "nimbus-urgency",
+    "tag": "v26.3.0",
+    "is_prerelease": false,
+    "name": "v26.3.0",
+    "url": "https://github.com/status-im/nimbus-eth2/releases/tag/v26.3.0",
+    "published_at": "2026-03-02T06:11:18+00:00",
+    "body": "## Notes\r\n\r\nThe Nimbus consensus client `v26.3.0` is a `low-urgency` release which improves blob and column-handling performance.\r\n\r\n### Improvements\r\n\r\n- Improve blob and column-handling performance:\r\n  https://github.com/status-im/nimbus-eth2/commit/1a4774a42da0bc636e15a5d6ca234b2d6a3e05ce\r\n\r\n## Urgency guidelines\r\n\r\n`low-urgency`: update at your own convenience, sometime within our normal monthly update cycle\r\n\r\n`medium-urgency`: may contain an important stability fix, it is better to update sooner rather than later\r\n\r\n`high-urgency`: update as soon as you can, this is a critical update required for Nimbus to function correctly\r\n\r\n## SHA512 checksums\r\n\r\n```text\r\n# Linux AMD64\r\nebfb0bdcbf3b76e33f7bf0c0e1e0179ad1d3340f142e2ab08174841c29aa3ff3c616d1df1038ff95c26b654b8f23e206714decc6ee4fe785276ce9e6ca4a849d  nimbus_beacon_node\r\n899b054d8924ca421fe4b134e7714a912242e65a7ebbb96d0c2d6f2cbfc745e5d38c5137818c18ccfe9eaa8589c5b16b648401aadbbbd51d868cd5ae40602ac4  nimbus_validator_client\r\n# Linux ARM64\r\nb1f2e8409cb49fff3c89d0166c0e6a20271d92b799125fa9df9c7f37db89a5c8ee35f6b8551e8da86305d9dbbbca289ea59c15af464f6e0c6f8455c48dfb9342  nimbus_beacon_node\r\n800034b86baa8f148d77b3d195b3aa32b71809328396945e4f7f1d6abc5dea0f86ea83a2b81478df24fd8fb4a83e43aca321ac5272b5beb33f4a83bb710e4b08  nimbus_validator_client\r\n# Linux ARM\r\nf2b0c2acbfa2bd728592d457f266c8b7d06aec7fa09ebca5c86c74989e76f8f67215aae182d0211dd17efc1050a7fe11fd34d5cf9f619be420c9f20e341066f3  nimbus_beacon_node\r\n583b0ea4ceb7024f24b7c4b22a9f591aeb34bb4cada4fafdff620b9dcefdf5fd32f1da83dae512b01723e55380b06d3fd58a5e2f30ed1325305343f2303310a6  nimbus_validator_client\r\n# Windows AMD64\r\n1d6299f67bbf8c0eabbeb6abfbba8202f7e4e5db1666d0f466394fad7fecdf7f49e47ead6c1f0c8e611ffc2b3b340020cbee127b3cab99903397380cc2d85bec  nimbus_beacon_node.exe\r\n79a86802dc237207cc967248474eb9918b0e0d511fed06a701ecc1e4a6a4137c6cc7a5a6f4b4f54e7e4f900a2fc809ad584dddcbf1447f8870af0e27885f3527  nimbus_validator_client.exe\r\n# macOS ARM64\r\n77e4679089d0d5d79819dd20f506078641c68216c08d9f7e2e4d25353766c447658187092a3c9346741920f35daafb53a94bff95a1dd58468b68eaf14b9cd80e  nimbus_beacon_node\r\n771711fc6d9d41310c7f1d5ffa1bd2c4740a047c2869d1be8a6d6c197c7b20eaf4b696221feb815124e5d3263c807b1a72fd895fd4cc6803f27bfc3e084b828c  nimbus_validator_client\r\n```\r\n",
+    "why": "low-urgency",
+    "expect": {
+      "severity": "optional"
+    }
+  },
+  {
+    "component_slug": "nimbus-eth2",
+    "assessor": "nimbus-urgency",
+    "tag": "v26.3.1",
+    "is_prerelease": false,
+    "name": "v26.3.1",
+    "url": "https://github.com/status-im/nimbus-eth2/releases/tag/v26.3.1",
+    "published_at": "2026-03-28T06:02:52+00:00",
+    "body": "## Notes\r\n\r\nThe Nimbus consensus client `v26.3.1` is a `medium-urgency` release for Ethereum which improves column-handling performance and increases validator client robustness. It is `high-urgency` for Gnosis due to the imminent Fulu fork.\r\n\r\n### Improvements\r\n\r\n- Schedule Fulu fork for Gnosis:\r\n  https://github.com/status-im/nimbus-eth2/pull/8144\r\n\r\n- Implement the fast confirmation rule:\r\n  https://github.com/status-im/nimbus-eth2/pull/8072\r\n  https://github.com/status-im/nimbus-eth2/pull/8121\r\n  https://github.com/status-im/nimbus-eth2/pull/8129\r\n  https://github.com/status-im/nimbus-eth2/pull/8130\r\n  https://github.com/status-im/nimbus-eth2/pull/8132\r\n  https://github.com/status-im/nimbus-eth2/pull/8137\r\n\r\n- Verify block signatures only once rather than for every column:\r\n  https://github.com/status-im/nimbus-eth2/pull/7949\r\n\r\n### Fixes\r\n\r\n- Enable timely validator client proposals with partially unresponsive beacon nodes:\r\n  https://github.com/status-im/nimbus-eth2/pull/8174\r\n\r\n- Show optimistic sync status while backfilling:\r\n  https://github.com/status-im/nimbus-eth2/pull/8136\r\n\r\n- Fix crash when attempting to subscribe to `attestation` beacon API SSE:\r\n  https://github.com/status-im/nimbus-eth2/pull/8057\r\n\r\n## Urgency guidelines\r\n\r\n`low-urgency`: update at your own convenience, sometime within our normal monthly update cycle\r\n\r\n`medium-urgency`: may contain an important stability fix, it is better to update sooner rather than later\r\n\r\n`high-urgency`: update as soon as you can, this is a critical update required for Nimbus to function correctly\r\n\r\n## SHA512 checksums\r\n\r\n```text\r\n# Linux AMD64\r\nacc8ffc2da3ea03648074a9acf60660475549254be8af7bc1c471609d095bd7ecef0c9f4352bf404e5cb7db73c8f17f4f67e8f5e24620532e75bfb734d061604  nimbus_beacon_node\r\n225e690eb014daedc6131e3cce43fd65d901836b8c27a552f26a3dbd5a0ad18bc1f8a48abcd8a6d2729c6cd87c4320bc38cc4c086bb436da74da3416820e8360  nimbus_validator_client\r\n# Linux ARM64\r\n53347318ed260e9348fd0c63b95f65d06c6062df4113244292f83ba94db6296c0dff548c66de7120795b65e793305f2ff05dc67d81c03f0db0f824dac070cec4  nimbus_beacon_node\r\n525ddaceefad187c31a8bec8e54a4f21ae246959eaaebc1d1545d13945a68b82fc8f11d3e262e4b903d755c870a813a058f7a36c68d4621f33216fa56cf8f182  nimbus_validator_client\r\n# Linux ARM\r\na070a5b0cfa9413bba7d776ad481698cc5e0f856366dee140cfec32019600c23ce7a9cd1c77d05b44c8d672ab09d2dcd46b15841b4a6b0e1da2c36cdb7622b0d  nimbus_beacon_node\r\n8b6fc27869e0b2737adebaaa62192feaa4bca61102bc20a9a01cc9e546c13067406d5ea75ff2120546c46fcf8d8f0da4c8db1c4173ed917519755975b6fcc0a4  nimbus_validator_client\r\n# Windows AMD64\r\n050920d1ad487a071196c83e1179b7a57328935eb622c17c349f2c87c3708a461f9a8c0587650461eab4f23171e415bf171098a427aa2d10bc428f06837e5242  nimbus_beacon_node.exe\r\n8f034c9034d2cb5c21a2de2b5e5a0d99e9d96d615165d4105c4cbaf0e45df4914a84034d76adc5f1ef4effe5ac97ba6d85c0bbbb731bc9aa9bf7a77ebe42c3fc  nimbus_validator_client.exe\r\n# macOS ARM64\r\n973804a96d9f8b3760e9a977e42740fa3c800708f1422936eb87c8bba2554ed020ddb0b488fb874bed",
+    "why": "high-urgency only for Gnosis is ignored",
+    "expect": {
+      "severity": "recommended"
+    }
+  },
+  {
+    "component_slug": "nimbus-eth2",
+    "assessor": "nimbus-urgency",
+    "tag": "v25.3.0",
+    "is_prerelease": false,
+    "name": "v25.3.0",
+    "url": "https://github.com/status-im/nimbus-eth2/releases/tag/v25.3.0",
+    "published_at": "2025-03-02T18:47:46+00:00",
+    "body": "## Notes\r\n\r\nNimbus `v25.3.0` is a `low-urgency` release except for the Gnosis Chiado testnet, for which it's a `high-urgency` release.\r\n\r\n### Improvements\r\n\r\n- Add Gnosis Chiado testnet Electra fork support:\r\n  https://github.com/status-im/nimbus-eth2/pull/6968\r\n\r\n- Add SSZ support for the registerValidator beacon REST API endpoint:\r\n  https://github.com/status-im/nimbus-eth2/pull/6943\r\n\r\n- Increase trusted node sync state download timeout to 3 minutes:\r\n  https://github.com/status-im/nimbus-eth2/pull/6969\r\n\r\n- Add link to trusted node sync documentation regarding state download timeout:\r\n  https://github.com/status-im/nimbus-eth2/pull/6927\r\n\r\n### Fixes\r\n\r\n- Fix validator client graffiti with web3signer validators:\r\n  https://github.com/status-im/nimbus-eth2/pull/6927\r\n\r\n- Fix sync completion percentages exceeding 100%:\r\n  https://github.com/status-im/nimbus-eth2/pull/6922\r\n\r\n## Urgency guidelines\r\n\r\n`low-urgency`: update at your own convenience, sometime within our normal update cycle of two weeks\r\n\r\n`medium-urgency`: may contain an important stability fix, it is better to update sooner rather than later\r\n\r\n`high-urgency`: update as soon as you can, this is a critical update required for Nimbus to function correctly\r\n\r\n## SHA512 checksums\r\n\r\n```text\r\n# Linux AMD64\r\n304ade9c2ad0f305dfe95d5f407eae9bfedf0389f79c92e8f48c60660839f86b00b59a6ac6dc3bd426da89aaec7a866d71450a6e90ec815bcdcb3602f4d4be88  nimbus_beacon_node\r\ncaead92d5196dddfda48a8d8561c84982095264f0786f01b4da9c00e701022eef35bdef671d1db6b3909be0d82a4052b9072f86ab841a5198e72383e0b5339e3  nimbus_validator_client\r\n# Linux ARM64\r\n019e3965a048ae84b6aedf6ac892d0106093e1b576be225cff791dfd2a475ff511241c78c6c43df4d40a8818d35f683f948ef48a1ef3e6c39358cf15f9b2bb65  nimbus_beacon_node\r\nda8002508f3f1aa244739ecd7a67f35003fd7a79dcaecad858e0626e829e7006d300879d065563ebeb4d189ec32bab0e2b6391095d70f46e3349eb0027d90a5f  nimbus_validator_client\r\n# Linux ARM\r\n746b0326f3c357ebc5226baf5977b0e63fe6dc4f4284ab7f7b36c24035a775f7da8ad7807c277805c108885285aa6847d115af89ff7de47ed77f1d8f13955bf4  nimbus_beacon_node\r\n7477fac14803cd9f85e7a8a7107b59c7a3a4b9eab95353fafd26399481c4c14a2760be680eefb6d3d4dcde06600d511b8fac8712cc8d47870106eb88d9049d53  nimbus_validator_client\r\n# Windows AMD64\r\n9935d4a71e8bdbcbe94f5fa6baec3e1e67e89c1e9e7bbf7a0459e974370a5878afaed8c70a4f95b5a20d1c4f5dc240b68f195c22dcaf39a45a0b963036a631a1  nimbus_beacon_node.exe\r\nd570e53450796b0c640438082f22f3adb95df9be60e07ebb4bb6e4a2f25a840957b502a295dcd72287e22ce3cc0403adc2269c99af6ab0867b216b1cfa78d629  nimbus_validator_client.exe\r\n# macOS AMD64\r\nd05a2d64333b06b23199c1eb6cb7837af5ba7b6f8a02f65621f4d3f40090dee1690c32bc27141e41460786e7ddb2cdabfedfb02e041e9cefd3ff44f05994ac71  nimbus_beacon_node\r\na79292ee737542b39f81c43edb30a9ee0ef005733b133d73c4dbdf7f65a02371aff36b374504f42bce67b35f29e7bf13d27da1b74f0a0cafb71844d7dce3f4de  nimbus_validator_client\r\n# macOS ARM64\r\n4a949ae6d14327dd1cab17d35ecedd45ede155bedf4cb7228e39b1184883167f2d42d5f51b7dd89f089f18af49ddbd22d097672c9",
+    "why": "low-urgency except Gnosis Chiado",
+    "expect": {
+      "severity": "optional"
+    }
+  },
+  {
+    "component_slug": "geth",
+    "assessor": "geth-prose",
+    "tag": "v1.17.8",
+    "is_prerelease": false,
+    "name": "Protein Sludge Pack (v1.17.8)",
+    "url": "https://github.com/ethereum/go-ethereum/releases/tag/v1.17.8",
+    "published_at": "2026-10-08T16:35:36+00:00",
+    "body": "This is a security-focused release, fixing several DoS risk issues ❤️‍🩹 . Note most of the the fixes related to bugs which only become possible after the activation of the Amsterdam fork. There are also some general correctness improvements.\r\n\r\nThis release is recommended for all users.\r\n\r\n## All Changes\r\n\r\n### Security\r\n\r\n- In the eth and snap p2p protocol handler, DoS resistance has been improved for multiple packet handlers (#35862, #35883, #35859, #35857, #35904, #35856)\r\n- JUMPDEST analysis caching has been hardened for attack cases after Amsterdam fork (#35881)\r\n- The IP address predictor now requires IP verification before accepting statements (#35861)\r\n- A post-Amsterdam DoS vector related to BAL accounts is resolved (#35865)\r\n- A rogue STUN server could crash the node with an invalid response (#35863)\r\n\r\n### RPC\r\n\r\n- `eth_createAccessList` now works when the sender account has no balance (#35397)\r\n- `eth_simulateV1` has been fixed to correctly report ETH transfer logs post-Amsterdam (#35617)\r\n- `eth_simulateV1` virtual blocks are now aligned with the Amsterdam spec (#35668)\r\n- `eth_capabilities` reports the availability of receipts bounded by the transaction hash index (#35878)\r\n- For `eth_call` and related operations, the transaction gas limit is no longer applied (after Amsterdam fork) (#35845)\r\n- A post-Amsterdam crash in journaled live tracers core/tracing: handle creator nonce change without an open frame (#35896)\r\n- An edge case in processing beacon chain head updates after unclean shutdown is resolved (#35804)\r\n- abigen will now use sequential nonces when deploying library dependencies of a contract (#35888)\r\n\r\n### Core Library\r\n\r\n- The hard-coded Hoodi testnet beacon chain genesis time was incorrect (#35876)\r\n- blsync could get stuck if the server was unresponsive or overloaded (#35872)\r\n\r\n### P2P\r\n\r\n- A correctness issue in the EIP-8070 Sparse Blobpool (Amsterdam fork) implementation is fixed (#35860)\r\n- The dial scheduler now handles IPv4 <> IPv6 transitions for DNS-resolved static nodes (#35880)\r\n\r\n### Build\r\n\r\n- The PPA now publishes for Ubuntu 26.04 \"Resolute Raccoon\" (#35854)\r\n\r\n---\r\n\r\nFor a full rundown of the changes please consult the Geth [1.17.8](https://github.com/ethereum/go-ethereum/milestone/205?closed=1) release milestone.\r\n\r\nAs with all our previous releases, you can find the:\r\n\r\n- Pre-built binaries for all platforms on our [downloads page](https://geth.ethereum.org/downloads/).\r\n- Docker images published under [`ethereum/client-go`](https://hub.docker.com/r/ethereum/client-go) (use \"stable\" tag).\r\n- Ubuntu packages in our [Launchpad PPA repository](https://launchpad.net/~ethereum/+archive/ubuntu/ethereum).\r\n- macOS packages in our [Homebrew Tap repository](https://github.com/ethereum/homebrew-ethereum).\r\n",
+    "why": "security-focused but \"recommended for all users\"",
+    "expect": {
+      "severity": "recommended",
+      "flags": [
+        "security"
+      ]
+    }
+  },
+  {
+    "component_slug": "geth",
+    "assessor": "geth-prose",
+    "tag": "v1.17.6",
+    "is_prerelease": false,
+    "name": "Inorganic Lubricant (v1.17.6)",
+    "url": "https://github.com/ethereum/go-ethereum/releases/tag/v1.17.6",
+    "published_at": "2026-09-23T02:21:47+00:00",
+    "body": "<!-- Inorganic Lubricant (v1.17.6) -->\r\n\r\nThis is a maintenance release with a number of performance improvements to block processing and initial sync, and is recommended for all users.\r\n\r\nA few things worth highlighting:\r\n\r\n- The Amsterdam hardfork is scheduled on the Sepolia testnet at timestamp `1791294816` (Oct 6, 2026, 13:53:36 UTC). Sepolia node operators must upgrade before that time.\r\n- The Holesky testnet has been removed, as the network reached end-of-life.\r\n- Go 1.24 is no longer supported. Release binaries and Docker images are now built with Go 1.27.\r\n\r\n## Fork Implementation\r\n\r\n- Schedule the Amsterdam fork on Sepolia (#35734)\r\n- Remove the EIP-7610 implementation (#35581)\r\n- Update EIP-2780 and EIP-8038 gas parameters (#35454, #35497)\r\n- Update EIP-7997 deterministic factory contract (#35458)\r\n- Update EIP-8037, repaying the outstanding gas debt first after absorbing a child frame (#35633)\r\n- Implement parallel block execution driven by the block-level access list (#35264, #35441, #35443, #35459, #35461, #35465, #35575, #35693)\r\n- Rename \"regular gas\" to \"execution gas\" to match EIP-8037 (#35457, #35486)\r\n\r\n## Core\r\n\r\n- Remove the Holesky testnet (#35591)\r\n- Optimize JSON decoding of large requests such as `engine_newPayload` (#35518)\r\n- Process the receipts for bloom construction and root calculation alongside execution (#35738)\r\n- Introduce a precompile result cache shared between prefetcher, block processing and miner (#35388, #35473, #35526, #35578, #35753)\r\n- Parallelize chain data and state writes in the post-execution commit (#35595)\r\n- Do not seal a block if a database error occurred (#35427)\r\n- Fix a panic in the log indexer when a reorg shortens the chain onto the rendered block (#35619)\r\n- Honor `ExecuteConfig.EnableTracer` for the EVM-level tracing hooks (#35512)\r\n- Add a metered LRU cache variant (#33719)\r\n- Retain block-level access lists alongside bad blocks (#35423)\r\n- Unset the block-level access list at the end of each transaction (#35498)\r\n- Fix the blob cache initialization (#35509)\r\n- Fix head truncation below a diverged tail group (#35551)\r\n- Improve the blob fetcher with a few defensive operations (#35572)\r\n- Fix deadlock when re-requesting partial receipts in eth/70 (#35537)\r\n- Reject empty partial receipt responses in eth/70 (#35593)\r\n- Cap the total size of blocked blob transactions in the sparse blobpool (#35367)\r\n- Fix the `Cells`/`GetCells` RLP encoding in eth/72 (#35428)\r\n- Cache recovered blobs in the blobpool to speed up serving pre-eth/72 peers (#35543)\r\n- Add fork validation for transaction types in the state transition (#35588)\r\n- Avoid announcing sparse blob txs to legacy peers (#35589)\r\n- Add eth/71 (EIP-8159) tests (#35389)\r\n- Fix gas tracer hooks and gas measurement (#35646)\r\n- The eth/72 blob buffer is capped at 128 MiB total and 16 MiB per peer (#35766)\r\n\r\n## Sync\r\n\r\n- Optimize the state sync by parallelizing response processing (#35533)\r\n- Implement best-effort downloading of block-level ac",
+    "why": "Sepolia operators must upgrade before the fork",
+    "expect": {
+      "severity": "high",
+      "flags": [
+        "hardfork",
+        "mandatory"
+      ],
+      "wave": "glamsterdam"
+    }
+  },
+  {
+    "component_slug": "geth",
+    "assessor": "geth-prose",
+    "tag": "v1.17.7",
+    "is_prerelease": false,
+    "name": "Intact Neuro-Coil (v1.17.7)",
+    "url": "https://github.com/ethereum/go-ethereum/releases/tag/v1.17.7",
+    "published_at": "2026-09-30T11:48:08+00:00",
+    "body": "<!-- Intact Neuro-Coil (v1.17.7) -->\r\n\r\nThis is a quick release, cut mainly because publishing v1.17.6 to the Ubuntu PPA failed. It also carries a few fixes merged since then. Both v1.17.6 and v1.17.7 are ready for the Amsterdam fork on Sepolia (Oct 6, 2026), so Sepolia validators can run either version.\r\n\r\nUsers can now also choose their own history pruning point with `--history.chain <block number>:<block hash>`. It works both for pruning an existing node with `geth prune-history` and for snap sync, which then skips downloading the chain history before that block.\r\n\r\n## Changes\r\n\r\n- Add `postosaka` and custom `<block number>:<block hash>` history pruning points (#35792)\r\n- Account for both the execution and state gas (EIP-8037) when selecting transactions in the miner (#35773)\r\n- Fix a memory leak by waiting for the block prefetcher when stopping the chain (#35821)\r\n- Release the pathdb clean caches when the database is disabled (#35789)\r\n- Encode and hash the block-level access list once, in a dedicated pipeline (#35772)\r\n- Keep the snap sync v2 pivot moving by applying block-level access lists after the state sync (#35749)\r\n- Only fetch block-level access lists close to the chain head (#35780)\r\n- Skip peers whose announced block range doesn't cover the request (#35723)\r\n- Restore the txpool empty-state fallback during snap sync, fixing the regression introduced in v1.17.3 (#35582)\r\n- Allow restarting an interrupted snap sync when a history cutoff is configured (#35837, #35844)\r\n- Update execution-spec-tests fixtures to v21 (#35835)\r\n- Add five new multi-cloud bootnodes operated by NodeOps alongside the existing bootnodes (#35682)\r\n\r\nFor a full rundown of the changes please consult the Geth [1.17.7](https://github.com/ethereum/go-ethereum/milestone/204?closed=1) release milestone.\r\n\r\n---\r\n\r\nAs with all our previous releases, you can find the:\r\n\r\n- Pre-built binaries for all platforms on our [downloads page](https://geth.ethereum.org/downloads/)\r\n- Docker images published under [`ethereum/client-go`](https://hub.docker.com/r/ethereum/client-go) (use \"stable\" tag)\r\n- Ubuntu packages in our [Launchpad PPA repository](https://launchpad.net/~ethereum/+archive/ubuntu/ethereum)\r\n- macOS packages in our [Homebrew Tap repository](https://github.com/ethereum/homebrew-ethereum)",
+    "why": "ready for the fork, but either version works",
+    "expect": {
+      "severity": "optional",
+      "flags": [
+        "hardfork"
+      ]
+    }
+  },
+  {
+    "component_slug": "teku",
+    "assessor": "teku-notes",
+    "tag": "26.10.0",
+    "is_prerelease": false,
+    "name": "26.10.0",
+    "url": "https://github.com/Consensys-Incorporated/teku/releases/tag/26.10.0",
+    "published_at": "2026-10-08T22:05:15+00:00",
+    "body": "This is a recommended update containing improvements and bug fixes.\r\n\r\n### Downloads\r\n- Available as `26.10.0` on [Dockerhub](https://hub.docker.com/r/consensys/teku)\r\n- Download the binary distribution from the release assets below.\r\n\r\nNote: We will stop publishing binaries to Cloudsmith in upcoming releases. If you have any automation that relies on the binaries being available there, you should update to consume the binaries from the GitHub releases page\r\n\r\n### Breaking Changes\r\nN/A\r\n\r\n### Additions and Improvements\r\n - Added gossipsub metrics `libp2p_gossip_gossipsub_*` (off by default; enable them with `--Xmetrics-additional-categories=LIBP2P_GOSSIP`).\r\n - Block production now resends `forkchoiceUpdated` when the execution layer returned no `payloadId` (e.g. `SYNCING`) for the one sent ahead of the proposal slot, instead of missing the proposal. A warning is logged when no `payloadId` is returned.\r\n - Set gossip `max_total_fields` limit to 32768. See [#11341](https://github.com/Consensys-Incorporated/teku/issues/11341).\r\n\r\n### Bug Fixes\r\n - The validator client now sends the required `Eth-Consensus-Version` header when submitting gloas proposer preferences to the beacon node.\r\n - The validator client now sends the required `Eth-Consensus-Version` header when submitting gloas payload attestation messages to the beacon node.\r\n - The ENR `eth2` field now advertises the current fork version as `next_fork_version` when a BPO fork is scheduled before the next hard fork, as the Fulu p2p specification requires.\r\n - A block production request that fails no longer keeps its preparation for the slot, so a retry within the same slot starts from a fresh preparation.\r\n - Fixed valid voluntary exits and slashings referring to an earlier fork being rejected on gossip, which wrongly penalised the peers forwarding them.\r\n - Peers discovered with both QUIC and TCP addresses are now dialed over TCP when the QUIC dial fails, instead of being retried over QUIC only. [#11397](https://github.com/Consensys/teku/issues/11397)\r\n\r\n### Upcoming Breaking Changes\r\nN/A",
+    "why": "Breaking Changes: N/A",
+    "expect": {
+      "severity": "recommended",
+      "notFlags": [
+        "breaking"
+      ]
+    }
+  },
+  {
+    "component_slug": "teku",
+    "assessor": "teku-notes",
+    "tag": "26.9.1",
+    "is_prerelease": false,
+    "name": "26.9.1",
+    "url": "https://github.com/Consensys-Incorporated/teku/releases/tag/26.9.1",
+    "published_at": "2026-09-28T01:16:09+00:00",
+    "body": "This is a recommended update containing improvements and bugfixes.\r\n\r\nThis is a required update for the Sepolia network for the upcoming Glamsterdam (Gloas) fork at epoch `353024` (October 6, 2026 13:53:36 UTC).\r\n\r\n### Downloads\r\n- Available as `26.9.1` on [Dockerhub](https://hub.docker.com/r/consensys/teku)\r\n- Download the binary distribution:\r\n    - [tar.gz](https://artifacts.consensys.net/public/teku/raw/names/teku.tar.gz/versions/26.9.1/teku-26.9.1.tar.gz) (sha256: `2510817b1ad128e62eef79129dba13158d750f584a1191424d616862e59d523f`)\r\n    - [zip](https://artifacts.consensys.net/public/teku/raw/names/teku.zip/versions/26.9.1/teku-26.9.1.zip) (sha256: `f522a6e7bf0308dd282757bfb9a3c047922ffe4eabaef2f9c2f4d462fc64a3a3`)\r\n\r\nNote: We will stop publishing binaries to Cloudsmith in upcoming releases. If you have any automation that relies on the binaries being available there, you should update to consume the binaries from the GitHub releases page\r\n\r\n### Additions and Improvements\r\n - Scheduled the Glamsterdam (Gloas) upgrade on Sepolia for epoch `353024` (October 6, 2026 13:53:36 UTC).\r\n - Updated aircompressor to 3.8 and made it the only Snappy implementation for gossip and RPC (removed snappy-xerial dependency)\r\n - `GET /eth/v1/events` now responds with `400` when a requested topic is not recognised, instead of opening a stream which never delivers any events.\r\n\r\n### Bug Fixes\r\n - Fixed status, event, validator and database log messages being written twice when `--log-destination` is set to `CONSOLE` or `FILE`.\r\n - Fixed an out of memory error when a sync stopped while the chain head was still far behind. The node no longer reports itself as in sync in that case.\r\n - Fixed cases where Teku kept running, or hung while shutting down, after an out of memory error instead of exiting. It can now exit with code 3 as well as the usual code 1; both mean the node can be restarted.\r\n - `POST /eth/v1/validator/{pubkey}/graffiti` now responds with `202` instead of `204` on success, as required by the keymanager API spec.",
+    "why": "required update for Sepolia",
+    "expect": {
+      "severity": "high",
+      "flags": [
+        "hardfork",
+        "mandatory"
+      ]
+    }
+  },
+  {
+    "component_slug": "prysm",
+    "assessor": "prysm-notes",
+    "tag": "v7.2.0",
+    "is_prerelease": false,
+    "name": "v7.2.0",
+    "url": "https://github.com/OffchainLabs/prysm/releases/tag/v7.2.0",
+    "published_at": "2026-09-28T15:50:56+00:00",
+    "body": "## [v7.2.0](https://github.com/OffchainLabs/prysm/compare/v7.1.8...v7.2.0) - 2026-09-25\r\n\r\nThis release schedules the Gloas fork on the Sepolia testnet at epoch 353024 (October 6, 2026, 13:53:36 UTC). Sepolia operators are required to update to v7.2.0 before the fork, and must also run an execution client that supports the corresponding Amsterdam fork on Sepolia. Gloas is not yet scheduled for Hoodi or mainnet; operators of those networks are encouraged to update per their regular update cadence.\r\n\r\n**Sepolia gas limit:** the Sepolia Gloas configuration published upstream on September 24 adds an EIP-8261 `GAS_LIMIT_SCHEDULE` entry that raises the network gas limit to 200M at the fork. That entry landed after this release was cut and is **not included in v7.2.0**, so validators on this release default to a 60M gas limit in their Gloas proposer preferences. Sepolia validators who want to propose with a 200M gas limit must set it explicitly at the option level: add `\"gas_limit\": \"200000000\"` to `default_config` (or to a key under `proposer_config`) in a version 2 proposer settings file loaded with `--proposer-settings-file` or `--proposer-settings-url`, or set it through the keymanager API with `POST /eth/v1/validator/{pubkey}/gas_limit`. An explicitly configured gas limit is honored as configured. Note that `--suggested-gas-limit` only applies to pre-Gloas mev-boost registrations and has no effect after the fork. A follow-up release will include the schedule.\r\n\r\nRelease highlights:\r\n\r\n- Gloas fork scheduled on Sepolia at epoch 353024 (October 6, 2026, 13:53:36 UTC). [[PR]](https://github.com/OffchainLabs/prysm/pull/17512)\r\n- Validator client support for Gloas builders: version 2 proposer settings, per-key builder configuration through the keymanager API, the Gloas builder REST endpoints, remote signing (web3signer) of Gloas blocks and a builder circuit breaker. `--with-builder`, `--enable-builder` and `--suggested-gas-limit` only produce legacy (pre-Gloas) mev-boost content and are deprecated.\r\n- Proposer settings loaded from `--proposer-settings-file` or `--proposer-settings-url` now reject unknown keys; review your proposer settings before updating. [[PR]](https://github.com/OffchainLabs/prysm/pull/17498)\r\n- Active-active REST validator client: with `--enable-beacon-rest-api` and several `--beacon-rest-api-provider` nodes, the validator client uses the best suited connected beacon node instead of failing over from a single active node. [[PR]](https://github.com/OffchainLabs/prysm/pull/17075)\r\n- Web3Signer public keys can be polled from the remote signer with `--validators-external-signer-poll-interval`, and keys are tracked per source. [[PR]](https://github.com/OffchainLabs/prysm/pull/17229)\r\n- The fast confirmation rule, behind the `--enable-fast-confirmation` flag. [[PR]](https://github.com/OffchainLabs/prysm/pull/17122)\r\n- The EF bootstrap nodes for mainnet, Sepolia and Hoodi are replaced with the NodeOps bootnode fleet. [[PR]](https://github.",
+    "why": "schedules Gloas on Sepolia, required",
+    "expect": {
+      "severity": "high",
+      "flags": [
+        "hardfork",
+        "mandatory"
+      ],
+      "wave": "glamsterdam"
+    }
+  },
+  {
+    "component_slug": "prysm",
+    "assessor": "prysm-notes",
+    "tag": "v7.1.8",
+    "is_prerelease": false,
+    "name": "v7.1.8",
+    "url": "https://github.com/OffchainLabs/prysm/releases/tag/v7.1.8",
+    "published_at": "2026-07-29T14:51:33+00:00",
+    "body": "## [v7.1.8](https://github.com/OffchainLabs/prysm/compare/v7.1.7...v7.1.8) - 2026-07-27\r\n\r\nThis is a highly recommended patch release containing multiple bug fixes improving the handling of early attestations for better inclusion. Several other bugfixes and ux improvements are also included. Some highlights:\r\n - libp2p bug fixed, improving network-wide propagation of early attestations. [[PR]](https://github.com/OffchainLabs/prysm/pull/17123)\r\n - Bug fix enabling validator clients using grpc to make timely attestations (resolving notification stream connection issues).\r\n - Builder client now automatically falls back to JSON when a remote builder rejects SSZ requests (415/406), so builders without SSZ support (e.g. Commit Boost) work without needing `--disable-builder-ssz`.\r\n - Numerous UX / quality of life improvements (see Added and Changed sections below).\r\n - Miscellanious small bugfixes (see the Fixed section below)\r\n - And of course, changes related to the upcoming gloas fork, including support for partial data columns (more efficient blob networking) and progressive merkleization.\r\n\r\n### Added\r\n\r\n- Gate the `--distributed` validator client flag when used without the REST API being enabled. [[PR]](https://github.com/OffchainLabs/prysm/pull/17151)\r\n- Added shorter flag aliases: `--beacon-rest`, `--beacon-grpc`, and `--enable-rest`. [[PR]](https://github.com/OffchainLabs/prysm/pull/17159)\r\n- Add `GET /prysm/v1/node/custody` endpoint exposing the node's data column custody state: custody group count, custody groups and columns, earliest available slot, supernode/semi-supernode status, and backfill progress. [[PR]](https://github.com/OffchainLabs/prysm/pull/17144)\r\n- Builder client now automatically falls back to JSON when a remote builder rejects SSZ requests (415/406), so builders without SSZ support (e.g. Commit Boost) work without needing `--disable-builder-ssz`. Covers `GetHeader`, `RegisterValidator`, `SubmitBlindedBlock`, `SubmitBlindedBlockPostFulu`, and the Gloas `GetExecutionPayloadBid` and `SubmitBuilderPreferences` endpoints. Once a builder rejects SSZ, the client uses JSON for the remainder of its lifetime. [[PR]](https://github.com/OffchainLabs/prysm/pull/17137)\r\n- Reorg late payloads in Gloas behind the `--reorg-late-payloads` flag when the PTC did not reach timeliness consensus. [[PR]](https://github.com/OffchainLabs/prysm/pull/16933)\r\n- progressive merklization functions in the ssz package. [[PR]](https://github.com/OffchainLabs/prysm/pull/16847)\r\n- progressive SSZ merkleization for Gloas beacon state. [[PR]](https://github.com/OffchainLabs/prysm/pull/16860)\r\n- hidden, experimental beacon node flag `--enable-progressive-ssz` to. [[PR]](https://github.com/OffchainLabs/prysm/pull/16860)\r\n\r\n### Changed\r\n\r\n- GET /eth/v1/validator/payload_attestation_data/{slot} now returns 204 instead of 503 when no block has been seen for the requested slot, per ethereum/beacon-APIs#612. [[PR]](https://github.com/OffchainLabs/prysm/pull/16851)\r\n- S",
+    "why": "highly recommended patch release",
+    "expect": {
+      "severity": "recommended"
+    }
+  },
+  {
+    "component_slug": "prysm",
+    "assessor": "prysm-notes",
+    "tag": "v7.1.2",
+    "is_prerelease": false,
+    "name": "v7.1.2",
+    "url": "https://github.com/OffchainLabs/prysm/releases/tag/v7.1.2",
+    "published_at": "2026-01-07T16:51:20+00:00",
+    "body": "# [v7.1.2](https://github.com/prysmaticlabs/prysm/compare/v7.1.1...v7.1.2) - 2026-01-07\r\n\r\nHappy new year! This patch release is very small. The main improvement is better management of pending attestation aggregation via [PR 16153](https://github.com/OffchainLabs/prysm/pull/16153).\r\n\r\n### Added\r\n\r\n- `primitives.BuilderIndex`: SSZ `uint64` wrapper for builder registry indices. [[PR]](https://github.com/prysmaticlabs/prysm/pull/16169)\r\n\r\n### Changed\r\n\r\n- the /eth/v2/beacon/pool/attestations and /eth/v1/beacon/pool/sync_committees now returns a 503 error if the node is still syncing, the rest api is also working in a similar process to gRPC broadcasting immediately now. [[PR]](https://github.com/prysmaticlabs/prysm/pull/16152)\r\n- `validateDataColumn`: Remove error logs. [[PR]](https://github.com/prysmaticlabs/prysm/pull/16157)\r\n- Pending aggregates: When multiple aggregated attestations only differing by the aggregator index are in the pending queue, only process one of them. [[PR]](https://github.com/prysmaticlabs/prysm/pull/16153)\r\n\r\n### Fixed\r\n\r\n- Fix the missing fork version object mapping for Fulu in light client p2p. [[PR]](https://github.com/prysmaticlabs/prysm/pull/16151)\r\n- Do not process slots and copy states for next epoch proposers after Fulu. [[PR]](https://github.com/prysmaticlabs/prysm/pull/16168)\r\n",
+    "why": "small patch; only a fork name in the changelog",
+    "expect": {
+      "severityIn": [
+        "unassessed",
+        "optional"
+      ],
+      "notFlags": [
+        "hardfork"
+      ]
+    }
+  },
+  {
+    "component_slug": "prysm",
+    "assessor": "prysm-notes",
+    "tag": "v6.0.5",
+    "is_prerelease": false,
+    "name": "v6.0.5",
+    "url": "https://github.com/OffchainLabs/prysm/releases/tag/v6.0.5",
+    "published_at": "2025-09-26T15:40:59+00:00",
+    "body": "## [v6.0.5](https://github.com/prysmaticlabs/prysm/compare/v6.0.4...v6.0.5) - 2025-09-26\r\n\r\nWe are releasing a patch update on top of v6.0.4 to address a stability issue with quic-go. \r\nAll operators should update as soon as possible to v6.0.5 or later.\r\n\r\n### Security\r\n\r\n- Updated quic-go to latest version. [[PR]](https://github.com/prysmaticlabs/prysm/pull/15749)\r\n\r\n",
+    "why": "update as soon as possible + Security section",
+    "expect": {
+      "severity": "critical",
+      "flags": [
+        "security"
+      ]
+    }
+  },
+  {
+    "component_slug": "grandine",
+    "assessor": "generic",
+    "tag": "2.0.4",
+    "is_prerelease": false,
+    "name": "2.0.4",
+    "url": "https://github.com/grandinetech/grandine/releases/tag/2.0.4",
+    "published_at": "2026-03-31T06:23:09+00:00",
+    "body": "Grandine 2.0.4 is a high-priority release for mainnet users - it contains security fixes and performance optimisations.\r\n\r\n## What's Changed\r\n* Send full signed execution payload bid to event stream by @hangleang in https://github.com/grandinetech/grandine/pull/601\r\n* Use nethermind reference assemblies from github by @ArtiomTr in https://github.com/grandinetech/grandine/pull/635\r\n* Update `POST /eth/v2/beacon/blocks` to publish only signed beacon block for post-Gloas by @hangleang in https://github.com/grandinetech/grandine/pull/600\r\n* Check pubkey in pending deposits before register builder by @hangleang in https://github.com/grandinetech/grandine/pull/602\r\n* Pin specific version of ZISK in tests by @Tumas in https://github.com/grandinetech/grandine/pull/636\r\n* Deduplicate CI build runs for internal PRs by @hangleang in https://github.com/grandinetech/grandine/pull/634\r\n* Disable macos & windows builds in CI by @ArtiomTr in https://github.com/grandinetech/grandine/pull/638\r\n* `POST /eth/v1/beacon/execution_payload/bid` by @hangleang in https://github.com/grandinetech/grandine/pull/517\r\n* `GET /eth/v1/validator/execution_payload_bid/{slot}/{builder_index}` by @hangleang in https://github.com/grandinetech/grandine/pull/518\r\n* Add payload attestation tick by @hangleang in https://github.com/grandinetech/grandine/pull/603\r\n* Fix check builder balance edge case when bid_amount = 0 by @hangleang in https://github.com/grandinetech/grandine/pull/640\r\n* Extract prune_delayed_after_finalization and call it on slot finalization by @Tumas in https://github.com/grandinetech/grandine/pull/637\r\n* Upgrade crates and replace `bincode` with `wincode` & bump Rust version by @Tumas in https://github.com/grandinetech/grandine/pull/630\r\n* Update consensus spec tests to v1.7.0-alpha3 by @Tumas in https://github.com/grandinetech/grandine/pull/639\r\n* Remove validator public keys from persisted state by @ArtiomTr in https://github.com/grandinetech/grandine/pull/611\r\n* Link `cc` to `clang` in Cross.toml by @Tumas in https://github.com/grandinetech/grandine/pull/641\r\n* Use `tokio::time::Instant` in ticks() to fix flaky clock tests by @Tumas in https://github.com/grandinetech/grandine/pull/642\r\n* Fix finalized validator loading from database for old databases. by @Tumas in https://github.com/grandinetech/grandine/pull/643\r\n* Updated dependencies by @sauliusgrigaitis in https://github.com/grandinetech/grandine/pull/644\r\n* Fixed nethermind reference assemblies installation by @ArtiomTr in https://github.com/grandinetech/grandine/pull/645\r\n* Store finalized validators to disk only when state is stored by @Tumas in https://github.com/grandinetech/grandine/pull/647\r\n* Avoid initiating DB transactions for empty batches by @povi in https://github.com/grandinetech/grandine/pull/648\r\n* Update libmdbx bindings by @Tumas in https://github.com/grandinetech/grandine/pull/649\r\n* Limit data column pruning per transaction by @Tumas in https://github.com/grandinetech/grandine/pull/650\r\n* R",
+    "why": "high-priority for mainnet + security fixes",
+    "expect": {
+      "severity": "critical",
+      "flags": [
+        "security"
+      ]
+    }
+  },
+  {
+    "component_slug": "eth-docker",
+    "assessor": "generic",
+    "tag": "v26.6.0",
+    "is_prerelease": false,
+    "name": "Version 26.6.0",
+    "url": "https://github.com/ethstaker/eth-docker/releases/tag/v26.6.0",
+    "published_at": "2026-06-05T09:23:41+00:00",
+    "body": "This is an optional release\r\n\r\nChanges\r\n- Support Nethermind EraE import\r\n- CNAMEs can be automatically created when using `traefik-cf.yml`, see `CNAME_LIST` in `.env`\r\n- Bump Tempo to `3.0.0` and migrate configuration\r\n- Traefik defaults to version `3.7`\r\n- Better support for rootless Docker\r\n- SSV API address defaults to `0.0.0.0`; this requires a manual change for existing setups\r\n- Do not print the Prometheus version, just print Grafana\r\n- Timestamp `.env.bak` files during `./ethd update`\r\n\r\nBug fixes\r\n- Fix Geth EraE import\r\n- Tempo retains traces for 14 days now, not 1 hour\r\n- Fix slashing protection import during `./ethd keys import` - thanks @oksanaphmn !\r\n- `cb-pbs` service now restarts correctly after Docker update or reboot\r\n- Web3signer service to lower key security works with large number of keys",
+    "why": "\"key security\" is not a security fix; team says optional",
+    "expect": {
+      "severity": "optional",
+      "notFlags": [
+        "security"
+      ]
+    }
+  },
+  {
+    "component_slug": "staking-deposit-cli",
+    "assessor": "generic",
+    "tag": "v2.8.0",
+    "is_prerelease": false,
+    "name": "Bug Patch",
+    "url": "https://github.com/ethereum/staking-deposit-cli/releases/tag/v2.8.0",
+    "published_at": "2024-11-26T14:21:16+00:00",
+    "body": "## Vulnerability\r\n\r\nThis release contains a bug fix for an issue discovered by a [Trail of Bits](https://www.trailofbits.com/) audit of the [ethstaker fork of this repo](https://github.com/eth-educators/ethstaker-deposit-cli). Earlier versions of the [Wagyu Key Gen](https://github.com/stake-house/wagyu-key-gen) GUI are also vulnerable.\r\n\r\nKeystore files generated with earlier releases of this tool are vulnerable to be decrypted without the need for a password if many keystores were generated at once. The attack becomes exponentially easier the more keys generated. If you generated a few keys, then it appears you’re safe as the current research indicates significant compute would be required. However, if you generated a large number of keystores in a single run of the CLI, you should treat the keystores as if they are unencrypted.\r\n\r\nAn attack requires access to multiple keystores that were generated simultaneously, so if your keys have only been stored locally, or you did not generate a large number, it appears you are not susceptible.\r\n\r\nIf you think you could be vulnerable to such an attack, you have two options depending on your circumstances:\r\n\r\n1. If your keystores have not been exposed to the public internet, then you can re-derive your keystores from your mnemonic using this or a later version of this tool. Delete all existing copies of your old keystores, make sure your validator signing keys have been removed from your Validator Client and import your new keystores. Exercise extreme caution to ensure to remove your old keys from your Validator Client before importing the new versions as there is a risk of being slashed otherwise.\r\n\r\n2. If you think your keystores have been exposed to the public internet or parties you do not trust and you generated many keys, you will need to exit and withdraw your current validators, derive new keys from a new mnemonic, and re-deposit as new validators.\r\n\r\n## Changelog\r\n\r\n- Patch vulnerability with multiple keystores\r\n- #378 - Update Holešky fork-version for relaunch\r\n- #401 - Update python, packages, & OS versions\r\n- #425 - Bumps cli-version 2.7 -> 2.8\r\n- #426 - Update to the latest testnet chain configs\r\n\r\n| Platform      | Compressed file                             | SHA256 Checksum                                                  |\r\n|---------------|---------------------------------------------|------------------------------------------------------------------|\r\n| Linux amd64   | staking_deposit-cli-948d3fc-linux-amd64.tar.gz | ef021252abd2591ef6d3558fb3258b35f478c20333f2dff4a17cc79b573c3879 |\r\n| Linux arm64   | staking_deposit-cli-948d3fc-linux-arm64.tar.gz | a30f09303443113987bd72100d9dfeac3113dbe8cfcfa57381135cc78dff8726 |\r\n| macOS arm64   | staking_deposit-cli-948d3fc-darwin-arm64.tar.gz | 8cdaeeedc864c79dcdaf52789820d98abab9ffdf1cdc0143ebad3c41aceca320 |\r\n| Windows amd64 | staking_deposit-cli-948d3fc-windows-amd64.zip | 9ed40c28c899c4e979ed037e9ce4d0595d21d5e3541ab76dcdf9d17459eea26d |",
+    "why": "keystore vulnerability + slashing risk, no statement",
+    "expect": {
+      "severity": "critical",
+      "flags": [
+        "security"
+      ]
+    }
+  },
+  {
+    "component_slug": "charon",
+    "assessor": "charon-notes",
+    "tag": "v1.11.1",
+    "is_prerelease": false,
+    "name": "v1.11.1",
+    "url": "https://github.com/ObolNetwork/charon/releases/tag/v1.11.1",
+    "published_at": "2026-10-14T10:02:44+00:00",
+    "body": "# v1.11.1 - 2026-10-13\r\n\r\n![Obol Logo](https://obol.tech/obolnetwork.png)\r\n\r\n> ⚠️ **This release is NOT Gloas-ready.** It is a patch release on top of v1.11.0 for the current fork only. A Gloas-ready release of Charon for Hoodi will be published in the upcoming days, and one for mainnet shortly after.\r\n\r\nThis is a recommended patch release of Charon [v1.11.1](https://github.com/ObolNetwork/charon/releases/tag/v1.11.1). It hardens the `chain_split_halt` feature flag, invalidates cached duties that a lagging beacon node computed from a stale chain view, and bundles a number of stability and security fixes. Feedback is welcome and appreciated, please use github [issues](https://github.com/ObolNetwork/charon/issues) or [discord](https://discord.obol.org/) if you have trouble with this release.\r\n\r\nRead the rest of the release notes for more:\r\n\r\n**Full Changelog**: [v1.11.0..v1.11.1](https://github.com/obolnetwork/charon/compare/v1.11.0..v1.11.1)\r\n\r\n## Hardened `chain_split_halt`\r\n\r\nWith `chain_split_halt` enabled, a node now rejects the leader's attestation proposal if it includes a validator the node has no attester duty for, or a validator whose duty assignment (slot, committee, position) differs from the local one. Previously such validators were skipped, so a leader whose duties came from a stale shuffling could lead the cluster into agreeing on attestation data for the wrong set of validators, leaving the validators actually due in that slot with nothing to sign. A leader proposing for a subset of the local validators is still accepted.\r\n\r\nThis makes the flag stricter: a node that disagrees with the leader now withholds its vote and a different leader takes over in the next round. If more nodes disagree than the cluster's fault tolerance allows, the slot stalls instead of signing data the cluster does not agree on.\r\n\r\n**Recommendation:** if you run with `chain_split_halt` enabled and upgrade to this version, we recommend also enabling `sse_reorg_duties` (`--feature-set-enable=chain_split_halt,sse_reorg_duties` or `CHARON_FEATURE_SET_ENABLE=chain_split_halt,sse_reorg_duties`). It lets the scheduler drop and re-resolve duties that turn out to be stale after it has already resolved the epoch, which keeps the window in which `chain_split_halt` has to reject proposals as short as possible.\r\n\r\n## Stale duties invalidation\r\n\r\nA beacon node that imports the last block of an epoch late can serve next-epoch attester duties computed from the wrong RANDAO seed. Because the late import only extends its chain, no `chain_reorg` event fires and those duties previously stayed cached for the whole epoch. Charon now compares the duty dependent roots of every beacon node `head` event with the dependent root of the cached attester duties, and on a mismatch invalidates the affected cached duties exactly as a chain reorg would. This is always on and needs no feature flag. Mismatches are counted by the new `app_beacon_node_sse_dependent_root_mismatch_total` metric, labe",
+    "why": "recommended patch; explicitly NOT Gloas-ready",
+    "expect": {
+      "severity": "recommended",
+      "notFlags": [
+        "hardfork"
+      ]
+    }
+  },
+  {
+    "component_slug": "nethermind",
+    "assessor": "generic",
+    "tag": "1.39.3",
+    "is_prerelease": false,
+    "name": "v1.39.3",
+    "url": "https://github.com/NethermindEth/nethermind/releases/tag/1.39.3",
+    "published_at": "2026-08-06T13:46:24+00:00",
+    "body": "> [!IMPORTANT]\r\n> This is a mandatory update for all node operators. Please upgrade at your earliest convenience.\r\n\r\n# Release notes\r\n\r\nA patch release on top of 1.39.2 with reliability and hardening fixes across block processing, networking, and request decoding. No consensus or database-format changes, so it's a drop-in upgrade from any 1.39.x version.\r\n\r\n## Overview\r\n\r\n3 changes since 1.39.2:\r\n\r\n- Hardened ABI decoding against malformed input (#12588)\r\n- Fixed pooled-memory cleanup in block processing and networking (#12034)\r\n- Reduced allocations in EIP-6110 deposit-request decoding (#12185)\r\n\r\n## What's Changed\r\n\r\n- Validate ABI decode allocation bounds by @flcl42 in https://github.com/NethermindEth/nethermind/pull/12588\r\n- Fix undisposed array-pool list leaks by @batrr in https://github.com/NethermindEth/nethermind/pull/12034\r\n- perf(requests): reuse a stack buffer for deposit request decoding by @AnkushinDaniil in https://github.com/NethermindEth/nethermind/pull/12185\r\n- chore: update Directory.Build.props for 1.39.3 by @stdevMac in https://github.com/NethermindEth/nethermind/commit/28cbe2a0\r\n\r\n**Full Changelog**: https://github.com/NethermindEth/nethermind/compare/1.39.2...1.39.3\r\n\r\n#### Build signatures\r\n\r\nThe packages are signed with the following OpenPGP key: `AD12 7976 5093 C675 9CD8 A400 24A7 7461 6F1E 617E`",
+    "why": "mandatory update for all node operators",
+    "expect": {
+      "severity": "high",
+      "flags": [
+        "mandatory"
+      ]
+    }
+  },
+  {
+    "component_slug": "nethermind",
+    "assessor": "generic",
+    "tag": "2.1.0",
+    "is_prerelease": false,
+    "name": "v2.1.0",
+    "url": "https://github.com/NethermindEth/nethermind/releases/tag/2.1.0",
+    "published_at": "2026-10-01T22:43:39+00:00",
+    "body": "# Release notes\n\n359 merged pull requests since 2.0.0, from 29 contributors.\n\n> [!IMPORTANT]\n> **Sepolia: Glamsterdam activated on Tue, 06 Oct 2026, 13:53:36 UTC.** Sepolia nodes must run 2.1.0 or later.\n\n> [!NOTE]\n> **Upgrading from 1.39.x?** The breaking changes below cover 2.0.0 → 2.1.0 only. Apply the [2.0.0 breaking changes](https://github.com/NethermindEth/nethermind/releases/tag/2.0.0#breaking-changes) and [upgrade checklist](https://github.com/NethermindEth/nethermind/releases/tag/2.0.0#upgrade-checklist) first; they are the complete 1.39.x → 2.0 list.\n\nFor most nodes this is an in-place upgrade with no resync. Read [Breaking changes](https://github.com/NethermindEth/nethermind/releases/tag/2.1.0#breaking-changes) first if you run on the **flat** backend with a custom sync config, run **poacore**, run a **Flashbots relay**, parse **Parity-style traces**, or build **plugins** against Nethermind.\n\n## Highlights\n\n- **Glamsterdam on Sepolia.** Final EIP-8037 state-gas rules, the `TX_MAX_TOTAL_GAS_LIMIT` transaction cap, and Engine API alignment for Amsterdam. (#13140, #13484, #13627, #13554, #13583, #13586, #13755)\n- **Faster EVM.** The interpreter loop is replaced by tail-call chain dispatch, stack words stay in `UInt256` limb layout, storage values stay as `UInt256` until they are persisted, and JUMPDEST analysis is rewritten. (#13128, #13323, #13420, #13189, #13810)\n- **Lower `engine_newPayload` latency.** The response goes out as soon as the block has executed and its roots match, before the commit. `engine_forkchoiceUpdated` still waits for that head's commit. GC pauses no longer stall payloads the way they did. (#13647, #13711, #13476, #13334)\n- **Per-transaction changeset index for flat archives (opt-in).** A single-transaction trace starts at its target transaction instead of replaying the whole block before it: `debug_traceTransaction` went from ~7.1 s to ~28 ms in the PR's measurements. Whole-block traces run their transactions in parallel (6–10× faster). Enable with `FlatDb.HistoryTransactionIndexEnabled=true`. (#13454, #13426)\n- **BAL healing after snap sync (flat backend).** On the flat backend, the state left by snap sync is healed by replaying block access lists instead of downloading trie nodes. It is on by default (`Sync.BalHealing=true`); set it to `false` to go back to trie-node healing. snap/2 is advertised only when BAL healing can run. (#12945)\n- **Dual-stack IPv4/IPv6 networking.** RLPx, discv4 and discv5 listen on both families, ENRs advertise both, and there is a new `Network.ExternalIpV6` override. (#12679, #12982, #12983, #13731)\n- **Flat backend safety rails.** A flat DB that RocksDB had to auto-repair is now re-synced instead of trusted. Unsafe flat activations are refused at start instead of silently corrupting or discarding state. (#13645, #13644)\n- **Reclaim the patricia trie after a trie→flat conversion.** `FlatDb.DropPruningTrieState=true` deletes the old trie store on the next start once the flat DB owns the",
+    "why": "Sepolia nodes must run 2.1.0",
+    "expect": {
+      "severity": "high",
+      "flags": [
+        "mandatory"
+      ]
+    }
+  },
+  {
+    "component_slug": "nethermind",
+    "assessor": "generic",
+    "tag": "2.0.0",
+    "is_prerelease": false,
+    "name": "v2.0.0",
+    "url": "https://github.com/NethermindEth/nethermind/releases/tag/2.0.0",
+    "published_at": "2026-09-22T14:58:58+00:00",
+    "body": "# Release notes\n\n669 merged pull requests since 1.39.3, from 39 contributors.\n\nNethermind 2.0.0 is a hardened, faster, archive-capable execution client, built for Ethereum, its L2s, and beyond. It consolidates everything shipped in `2.0.0-rc` and `2.0.0-rc2`.\n\nMost nodes upgrade in place with no resync. There are **breaking changes** — read [Breaking changes](https://github.com/NethermindEth/nethermind/releases/tag/2.0.0#breaking-changes) before upgrading, especially if you run an **archive node**, set custom **config keys**, or build against Nethermind as a **library or plugin**.\n\n> [!IMPORTANT]\n> **Upgrading from 1.39.x?** This page is the complete list of breaking changes from 1.39.x to 2.0. It replaces the `2.0.0-rc` and `2.0.0-rc2` notes; the `2.0.0-rc` release page has been removed. Go through [Breaking changes](https://github.com/NethermindEth/nethermind/releases/tag/2.0.0#breaking-changes) and the [Upgrade checklist](https://github.com/NethermindEth/nethermind/releases/tag/2.0.0#upgrade-checklist) below.\n>\n> **Going straight to 2.1.0 or later?** Apply this list first, then the [2.1.0 breaking changes](https://github.com/NethermindEth/nethermind/releases/tag/2.1.0#breaking-changes).\n\n<a id=\"breaking-changes\"></a>\n\n## ⚠️ Breaking changes\n\n### If you run a node (config)\n\n- **`Db.FlushOnExit` is now an enum, not a boolean.** Values: `None`, `WalOnly`, `Full`. The default changes from full-flush to **`WalOnly`**. If your config, env var, or CLI still sets `true`/`false`, the node **fails to start** — change `true` → `Full`, `false` → `None`.\n- **`Blocks.PreWarmStateOnBlockProcessing` was replaced by `Blocks.PreWarming`.** New enum values: `None`, `Block`, `BlockAndMempool` (default `BlockAndMempool`). The old key is now **silently ignored** (you'll get a warning, not a crash) — rename it or you lose your setting.\n- **Numeric config keys are now unsigned.** Negative values are rejected and the node **fails to start**. The one common case: `Receipt.TxLookupLimit: -1` (the old \"never index\" sentinel) must become `18446744073709551615`.\n- **`Receipt.MaxBlockDepth` default lowered from 10000 → 1000.** A single `eth_getLogs` spanning more than 1000 blocks is now rejected unless the log index is enabled. If you rely on wide ranges: raise `Receipt.MaxBlockDepth`, split the query, or enable the log index. *2.1.0 restores the 10,000 default (#13131).*\n- **`FlatDb.HistoryRetention` is required** whenever you set a window size or a since-block. `FlatDb.HistoryRetentionBlocks` on its own **fails to start**. A window size without a mode, `Rolling` without a size, `SinceBlock` without a block, or both numbers at once, are all refused.\n- **A configured `FinalTotalDifficulty` is no longer treated as \"TTD reached\"** (#12555). Custom-FTD configs that relied on that inference will wait for the real TTD.\n- **sepolia and hoodi default configs are now discv5-only** (hoodi's static bootnode list was removed). Stock-config nodes on those networks discover peers via di",
+    "why": "breaking major release, no urgency statement",
+    "expect": {
+      "severity": "recommended",
+      "flags": [
+        "breaking"
+      ]
+    }
+  },
+  {
+    "component_slug": "besu",
+    "assessor": "teku-notes",
+    "tag": "26.9.0",
+    "is_prerelease": false,
+    "name": "26.9.0",
+    "url": "https://github.com/besu-eth/besu/releases/tag/26.9.0",
+    "published_at": "2026-09-25T22:22:13+00:00",
+    "body": "Amsterdam scheduled on Sepolia — Tue 6 Oct 2026, 13:53:36 UTC (timestamp 1791294816). **Sepolia operators must upgrade before then**.\r\n\r\nThis release contains security fixes. **Operators are advised to upgrade promptly.**\r\nDetails will be published in security advisories on\r\nhttps://github.com/besu-eth/besu/security/advisories after operators have had an\r\nopportunity to upgrade.\r\n\r\n## Breaking Changes\r\n- `BlockSimulationParameter.Builder.enforceConsensusGasLimitCaps()` is renamed to `enforceConsensusGasLimit()`. The flag now also controls whether the EIP-1559 gas limit adjustment algorithm is applied: when `true` (plugin/block-production path) `getNextGasLimit()` is used; when `false` (default, `eth_simulateV1` path) the parent gas limit is inherited unchanged, matching geth and Nethermind. [#11254](https://github.com/besu-eth/besu/pull/11254)\r\n- `BlockResult` constructor signatures no longer accept a `totalDifficulty` parameter. The field was already ignored (always `null` post-merge). Any code constructing `BlockResult` directly must drop the `Difficulty` argument. [#11179](https://github.com/besu-eth/besu/pull/11179)\r\n- `debug_traceCall` now applies the same balance-check rules as `eth_call` [#11230](https://github.com/besu-eth/besu/issues/11230)\r\n- `eth_feeHistory` now rejects reward percentiles outside `[0, 100]`, not strictly increasing, or more than 100 values (`-32602`), instead of sorting unordered input or silently omitting `reward` for oversize lists. [#11055](https://github.com/besu-eth/besu/issues/11055)\r\n- Removed the EIP-7610 storage collision check: contract creation no longer aborts when the destination address has non-empty storage but a zero nonce and no code, restoring the EIP-684 conditions for every fork. EIP-7610 was declined for inclusion in Glamsterdam (EIP-7773) and removed from the execution specs retroactively; no mainnet account is affected. `Account.isStorageEmpty()`, which existed only for this check, is removed from the `besu-evm` API. [#11175](https://github.com/besu-eth/besu/pull/11175)\r\n- Besu now exits on `OutOfMemoryError` (`-XX:+ExitOnOutOfMemoryError`). Use a restart policy, or set `JAVA_OPTS=-XX:-ExitOnOutOfMemoryError` to opt out. [#11300](https://github.com/besu-eth/besu/pull/11300)\r\n\r\n## Upcoming Breaking Changes\r\n- Plugin API\r\n  - `PluginTransactionSelectorFactory.create(final SelectorsStateManager selectorsStateManager)` is deprecated for removal\r\n  - `PoaQueryService` and `BftQueryService` are deprecated and will be removed in a future release, with no replacement. They have no known usage\r\n  - `MiningService` is deprecated for removal and will be removed in a future release, with no replacement. It has no known usage\r\n  - `BesuEvents` is deprecated and will be removed at the breaking release. Its event families are available on `BlockchainService`, `TransactionPoolService` and `SynchronizationService` through `subscribe*` methods returning a `Subscription` handle; `TTDReachedListener` has no replacem",
+    "why": "security fixes, upgrade promptly, Sepolia must upgrade",
+    "expect": {
+      "severity": "critical",
+      "flags": [
+        "security",
+        "hardfork",
+        "mandatory"
+      ]
+    }
+  },
+  {
+    "component_slug": "besu",
+    "assessor": "teku-notes",
+    "tag": "25.4.0",
+    "is_prerelease": false,
+    "name": "25.4.0",
+    "url": "https://github.com/besu-eth/besu/releases/tag/25.4.0",
+    "published_at": "2025-04-08T03:26:12+00:00",
+    "body": "> [!IMPORTANT]  \r\n> This is NOT a Pectra Mainnet-ready release. The next release likely will be.\r\n\r\nThis is an optional update. Please note the upcoming breaking changes. \r\nThis release is mostly stability improvements ahead of the hard fork.\r\n\r\n### Upcoming Breaking Changes\r\n- `MetricSystem::createLabelledGauge` is deprecated and will be removed in a future release, replace it with `MetricSystem::createLabelledSuppliedGauge`\r\n- `--Xsnapsync-synchronizer-flat-db-healing-enabled` is deprecated, use `--Xbonsai-full-flat-db-enabled` instead.\r\n- `--Xbonsai-limit-trie-logs-enabled` is deprecated, use `--bonsai-limit-trie-logs-enabled` instead.\r\n- `--Xbonsai-trie-log-pruning-enabled` is deprecated, use `--bonsai-limit-trie-logs-enabled` instead.\r\n- `--Xbonsai-trie-logs-pruning-window-size` is deprecated, use `--bonsai-trie-logs-pruning-window-size` instead.\r\n- `--Xsnapsync-bft-enabled` is deprecated and will be removed in a future release. SNAP sync is supported for BFT networks.\r\n- `--tx-pool-disable-locals` has been deprecated, use `--tx-pool-no-local-priority`, instead.\r\n- Sunsetting features - for more context on the reasoning behind the deprecation of these features, including alternative options, read [this blog post](https://www.lfdecentralizedtrust.org/blog/sunsetting-tessera-and-simplifying-hyperledger-besu)\r\n    - Tessera privacy\r\n    - Smart-contract-based (onchain) permissioning\r\n    - Proof of Work consensus\r\n    - Fast Sync\r\n- Transaction indexing will be disabled by default in a future release for snap sync and checkpoint sync modes. This will break RPCs that use transaction hash for historical queries.\r\n- Support for block creation on networks running a pre-Byzantium fork is deprecated for removal in a future release, after that in order to update Besu on nodes that build blocks, your network needs to be upgraded at least to the Byzantium fork. The main reason is to simplify world state management during block creation, since before Byzantium for each selected transaction, the receipt must contain the root hash of the modified world state, and this does not play well with the new plugin features and future work on parallelism.\r\n- `--compatibility-eth64-forkid-enabled` has been deprecated and will be removed in the next release. [#8492](https://github.com/hyperledger/besu/pull/8492)\r\n\r\n### Additions and Improvements\r\n- Add Hoodi discovery DNS [#8446](https://github.com/hyperledger/besu/pull/8446)\r\n- Decode deposit log data without Web3j [#8394](https://github.com/hyperledger/besu/issues/8394)\r\n- Tune layered txpool default configuration for upcoming gas limit and blob count increases [#8487](https://github.com/hyperledger/besu/pull/8487)\r\n- Removed support for Ethereum protocol versions `eth/62`, `eth/63`, `eth/64`, and `eth/65`. [#8492](https://github.com/hyperledger/besu/pull/8492)\r\n- Explicitly add `depositContractAddress` to `mainnet.json` [#8410](https://github.com/hyperledger/besu/pull/8410)\r\n\r\n### Performance\r\n- Consensys/tuweni 2",
+    "why": "team says \"optional update\"; deprecation notes saying a network \"needs to be upgraded\" are not a mandate",
+    "expect": {
+      "severity": "optional"
+    }
+  },
+  {
+    "component_slug": "besu",
+    "assessor": "teku-notes",
+    "tag": "25.10.0-RC1",
+    "is_prerelease": true,
+    "name": "25.10.0-RC1",
+    "url": "https://github.com/besu-eth/besu/releases/tag/25.10.0-RC1",
+    "published_at": "2025-10-01T00:47:31+00:00",
+    "body": "## 25.10.0-RC1\r\n\r\n> [!IMPORTANT]  \r\n> This RC is an optional update for Holesky and Sepolia users. 25.9.0 remains the official Fusaka Testnet release.\r\nYou only need to upgrade to this release if you're experiencing the eth_subscribe or ethstats known issue from 25.9.0. \r\n> This RC is still pending burn in for mainnet.\r\n\r\n\r\nFusaka Hardfork details: https://eips.ethereum.org/EIPS/eip-7607#activation\r\n\r\n- Holešky scheduled to fork on 2025-10-01 08:48:00\r\n- Sepolia scheduled to fork on 2025-10-14 07:36:00\r\n- Hoodi scheduled to fork on 2025-10-28 18:53:12\r\n\r\n### Breaking Changes\r\n\r\n### Upcoming Breaking Changes\r\n- Deprecated CLI options\r\n  - `--Xbonsai-parallel-tx-processing-enabled` is deprecated since 25.7.0. Use `--bonsai-parallel-tx-processing-enabled` instead.\r\n  - `--Xsnapsync-server-enabled` is deprecated since 25.7.0. Use `--snapsync-server-enabled` instead.\r\n  - `--Xsnapsync-synchronizer-pre-merge-headers-only-enabled` is deprecated since 25.7.0. Use `--snapsync-synchronizer-pre-checkpoint-headers-only-enabled` instead.\r\n  - `--Xhistory-expiry-prune` is deprecated since 25.7.0. Use `--history-expiry-prune` instead.\r\n- Sunsetting features - for more context on the reasoning behind the deprecation of these features, including alternative options, read [this blog post](https://www.lfdecentralizedtrust.org/blog/sunsetting-tessera-and-simplifying-hyperledger-besu)\r\n  - Proof of Work consensus (PoW)\r\n  - Fast Sync\r\n\r\n### Additions and Improvements\r\n- Update spring security framework (toml parsing) [#9153](https://github.com/hyperledger/besu/pull/9153)\r\n- Update grpc and guava [#9150](https://github.com/hyperledger/besu/pull/9150)\r\n- Implement optional sender balance checks in the layered txpool [#9176](https://github.com/hyperledger/besu/pull/9176)\r\n- Add `--cache-last-block-headers` flag to cache the last n block headers persisted to the blockchain [#9223](https://github.com/hyperledger/besu/pull/9223)\r\n- Manage unexpected exceptions during block creation [#9208](https://github.com/hyperledger/besu/pull/9208)\r\n- Upgrade to execution-spec-tests v5.2.0 [#9226](https://github.com/hyperledger/besu/pull/9226), [#9242](https://github.com/hyperledger/besu/pull/9242)\r\n\r\n### Bug fixes\r\n- Fix eth_subscribe RPC failing to return a block response [#9212](https://github.com/hyperledger/besu/pull/9212)\r\n- Fix ethstats integration failing to provide block updates to ethstats server [#9220](https://github.com/hyperledger/besu/pull/9220)\r\n\r\n**Full Changelog**: https://github.com/hyperledger/besu/compare/25.9.0...25.10.0-RC1\r\n\r\nf0390f431612771485a68e4e9e2e177f35243aacc2eec91d4cc00e4f25cf5df1  besu-25.10.0-RC1.zip\r\n9e62ffe9722ea1e20913d1428db0e4039c070298876857528b78e23e8ef1d7b6  besu-25.10.0-RC1.tar.gz\r\n",
+    "why": "RC is an optional update even though it schedules forks",
+    "expect": {
+      "severity": "optional",
+      "flags": [
+        "hardfork",
+        "prerelease"
+      ]
+    }
+  },
+  {
+    "component_slug": "erigon",
+    "assessor": "generic",
+    "tag": "v3.6.1",
+    "is_prerelease": false,
+    "name": "v3.6.1",
+    "url": "https://github.com/erigontech/erigon/releases/tag/v3.6.1",
+    "published_at": "2026-09-09T20:41:51+00:00",
+    "body": "# Erigon v3.6.1 — Upstream Underbelly\r\n\r\nv3.6.1 is a bugfix and security release recommended for all users. It fixes a downloader regression that could silently replace a valid local snapshot (#23859), a peer-ban bypass that let a banned Caplin peer reconnect immediately (#23866), an index-build defect that could leave stale bits in a `recsplit` index after a salt-collision retry (#23858), and bumps `google.golang.org/grpc` for two HIGH-severity CVEs (#23888). It is a drop-in upgrade from 3.6.0 — no re-sync required.\r\n\r\n### Highlights\r\n\r\n- db/downloader: keep local snapshot data once the initial download is complete (#23859) by @AskAlexSharov — a locally-differing `.seg` that no longer matched its `.torrent` was silently replaced even after `preverified.toml` existed; it is now kept and registered for seeding, with a warn-level log when a mismatched file is still replaced. Fixes #21522.\r\n- cl/sentinel: honour the peer ban on inbound connections (#23866) by @lystopad — `BanStatus` was only consulted on outbound dials, so a peer already three-strike banned still received a fresh handshake on every inbound reconnect; one Gnosis archive node logged 13,827 failed handshakes against 1,638 banned peers in ninety minutes. Fixes #23605.\r\n- db/recsplit: reset the Golomb-Rice encoder, Elias-Fano structure, and existence filter on `ResetNextSalt` (#23858) by @AskAlexSharov — retrying an index build after a salt collision left the failed attempt's encoded bits and existence-filter data in place, corrupting the rebuilt index.\r\n- sd: lock `changesetMu` on every `DomainPut`, not only on field reads (#23680) by @AskAlexSharov — the mutex guarded reads of change-set state but not the writes that mutate it, leaving a data race under concurrent commits.\r\n- rpc/jsonrpc: report base-fee sub-pool transactions as pending (#23647) by @lupin012 — transactions parked in the base-fee sub-pool were reported as queued instead of pending, understating the pending count seen by clients and tooling.\r\n- cl/beacon: report a syncing node as 503, not 500 (#23608) by @lystopad — the committee-subscription and duties endpoints answered `500 Internal Server Error` while starting up or catching up, where beacon-APIs specifies `503 CurrentlySyncing`; alerting on 500s no longer fires on ordinary startup or resync.\r\n- cl: seed the ENR custody group count instead of an empty entry (#23591) by @lystopad — nodes advertised an empty PeerDAS custody-group-count ENR entry, making them unselectable as custody peers by counterparties that filter on it.\r\n\r\n### Security\r\n\r\n- p2p/discover: require a proven bond before accepting a PING endpoint statement (#23639) by @yperbasis — an unbonded PING could feed an arbitrary claimed address into a node's local endpoint predictor; a statement is now only accepted once a recent PONG has proven return reachability.\r\n- build: bump `google.golang.org/grpc` to v1.83.2 (#23888) by @lystopad — CVE-2026-84304: fragmented HTTP/2 DATA frames were each stored as a sepa",
+    "why": "bugfix and security release recommended for all users",
+    "expect": {
+      "severity": "recommended",
+      "flags": [
+        "security"
+      ]
+    }
+  },
+  {
+    "component_slug": "erigon",
+    "assessor": "generic",
+    "tag": "v3.7.1",
+    "is_prerelease": false,
+    "name": "v3.7.1",
+    "url": "https://github.com/erigontech/erigon/releases/tag/v3.7.1",
+    "published_at": "2026-10-02T08:12:41+00:00",
+    "body": "# Erigon v3.7.1 — Velvet Vibrissae\r\n\r\nv3.7.1 makes **Caplin ready for Glamsterdam on Sepolia**. Upgrade Sepolia nodes before **6 October 2026, 13:53:36 UTC** (epoch `353024`). This bugfix release is recommended for all users; no re-sync is required from 3.7.0. Operators using custom graffiti or non-default Caplin ports should review the breaking changes below.\r\n\r\n**Breaking Changes**\r\n\r\n- cl/beacon: prefix custom graffiti with EL+CL client identification by default (#24394) by @lystopad — leaves 19 bytes for custom text, or 25 while the EL version is unavailable; longer text is truncated. Set `--beacon.api.preserve-graffiti` to keep the full 32 bytes for custom graffiti. Short hex values are right-padded with and without `--beacon.api.preserve-graffiti`.\r\n- cl/p2p: add QUIC v1 with TCP fallback (#24413) by @domiwei — QUIC defaults to UDP `4001`; allow this port through your firewall, or the port configured by `--caplin.discovery.quicport` (`--sentinel.quic.port` for standalone Sentinel). Discovery still defaults to UDP `4000`. If you use `--caplin.discovery.port=4001`, set a different QUIC port before upgrading: conflicting discovery and QUIC UDP binds now prevent Caplin from starting. Fixes #23398.\r\n\r\n**Bugfixes**\r\n\r\n- cl, execution: prepare Caplin for Glamsterdam on Sepolia (#24386, #24399, #24421, #24441, #24458, #24474, #24484) by @domiwei, @yperbasis, @MysticRyuujin, @Bruce039 — aligns Gloas consensus and APIs with `consensus-specs` v1.7.0-beta.2, corrects Payload Timeliness Committee (PTC) duties and fork-epoch advertising, and preserves slot numbers and block access lists in locally built payloads. Sets the payload deadline to 50% of the slot (6 seconds on Sepolia) and schedules Sepolia's default 200M gas-limit target. Retries retained parent payloads without an EL verdict during sync within the running process.\r\n- execution: release block-builder state after a payload is built (#24478) by @taratorio — cached results kept transaction read sets and contract bytecode alive, causing out-of-memory failures under heavy code-access workloads.\r\n- cl/beacon: publish request blobs on nodes that did not produce the block (#24471) by @lystopad — fixes `500 missing blob bundle` when validators publish pre-Gloas blocks to multiple beacon nodes. Fixes #23112.\r\n- execution/engineapi: wait longer for a busy execution module before dropping a payload build (#24396) by @lystopad — external consensus clients now get up to 6 seconds, or one slot on chains with shorter slots, instead of 500 ms. This avoids missed proposals during background flush and commit. Fixes #24371.\r\n- db/datadir/reset: reject `erigon snapshots reset --local=false` when it would mix referenced commitment and state files from different builds (#24401) by @lystopad — checks run before any deletion; `--allow-mixed-state` overrides the guard.\r\n\r\n**Security**\r\n\r\n- cl/beacon, cl/phase1/network/services: prevent unvalidated sync-committee messages from reaching gossip (#24368, #24384) by @lysto",
+    "why": "upgrade Sepolia nodes before the fork",
+    "expect": {
+      "severity": "high",
+      "flags": [
+        "hardfork",
+        "breaking",
+        "mandatory"
+      ]
+    }
+  },
+  {
+    "component_slug": "lodestar",
+    "assessor": "generic",
+    "tag": "v1.50.0",
+    "is_prerelease": false,
+    "name": "Release v1.50.0",
+    "url": "https://github.com/ChainSafe/lodestar/releases/tag/v1.50.0",
+    "published_at": "2026-10-12T13:02:48+00:00",
+    "body": "Good day Lodestar operators! We've just released v1.50.0. It is **mandatory** for Hoodi operators and **recommended** for mainnet users. Hoodi operators must also upgrade their execution client to a Glamsterdam-ready release before the fork. **Building is done differently with Gloas so please read the docs linked below so you can configure your setup correctly**\r\n\r\n- **Hoodi Glamsterdam fork scheduled.** Adds the fork epoch and the 200M gas limit schedule\r\n- **Validator clients from Gloas.** Fee recipient and gas limit come from signed proposer preferences. From the Gloas fork onwards, the beacon node rejects `prepare_beacon_proposer` and `register_validator` with `410` error response. Upgrade the Lodestar beacon node and validator client together. If you run another validator client against a Lodestar beacon node, make sure it supports proposer preferences\r\n- **Builders from Gloas.** Builder bids arrive in-protocol over p2p. External builders are configured on the validator client (`--builder.urls`, or per key in the proposer config) instead of through relays on the beacon node. Pre-Gloas builder settings keep working until the fork. Setup guides:\r\n  - [Configure external builders (Gloas)](https://chainsafe.github.io/lodestar/run/validator-management/vc-configuration/#configure-external-builders-gloas)\r\n  - [Builder selection and boost factor](https://chainsafe.github.io/lodestar/run/validator-management/vc-configuration/#configure-your-builder-selection-andor-builder-boost-factor)\r\n  - [Per-key builder settings from Gloas](https://chainsafe.github.io/lodestar/run/validator-management/proposer-config/#builder-settings-from-gloas)\r\n- **SSZ engine API.** When the execution client advertises the REST/SSZ engine API, Lodestar uses it automatically, otherwise it keeps using JSON-RPC. Override with `--execution.engineApi`\r\n- **Metrics note.** The `notifyNewPayload` engine timing metric now reflects execution client time more accurately. Previously it included part of Lodestar's own block processing, so values will read lower after upgrading. This is a measurement change, not a change in block import time.\r\n\r\n[Full Changelog](https://github.com/ChainSafe/lodestar/compare/v1.49.0...v1.50.0)\r\n\r\n### Features\r\n\r\n- reject proposer data and validator registrations from gloas (#10341) (@nflaig)\r\n- track validators that submit proposer preferences as attached (#10340) (@nflaig)\r\n- stop depending on prepare_beacon_proposer for custody and gloas payloads (#10336) (@nflaig)\r\n- stop calling `prepareBeaconProposer` from gloas (#10337) (@nflaig)\r\n- support engine api over REST with SSZ encoding (#10204) (@nflaig)\r\n- persist proposer preferences across beacon node restarts (#10327) (@nflaig)\r\n- honor executiononly builder selection post-gloas (#10309) (@lodekeeper)\r\n- disallow new validators with BLS withdrawal credentials in heze (#10316) (@nflaig)\r\n- retrieve proposer preferences on connection opening (#10290) (@markolazic01)\r\n- schedule Gloas fork and 200M gas lim",
+    "why": "mandatory for Hoodi, recommended for mainnet",
+    "expect": {
+      "severity": "high",
+      "flags": [
+        "hardfork",
+        "mandatory"
+      ],
+      "wave": "glamsterdam"
+    }
+  },
+  {
+    "component_slug": "lodestar",
+    "assessor": "generic",
+    "tag": "v1.48.0",
+    "is_prerelease": false,
+    "name": "Release v1.48.0",
+    "url": "https://github.com/ChainSafe/lodestar/releases/tag/v1.48.0",
+    "published_at": "2026-09-15T17:34:41+00:00",
+    "body": "Good day Lodestar operators! We’ve just released v1.48.0, a **strongly recommended** upgrade for mainnet and testnet users.\r\n\r\nThis release introduces flat-file storage for PeerDAS data columns, reducing LevelDB pressure and making data-column serving more efficient for finalized and retained column data.\r\n\r\n### Highlights\r\n\r\n- **Flat-file storage for data columns**: Newly persisted PeerDAS data columns are now stored as flat files under `$dataDir/data_columns` by default, with `--dataColumnDir` available if operators want to place them on a separate volume. (#8899)\r\n\r\n- **More efficient data-column reads**: The new format stores columns with per-column indexing and compression, so Lodestar can read requested columns directly instead of loading every column for a block. (#8899)\r\n\r\n- **No manual migration required**: Existing LevelDB column data remains available as an upgrade fallback, while newly persisted data columns use the flat-file path. Blob sidecar storage is unchanged. (#8899)\r\n\r\nClick here for the [full changelog](https://github.com/ChainSafe/lodestar/compare/v1.47.0...v1.48.0)\r\n\r\n### Features\r\n\r\n- add flat file storage for data columns (#8899) (@wemeetagain)\r\n- track stateTransition steps in metrics (#10016) (@markolazic01)\r\n- enforce progressive list limits on deserialization (#10042) (@wemeetagain)\r\n- add NewPayloadRequest ssz types (#10051) (@nflaig)\r\n- track late canonical blocks (#9968) (@twoeths)\r\n- gloas lc support (#9687) (@spiral-ladder)\r\n- log builder configuration at startup (#9946) (@nflaig)\r\n- reorg weak head when the proposer equivocated (#9929) (@nflaig)\r\n- flood publish execution payload bids (#9914) (@markolazic01)\r\n- track queue time of gossipsub messages (#9940) (@twoeths)\r\n- **builder:** track proposer preferences (#9976) (@krisoshea-eth)\r\n- **builder:** observe beacon node blocks (#9931) (@krisoshea-eth)\r\n- **builder:** add bid ledger (#9975) (@krisoshea-eth)\r\n- **builder:** bid policy (#9974) (@markolazic01)\r\n- **builder:** payload store (#9970) (@markolazic01)\r\n\r\n### Bug Fixes\r\n\r\n- dos protection for NetworkProcessor (#10039) (@twoeths)\r\n- batch verify payload attestation signatures in blocks (#10055) (@nflaig)\r\n- emit payload_attributes before EL payload preparation (#10037) (@ensi321)\r\n- fall back to finalized safe block (#10027) (@nazarhussain)\r\n- emit head event when fork choice head changes on clock tick (#10036) (@ensi321)\r\n- reject attestation source epochs below the min-span lookback (#9999) (@wemeetagain)\r\n- emit finalized_checkpoint event from fork choice finalized callback (#10035) (@ensi321)\r\n- do not abort validator monitor epoch summaries on unknown block roots (#10026) (@nflaig)\r\n- check the parent envelope block root in chain segment assertion (#10033) (@nflaig)\r\n- ignore future slot gossip messages (#10023) (@twoeths)\r\n- import payload envelopes of known blocks in range sync batches (#10006) (@nflaig)\r\n- do not import orphaned payload envelopes of old blocks in range sync (#10005) (@nflaig)\r\n- se",
+    "why": "\"dos protection\" changelog entry is not a security release",
+    "expect": {
+      "severity": "recommended",
+      "notFlags": [
+        "security"
+      ]
+    }
+  },
+  {
+    "component_slug": "reth",
+    "assessor": "reth-table",
+    "tag": "v2.7.0",
+    "is_prerelease": false,
+    "name": "Reth v2.7.0",
+    "url": "https://github.com/paradigmxyz/reth/releases/tag/v2.7.0",
+    "published_at": "2026-09-28T12:45:27+00:00",
+    "body": "![image](https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-2.png)\r\n\r\nReth v2.7.0 prepares Sepolia for the Glamsterdam hardfork and brings fixes to state persistence, forkchoice, RPC, and networking.\r\n\r\n### Action required\r\n\r\n**Sepolia operators must upgrade before 6 October 2026 at 13:53:36 UTC.** This release schedules Amsterdam activation on Sepolia testnet and tests the fork ID and `eth_config` transition. ([Reth change](https://github.com/paradigmxyz/reth/pull/27350), [official schedule](https://eips.ethereum.org/EIPS/eip-7773))\r\n\r\n### Highlights\r\n\r\n- **Hardfork and storage readiness:** Enabled persistent RocksDB storage for block access lists. Read-only tools can also open older databases that do not yet have the BAL tables. ([#26789](https://github.com/paradigmxyz/reth/pull/26789), [#27471](https://github.com/paradigmxyz/reth/pull/27471))\r\n- **Performance and configuration:** Enabled the shared sender recovery cache by default, lowered the default RPC cache counts (blocks: 5,000 to 1,000; blocks' receipts: 2,000 to 500), added per-cache byte limits and idle eviction, and made the engine backfill threshold configurable. ([#27447](https://github.com/paradigmxyz/reth/pull/27447), [#27310](https://github.com/paradigmxyz/reth/pull/27310), [#27351](https://github.com/paradigmxyz/reth/pull/27351), [#27329](https://github.com/paradigmxyz/reth/pull/27329))\r\n- **RPC tracing cache:** Use `--rpc-cache.cache-computed-bals` to retain computed BALs for faster repeat traces. `--rpc-cache.prewarm-bals[=<BLOCKS>]` also enables caching and prewarms new canonical blocks, optionally replaying recent blocks on startup. In v2.7, `--rpc-cache.max-bals-bytes` and `--rpc-cache.idle-timeout` bound retained cache data. ([#24037](https://github.com/paradigmxyz/reth/pull/24037), [#24097](https://github.com/paradigmxyz/reth/pull/24097), [#26835](https://github.com/paradigmxyz/reth/pull/26835), [#27351](https://github.com/paradigmxyz/reth/pull/27351))\r\n\r\n### RPC behavior changes\r\n\r\n- The testing RPC namespace now requires explicit selection. Calls to `trace_callMany` without a block and `trace_filter` without bounds now default to `latest`; callers needing pending state or historical ranges should specify them. `eth_estimateGas` now respects `--rpc.gascap`. ([#27398](https://github.com/paradigmxyz/reth/pull/27398), [#27410](https://github.com/paradigmxyz/reth/pull/27410), [#27411](https://github.com/paradigmxyz/reth/pull/27411), [#27384](https://github.com/paradigmxyz/reth/pull/27384))\r\n- Corrected Otterscan block and transaction responses. ([#27217](https://github.com/paradigmxyz/reth/pull/27217))\r\n- Fixed tracing responses: `trace_get` now selects results by trace tree path, and replaying a missing transaction returns `null`. ([#27366](https://github.com/paradigmxyz/reth/pull/27366), [#27364](https://github.com/paradigmxyz/reth/pull/27364))\r\n\r\n[Full changelog: v2.6.0...release/v2.7.0](https://github.com/paradigmxyz/reth/compare/v2.6.0...release/v2.7.0)",
+    "why": "Sepolia operators must upgrade",
+    "expect": {
+      "severity": "high",
+      "flags": [
+        "hardfork",
+        "mandatory"
+      ]
+    }
+  },
+  {
+    "component_slug": "reth",
+    "assessor": "reth-table",
+    "tag": "v2.5.2",
+    "is_prerelease": false,
+    "name": "Reth v2.5.2",
+    "url": "https://github.com/paradigmxyz/reth/releases/tag/v2.5.2",
+    "published_at": "2026-09-02T11:32:33+00:00",
+    "body": "![image](https://raw.githubusercontent.com/paradigmxyz/reth/main/assets/reth-2.png)\r\n\r\n## Maintenance Release\r\n\r\n- Recovers ExEx WALs with non-contiguous file IDs, preventing startup failures after finalization leaves gaps.\r\n- Allows networks with dynamically scheduled forks to update their advertised fork filter without restarting.\r\n- Improves RocksDB open-file limit handling and includes rejected block hashes in stage error logs.\r\n\r\n## Update Priority\r\n\r\n| User Class | Priority |\r\n| --- | --- |\r\n| Payload Builders | High |\r\n| Non-Payload Builders | High |\r\n\r\n**Full Changelog**: https://github.com/paradigmxyz/reth/compare/v2.5.1...v2.5.2\r\n\r\n\r\n## Binaries\r\n\r\n[See pre-built binaries documentation.](https://reth.rs/installation/binaries)\r\n\r\nThe binaries are signed with the PGP key: `50FB 7CC5 5B2E 8AFA 59FE 03B7 AA5E D56A 7FBF 253E`\r\n\r\n### Reth\r\n\r\n| System | Architecture | Binary | PGP Signature |\r\n|:---:|:---:|:---:|:---|\r\n| <img src=\"https://www.svgrepo.com/download/473700/linux.svg\" width=\"50\"/> | x86_64 | [reth-v2.5.2-x86_64-unknown-linux-gnu.tar.gz](https://github.com/paradigmxyz/reth/releases/download/v2.5.2/reth-v2.5.2-x86_64-unknown-linux-gnu.tar.gz) | [PGP Signature](https://github.com/paradigmxyz/reth/releases/download/v2.5.2/reth-v2.5.2-x86_64-unknown-linux-gnu.tar.gz.asc) |\r\n| <img src=\"https://www.svgrepo.com/download/473700/linux.svg\" width=\"50\"/> | aarch64 | [reth-v2.5.2-aarch64-unknown-linux-gnu.tar.gz](https://github.com/paradigmxyz/reth/releases/download/v2.5.2/reth-v2.5.2-aarch64-unknown-linux-gnu.tar.gz) | [PGP Signature](https://github.com/paradigmxyz/reth/releases/download/v2.5.2/reth-v2.5.2-aarch64-unknown-linux-gnu.tar.gz.asc) |\r\n| <img src=\"https://www.svgrepo.com/download/511330/apple-173.svg\" width=\"50\"/> | aarch64 | [reth-v2.5.2-aarch64-apple-darwin.tar.gz](https://github.com/paradigmxyz/reth/releases/download/v2.5.2/reth-v2.5.2-aarch64-apple-darwin.tar.gz) | [PGP Signature](https://github.com/paradigmxyz/reth/releases/download/v2.5.2/reth-v2.5.2-aarch64-apple-darwin.tar.gz.asc) |\r\n| <img src=\"https://www.svgrepo.com/download/473589/docker.svg\" width=\"50\"/> | Docker | [paradigmxyz/reth](https://ghcr.io/paradigmxyz/reth) | - |\r\n",
+    "why": "Update Priority table: payload builders high",
+    "expect": {
+      "severity": "high"
+    }
+  },
+  {
+    "component_slug": "ssv-node",
+    "assessor": "generic",
+    "tag": "v2.4.3",
+    "is_prerelease": false,
+    "name": "",
+    "url": "https://github.com/ssvlabs/ssv/releases/tag/v2.4.3",
+    "published_at": "2026-06-01T08:49:19+00:00",
+    "body": "This release improves duty scheduling reliability (proposer duty rework, late voluntary exit fix, multi-CL init resilience), strengthens consensus and message validation, adds detection/recovery for stale attestation data and silently-dropped EL logs, brings P2P performance and stability improvements, plus extensive test coverage, refactors, and dependency updates.\r\n\r\n## 🔐 Upgrade Priority \r\n\r\n| Network | Priority        |\r\n|---------|-----------------|\r\n| Mainnet | 👍 Recommended  |\r\n| Hoodi   | 👍 Recommended  |\r\n\r\n> ⚠️ Always ensure your Execution + Consensus clients and any remote signers (web3signer, external signers) are updated, SSV strives to support latest released versions of these clients.\r\n\r\n> ⚠️ Always update testnet and check performance before updating mainnet nodes.\r\n\r\n---\r\n\r\n## 🐳 Docker image\r\n\r\n```bash\r\ndocker pull ssvlabs/ssv-node:v2.4.3\r\n```\r\n\r\n---\r\n\r\n## New features\r\n\r\n### Configurable SSV API listen address\r\n\r\nAdds a new `SSVAPIAddress` (env: `SSV_API_ADDRESS`) config option so operators can bind the SSV HTTP API to `127.0.0.1` (or another specific interface) instead of all interfaces. The default behavior is intentionally non-breaking, but the node now logs a warning recommending `SSVAPIAddress: 127.0.0.1` whenever `SSVAPIPort` is enabled without an explicit address.\r\n\r\n### Validators-list API pagination\r\n\r\nAdds optional `pagination` (`page`, `per_page`) to the exporter `/v1/validators` HTTP endpoint. Existing clients work unchanged.\r\n\r\n### Stale attestation data detection & recovery\r\n\r\nWhen the beacon node returns attestation data with a `beacon_block_root` that doesn't match the latest cached `HeadEvent`, the SSV node waits briefly (50ms) and refetches to get fresh data — falling back gracefully if still mismatched or if insufficient time remains before the deadline. Stage validation over 5 days showed 100% recovery on detected mismatches with no negative side effects. New `ssv_cl_attestation_data_*` metrics track verification, mismatches, and refetch outcomes; proposal parent-root mismatches are also tracked for observability.\r\n\r\n### Execution-layer bloom filter cross-check\r\n\r\nAdds a bloom-filter cross-check in `fetchLogsInBatches` to detect events silently dropped by execution clients (known Geth v1.17.1 bug: `eth_getLogs` occasionally returns `[]` for blocks that actually contain SSV events). For each block with no logs near chain tip, the node fetches the block header, checks if its bloom matches the SSV contract address, and retries `FilterLogs` up to 3 times if it does. Scoped to the streaming path to keep historical-sync RPC cost flat. Surfaces via the `ssv.el.bloom.checks` counter (`recovery` / `false_positive` outcome).\r\n\r\n## What's Changed\r\n\r\n### Duty scheduling: proposer rework + late-exit fix + scheduler hardening\r\nReworks the proposer duty-fetching path with better retries and epoch-transition reorg handling (mirroring the `AttesterHandler` simplification), and fixes voluntary exits being scheduled too clos",
+    "why": "per-network Upgrade Priority table: Recommended",
+    "expect": {
+      "severity": "recommended",
+      "notFlags": [
+        "security"
+      ]
+    }
+  },
+  {
+    "component_slug": "siren",
+    "assessor": "lighthouse-table",
+    "tag": "v3.0.0",
+    "is_prerelease": false,
+    "name": "Yu Takeyama (Mount Lady)",
+    "url": "https://github.com/sigp/siren/releases/tag/v3.0.0",
+    "published_at": "2025-05-05T22:20:13+00:00",
+    "body": "## Summary\r\n\r\n\r\nThis release primes Siren for the upcoming PECTRA fork on Mainnet 🎉\r\n\r\nv3.0.0 is our largest upgrade yet, bringing full support for EIP-7251 and EIP-7002, a revamped wallet stack powered by WAGMI, and a host of security and UI enhancements. If you haven’t yet upgraded, we strongly recommend moving directly to v3.0.0 to take advantage of these improvements—and to ensure uninterrupted service once Pectra activates on 7 May 2025.\r\n\r\n🆕 New Features 🆕\r\n\r\nWallet Connection: Connect your wallet to the dashboard to access all of Siren’s new features. Most browser-based wallet extensions are supported, with the option to add WalletConnect as well.\r\n\r\nValidator Onboarding: Deposit and import a new validator directly from the dashboard into Lighthouse—no CLI required. You can also deposit directly into compounding withdrawal credentials.\r\n\r\nValidator Consolidation: Existing validators can opt in to receive compounding withdrawal credentials as defined in EIP-7251, allowing you to merge stakes and unlock Max EB benefits.\r\n\r\nPartial Withdrawals: Submit partial withdrawal requests for compounding validators right from the app.\r\n\r\nTop-up Functionality: Add funds to any validator with a low effective balance, or increase the stake of your compounding-credential validators with additional ETH.\r\n\r\n🔒 Security Improvements 🔒\r\n\r\nHardened session API tokens to include key flags that protect against token theft.\r\n\r\nAdded a Logout button so users can explicitly invalidate session tokens when leaving the dashboard unattended.\r\n\r\n\r\n## Known Issues\r\nThere are some small issues we are investigating. \r\n\r\n- Connecting via Frame or Frame Companion may intermittently cause the dashboard to hang when executing transactions. If a transaction remains pending —neither accepted nor cancelled— Siren can lose the ability to track its status—resulting in deposits being confirmed on-chain but not imported into Lighthouse via Siren. \r\n\r\n## All Changes\r\n\r\n- Feat: EIP 7002 (#357)\r\n- Feat: partial deposits (#332)\r\n- Feat: wallet connect (#314)\r\n- Feat: self consolidate (#317)\r\n- Feat: max eb deposit (#315)\r\n- Feat: end session (#305)\r\n- Fix: same site origin security (#300)\r\n- Feat: Max EB Consolidation (#294)\r\n- Feat: Enable Deposits (#268)\r\n\r\n## Docker Hub\r\nhttps://hub.docker.com/r/sigp/siren/tags?name=v3.0.0\r\n",
+    "why": "strongly recommended, primes for Pectra",
+    "expect": {
+      "severity": "recommended",
+      "flags": [
+        "hardfork"
+      ],
+      "wave": "pectra"
+    }
+  },
+  {
+    "component_slug": "dora",
+    "assessor": "generic",
+    "tag": "v1.23.0",
+    "is_prerelease": false,
+    "name": "v1.23.0",
+    "url": "https://github.com/ethpandaops/dora/releases/tag/v1.23.0",
+    "published_at": "2026-06-05T21:42:23+00:00",
+    "body": "### Major Changes\n* Added support for projecting pending deposits as validators post-Electra, improving visibility of churn-limited validators (by @pk910)  \n* Fixed builder name display in slot bids table and added integration with buildoor for richer builder info (by @barnabasbusa)  \n* Enhanced slot navigation to preserve active tabs when moving between slots, improving usability (by @barnabasbusa)  \n* Fixed bugs in filtered slots view, ensuring missed slots are shown when filtering by validator (by @pk910)  \n* Improved security and workflow hardening for CI/CD pipelines (by @parithosh)  \n* Fixed nil-pointer panics on deposit/consolidation pages when validator data is unloaded (by @pk910)\n\n<details>\n  <summary>Full changelog</summary>\n\n  ### Full changelog\n - ed61eb8b Merge pull request #731 from ethpandaops/pk910/pending-validators\n - 08b17ed9 Merge pull request #730 from ethpandaops/bbusa/run-sh-buildoor-config\n - ca01d084 Merge pull request #729 from ethpandaops/bbusa/fix-builder-tooltip-overlap\n - 077d6cb0 Merge pull request #728 from ethpandaops/bbusa/buildoor-inventory\n - 1266e800 Merge pull request #727 from ethpandaops/bbusa/fix-slot-bids-builder-name-lookup\n - 4e9538a0 Merge pull request #726 from ethpandaops/bbusa/cgc-decode-log-level\n - ed66ab32 Merge pull request #724 from ethpandaops/fix/orphaned-epochs-gas-bigint\n - 8a57c590 Merge pull request #725 from ethpandaops/bbusa/mev-blocks-by-hashes-paren\n - 3ba7416e Merge pull request #720 from ethpandaops/dependabot/npm_and_yarn/ui-package/ui-package-dependencies-e39fe14744\n - ee39f044 Merge pull request #723 from ethpandaops/pk910/various-fixes\n - b432d867 Merge pull request #722 from ethpandaops/pk910/tx-display-fix\n - a72b2542 Merge pull request #721 from ethpandaops/dependabot/github_actions/actions-3e91a36229\n - 87d65307 Merge pull request #646 from Sahil-4555/simplify-cache-and-handler-internals\n - df5b2b6e Merge pull request #718 from ethpandaops/pk910/go-eth2-client-v1-1-3\n - 21885def Merge pull request #717 from ethpandaops/dependabot/npm_and_yarn/ui-package/ui-package-dependencies-08256b51f8\n - 6600e456 Merge pull request #716 from ethpandaops/bbusa/fix-blocks-filtered-not-filter\n - 30196013 Merge pull request #714 from ethpandaops/bbusa/fix-included-deposits-nil-validator-panic\n - e410ee33 Merge pull request #711 from ethpandaops/pk910/fix-filtered-slots-view\n - 9907be48 Merge pull request #710 from ethpandaops/bbusa/fix-finalize-epoch-empty-canonicals\n - 124f6627 Merge pull request #708 from ethpandaops/bbusa/preserve-slot-tab-on-nav\n - 5280da34 Merge pull request #707 from ethpandaops/barnabasbusa-patch-1\n - 812d054e Merge pull request #706 from ethpandaops/codex/fix-security-alerts\n</details>\n\n### Release Artifacts\nPlease read through the [wiki](https://github.com/ethpandaops/dora/wiki) for setup & configuration instructions.\n| Release File  | Description |\n| ------------- | ------------- |\n| [dora_1.23.0_windows_amd64.zip](https://github.com/ethpandaops/dora/releases/downl",
+    "why": "CI hardening and a security-alerts merge are not security fixes",
+    "expect": {
+      "severityIn": [
+        "unassessed",
+        "optional",
+        "recommended"
+      ],
+      "notFlags": [
+        "security"
+      ]
+    }
+  },
+  {
+    "component_slug": "charon-distributed-validator-node",
+    "assessor": "charon-notes",
+    "tag": "v1.9.4",
+    "is_prerelease": false,
+    "name": "v1.9.4",
+    "url": "https://github.com/ObolNetwork/charon-distributed-validator-node/releases/tag/v1.9.4",
+    "published_at": "2026-03-26T09:26:51+00:00",
+    "body": "![Obol Logo](https://obol.tech/obolnetwork.png)\r\n\r\nThis is CDVN's `v1.9.4` release and **contains an urgent security update for operators running Lighthouse**. It includes also a version bumps of some other parts of the stack. Feedback is welcome and appreciated, please use github [issues](https://github.com/ObolNetwork/charon-distributed-validator-node/issues) or [discord](https://discord.obol.org) if you have trouble with this release.\r\n\r\n## What's Changed\r\n* fix(prometheus): quote external_labels values in YAML template by @apham0001 in https://github.com/ObolNetwork/charon-distributed-validator-node/pull/447\r\n* fix(loki): update config for Loki 3.x compatibility by @apham0001 in https://github.com/ObolNetwork/charon-distributed-validator-node/pull/448\r\n* chore(deps): update grafana/tempo docker tag to v2.10.2 by @renovate[bot] in https://github.com/ObolNetwork/charon-distributed-validator-node/pull/449\r\n* chore(deps): update ghcr.io/paradigmxyz/reth docker tag to v1.11.3 by @renovate[bot] in https://github.com/ObolNetwork/charon-distributed-validator-node/pull/443\r\n* chore(deps): update grafana/grafana docker tag to v12.4.1 by @renovate[bot] in https://github.com/ObolNetwork/charon-distributed-validator-node/pull/442\r\n* chore(deps): update consensys/teku docker tag to v26.3.0 by @renovate[bot] in https://github.com/ObolNetwork/charon-distributed-validator-node/pull/435\r\n* chore(deps): update sifrai/grandine docker tag to v2.0.3 by @renovate[bot] in https://github.com/ObolNetwork/charon-distributed-validator-node/pull/433\r\n* chore(deps): update prom/prometheus docker tag to v3.10.0 by @renovate[bot] in https://github.com/ObolNetwork/charon-distributed-validator-node/pull/429\r\n* pass CHARON_BEACON_NODE_HEADERS env var when set in .env file by @nickh-obol in https://github.com/ObolNetwork/charon-distributed-validator-node/pull/445\r\n* chore(deps): update nethermind/nethermind docker tag to v1.36.1 by @renovate[bot] in https://github.com/ObolNetwork/charon-distributed-validator-node/pull/438\r\n* Security checks by @bussyjd in https://github.com/ObolNetwork/charon-distributed-validator-node/pull/348\r\n* fix: pin GitHub Actions to SHA for supply chain security by @apham0001 in https://github.com/ObolNetwork/charon-distributed-validator-node/pull/452\r\n* bump LH v8.1.3 by @KaloyanTanev in https://github.com/ObolNetwork/charon-distributed-validator-node/pull/457\r\n\r\n## New Contributors\r\n* @bussyjd made their first contribution in https://github.com/ObolNetwork/charon-distributed-validator-node/pull/348\r\n\r\n**Full Changelog**: https://github.com/ObolNetwork/charon-distributed-validator-node/compare/v1.9.3...v1.9.4",
+    "why": "urgent security update",
+    "expect": {
+      "severity": "critical",
+      "flags": [
+        "security"
+      ]
+    }
+  },
+  {
+    "component_slug": "anchor",
+    "assessor": "lighthouse-table",
+    "tag": "v1.2.3",
+    "is_prerelease": false,
+    "name": "Dispatch boat",
+    "url": "https://github.com/sigp/anchor/releases/tag/v1.2.3",
+    "published_at": "2026-03-26T14:20:11+00:00",
+    "body": "## Summary\r\n\r\n:warning: Anchor v1.2.3 is a **high-priority** patch release with further security-critical fixes atop v1.2.2.\r\n\r\nThis is a **mandatory** upgrade for all users running any prior version. **All prior Anchor releases including v1.2.2 are affected by vulnerabilities.** All Anchor nodes should be upgraded as soon as possible. Further details to come in the following days.\r\n\r\n## All Changes\r\n\r\n- chore: Release v1.2.3 (#913)\r\n- chore: bump deps in stable (#912)\r\n- ci: strengthen PR template with evidence, risk, and rollback prompts (#892)\r\n\r\n## Binaries\r\n\r\n[See pre-built binaries documentation.](https://anchor-book.sigmaprime.io/installation-binaries.html)\r\n\r\nThe binaries are signed with Sigma Prime's PGP key: `15E66D941F697E28F49381F426416DC3F30674B0`\r\n\r\n| System | Architecture | Binary | PGP Signature |\r\n|:---:|:---:|:---:|:---|\r\n| <picture> <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://cdn.simpleicons.org/apple/white\" > <source media=\"(prefers-color-scheme: light)\" srcset=\"https://cdn.simpleicons.org/apple\" ><img src=\"https://cdn.simpleicons.org/apple\" width=\"32\" alt=\"Apple logo\">  </picture> | aarch64 | [anchor-v1.2.3-aarch64-apple-darwin.tar.gz](https://github.com/sigp/anchor/releases/download/v1.2.3/anchor-v1.2.3-aarch64-apple-darwin.tar.gz) | [PGP Signature](https://github.com/sigp/anchor/releases/download/v1.2.3/anchor-v1.2.3-aarch64-apple-darwin.tar.gz.asc) |\r\n| <picture> <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://cdn.simpleicons.org/linux/white\" > <source media=\"(prefers-color-scheme: light)\" srcset=\"https://cdn.simpleicons.org/linux/black\" ><img src=\"https://cdn.simpleicons.org/linux\" width=\"32\" alt=\"Linux logo\"> </picture> | x86_64 | [anchor-v1.2.3-x86_64-unknown-linux-gnu.tar.gz](https://github.com/sigp/anchor/releases/download/v1.2.3/anchor-v1.2.3-x86_64-unknown-linux-gnu.tar.gz) | [PGP Signature](https://github.com/sigp/anchor/releases/download/v1.2.3/anchor-v1.2.3-x86_64-unknown-linux-gnu.tar.gz.asc) |\r\n| <picture> <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://cdn.simpleicons.org/raspberrypi/white\" > <source media=\"(prefers-color-scheme: light)\" srcset=\"https://cdn.simpleicons.org/raspberrypi/black\" > <img src=\"https://cdn.simpleicons.org/raspberrypi\" width=\"32\" alt=\"Raspberrypi logo\"> </picture> | aarch64 | [anchor-v1.2.3-aarch64-unknown-linux-gnu.tar.gz](https://github.com/sigp/anchor/releases/download/v1.2.3/anchor-v1.2.3-aarch64-unknown-linux-gnu.tar.gz) | [PGP Signature](https://github.com/sigp/anchor/releases/download/v1.2.3/anchor-v1.2.3-aarch64-unknown-linux-gnu.tar.gz.asc) |\r\n| | | | |\r\n| **System** | **Option** | - | **Resource** |\r\n| <picture> <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://cdn.simpleicons.org/docker/white\" > <source media=\"(prefers-color-scheme: light)\" srcset=\"https://cdn.simpleicons.org/docker/black\" > <img src=\"https://cdn.simpleicons.org/docker/black\" width=\"32\" alt=\"Docker logo\"></picture> | Docker | [v1.2.3](https://hub.docker.c",
+    "why": "high-priority, mandatory, vulnerabilities",
+    "expect": {
+      "severity": "critical",
+      "flags": [
+        "security",
+        "mandatory"
+      ]
+    }
+  }
+]
