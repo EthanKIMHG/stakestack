@@ -14,3 +14,4 @@ create index if not exists stack_owners_user_idx on stack_owners (privy_user_id)
 
 alter table stack_owners enable row level security;
 revoke all on stack_owners from anon, authenticated;
+grant select, insert, update, delete on stack_owners to service_role;

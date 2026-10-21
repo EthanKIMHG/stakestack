@@ -246,6 +246,31 @@ create policy stacks_update_owner on stacks for update using (owner_id = auth.ui
 drop policy if exists stacks_delete_owner on stacks;
 create policy stacks_delete_owner on stacks for delete using (owner_id = auth.uid());
 
+-- ---------------------------------------------------------------- grants --
+-- Since 2026-10-30 Supabase no longer grants the Data API roles access to new tables in `public`
+-- automatically, so every table, sequence and view states its grants in the migration that creates
+-- it. Without these a fresh project, a preview branch or `supabase db reset` answers every
+-- supabase-js call with "permission denied". RLS above still decides which rows a role sees.
+grant usage on schema public to anon, authenticated, service_role;
+
+-- Reference data: read-only for the API roles; written by the ingester with the secret key.
+grant select on networks, fork_waves, components, slots, composition_rules, catalog_meta,
+  network_upgrades, releases, release_assessments, advisories, ingest_runs
+  to anon, authenticated;
+grant select, insert, update, delete on networks, fork_waves, components, slots, composition_rules,
+  catalog_meta, network_upgrades, releases, release_assessments, advisories, ingest_runs
+  to service_role;
+
+-- Stacks: the publishable key creates share links and owners edit their own (policies above).
+grant select, insert, update, delete on stacks to anon, authenticated, service_role;
+
+-- bigserial sequences: only the secret key inserts into these tables.
+grant usage, select on releases_id_seq, release_assessments_id_seq, ingest_runs_id_seq to service_role;
+
+-- Views and the feed function (functions are executable by everyone by default; stated for clarity).
+grant select on release_assessment_effective, next_network_upgrade to anon, authenticated, service_role;
+grant execute on function stack_timeline(jsonb, int) to anon, authenticated, service_role;
+
 -- short slug for share links
 create or replace function set_stack_slug() returns trigger language plpgsql as $$
 begin
