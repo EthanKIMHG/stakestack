@@ -13,8 +13,8 @@ then get every relevant release rated by severity and see hard fork readiness ne
 [Fork timeline](https://stakestack-eth.vercel.app/upgrades) ·
 [Releases](https://stakestack-eth.vercel.app/releases)
 
-[![CI](https://github.com/kimhg2/stakestack/actions/workflows/ci.yml/badge.svg)](https://github.com/kimhg2/stakestack/actions/workflows/ci.yml)
-[![Ingest](https://github.com/kimhg2/stakestack/actions/workflows/ingest.yml/badge.svg)](https://github.com/kimhg2/stakestack/actions/workflows/ingest.yml)
+[![CI](https://github.com/EthanKIMHG/stakestack/actions/workflows/ci.yml/badge.svg)](https://github.com/EthanKIMHG/stakestack/actions/workflows/ci.yml)
+[![Ingest](https://github.com/EthanKIMHG/stakestack/actions/workflows/ingest.yml/badge.svg)](https://github.com/EthanKIMHG/stakestack/actions/workflows/ingest.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Components tracked](https://img.shields.io/badge/components%20tracked-79-6e56cf)
 ![Next.js](https://img.shields.io/badge/Next.js-16-black)
@@ -188,7 +188,7 @@ You need a GitHub account, a [Supabase](https://supabase.com) project and a [Ver
 ### 1. Local setup
 
 ```bash
-git clone https://github.com/kimhg2/stakestack.git
+git clone https://github.com/EthanKIMHG/stakestack.git
 cd stakestack
 pnpm install
 cp .env.example .env    # fill in the values below

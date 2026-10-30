@@ -6,10 +6,10 @@
   "homepage": "https://stakestack-eth.vercel.app",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kimhg2/stakestack.git"
+    "url": "git+https://github.com/EthanKIMHG/stakestack.git"
   },
   "bugs": {
-    "url": "https://github.com/kimhg2/stakestack/issues"
+    "url": "https://github.com/EthanKIMHG/stakestack/issues"
   },
   "keywords": [
     "ethereum",

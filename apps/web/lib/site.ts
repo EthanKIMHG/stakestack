@@ -33,4 +33,4 @@ export const SITE_KEYWORDS = [
   'lido csm', 'rocket pool', 'eth-docker',
 ];
 export const CONTACT_EMAIL = 'kimhg@parataxiseth.co.kr';
-export const REPO_URL = process.env.NEXT_PUBLIC_GITHUB_REPO_URL || 'https://github.com/kimhg2/stakestack';
+export const REPO_URL = process.env.NEXT_PUBLIC_GITHUB_REPO_URL || 'https://github.com/EthanKIMHG/stakestack';
